@@ -27,6 +27,11 @@ app.get('/',(req, res) => {
     res.render('index');
 })
 
+// login
+app.get('/login',(req, res) => {
+    res.render('login')
+})
+
 app.listen(PORT, () => {
     console.log(`server is running on http://localhost:${PORT}`)
 })
