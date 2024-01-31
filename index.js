@@ -17,6 +17,7 @@ app.use(bodyparser.urlencoded({ extended: true }));
 
 // set view engine
 app.set('view engine', 'ejs');
+app.set('views',path.resolve(__dirname,'views/user'))
 
 // load assets
 app.use('/css', express.static(path.resolve(__dirname,'assets/css')));
@@ -27,8 +28,13 @@ app.get('/',(req, res) => {
     res.render('index');
 })
 
+// signup
+app.get('/signup',(req, res) => {
+    res.render('signup')
+})
+
 // login
-app.get('/login',(req, res) => {
+app.get('/login', (req, res) => {
     res.render('login')
 })
 
