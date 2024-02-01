@@ -23,10 +23,10 @@ app.use(bodyparser.urlencoded({ extended: true }));
 
 // set view engine
 app.set('view engine', 'ejs');
-app.set('views',path.resolve(__dirname,'views/user'))
+app.set('views',path.join(__dirname,'views/user'))
 
 // load assets
-app.use('/css', express.static(path.resolve(__dirname,'assets/css')));
+app.use(express.static(path.join(__dirname,'assets')));
 app.use('/js',express.static(path.resolve(__dirname,'assets/js')));
 app.use('/img',express.static(path.resolve(__dirname,'assets/img')));
 

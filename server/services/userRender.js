@@ -1,5 +1,5 @@
 // home route (home page)
-exports.homeRoutes = (req, res) => res.send('hello users, welcome to TryNutritions');
+exports.homeRoutes = (req, res) => res.render('index');
 
 // signup
 exports.userSigup = (req, res) => res.render('signup');
