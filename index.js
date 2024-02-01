@@ -24,19 +24,8 @@ app.use('/css', express.static(path.resolve(__dirname,'assets/css')));
 app.use('/js',express.static(path.resolve(__dirname,'assets/js')));
 app.use('/img',express.static(path.resolve(__dirname,'assets/img')));
 
-app.get('/',(req, res) => {
-    res.render('index');
-})
-
-// signup
-app.get('/signup',(req, res) => {
-    res.render('signup')
-})
-
-// login
-app.get('/login', (req, res) => {
-    res.render('login')
-})
+// load routers
+app.use('/', require('./server/routes/users'))
 
 app.listen(PORT, () => {
     console.log(`server is running on http://localhost:${PORT}`)
