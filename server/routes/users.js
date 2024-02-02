@@ -13,4 +13,13 @@ route.get('/signup', services.userSigup);
 // login
 route.get('/login', services.userLogin);
 
+// shop
+route.get('/shop', services.shop);
+
+// shop-details
+route.get('/shop-details', services.shopDetails);
+
+// cart
+route.get('/cart', services.cart);
+
 module.exports = route
