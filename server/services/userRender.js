@@ -1,5 +1,5 @@
 // home route (home page)
-exports.homeRoutes = (req, res) => res.render('index');
+exports.homeRoutes = (req, res) => res.render('user/body/home');
 
 // signup
 exports.userSigup = (req, res) => res.render('signup');
