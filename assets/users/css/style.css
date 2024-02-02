@@ -352,7 +352,7 @@
 
 .vesitable .owl-nav .owl-prev {
     position: absolute;
-    top: -8px;
+    top: -3px;
     right: 0;
     color: var(--bs-primary);
     padding: 5px 25px;
@@ -369,7 +369,7 @@
 
 .vesitable .owl-nav .owl-next {
     position: absolute;
-    top: -8px;
+    top: -3px;
     right: 88px;
     color: var(--bs-primary);
     padding: 5px 25px;
