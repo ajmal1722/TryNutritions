@@ -3,6 +3,8 @@ const route = express.Router();
 
 // require rendering page of user
 const services = require('../services/userRender');
+// require controller
+const controller = require('../controller/userController')
 
 // home route (home page)
 route.get('/',services.homeRoutes);
@@ -22,4 +24,8 @@ route.get('/shop-details', services.shopDetails);
 // cart
 route.get('/cart', services.cart);
 
-module.exports = route
+
+// API
+route.post('/api/users', controller.create)
+
+module.exports = route;

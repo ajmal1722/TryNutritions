@@ -13,4 +13,5 @@ exports.shop = (req, res) => res.render('user/body/shop');
 // shop-details
 exports.shopDetails = (req, res) => res.render('user/body/shop-details');
 
+// cart
 exports.cart = (req, res) => res.render('user/body/cart');
