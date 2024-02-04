@@ -24,6 +24,9 @@ route.get('/shop-details', services.shopDetails);
 // cart
 route.get('/cart', services.cart);
 
+// checkout
+route.get('/checkout', services.checkout);
+
 
 // API
 route.post('/api/users', controller.create)

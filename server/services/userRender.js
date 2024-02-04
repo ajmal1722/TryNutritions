@@ -15,3 +15,6 @@ exports.shopDetails = (req, res) => res.render('user/body/shop-details');
 
 // cart
 exports.cart = (req, res) => res.render('user/body/cart');
+
+// checkout
+exports.checkout = (req, res) => res.render('user/body/checkout');
