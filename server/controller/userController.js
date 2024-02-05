@@ -20,7 +20,7 @@ exports.create = (req, res) => {
         .save()
         .then(data => {
             console.log('data added succesfully');
-            res.send(data)
+            res.redirect('/');
         })
         .catch(error => {
             console.log('message:', error.message)

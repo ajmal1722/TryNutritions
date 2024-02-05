@@ -1,6 +1,9 @@
 .container {
   max-width: 780px;
 }
+.heading{
+  font-weight: 400;
+}
 input,
 input::-webkit-input-placeholder {
     font-size: 15px;
@@ -12,4 +15,14 @@ input::-webkit-input-placeholder {
 }
 label {
   font-size: 15px;
+}
+.btn{
+  border: 1px solid #ffb524;
+  border-radius: 20px;
+  color: #81c408;
+  font-weight: 500;
+}
+.btn:hover{
+  background-color: #ffb524;
+  color: white;
 }
