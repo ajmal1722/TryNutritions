@@ -1,8 +1,9 @@
 const Userdb = require('../model/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
-// create and save user
+// create and save user (signup)
 exports.create = async (req, res) => {
     try {
         // get all data from body
@@ -55,3 +56,36 @@ exports.create = async (req, res) => {
         });
     }
 };
+
+// Login
+exports.create = async (req, res) => {
+    try {
+        // get all data from frontend
+        const {email, password} = req.body;
+
+        // find user in DB
+        const userData = await Userdb.findOne({email: body.email})
+
+        // match the password
+        if (userData && (await bcrypt.compare(password, userData.password))) {
+            const token = jwt.sign(
+                {id: userData.__id},
+                'shhhh',
+            {
+                expiresIn: '2h'
+            }
+            );
+            userData.token = token
+            userData.password = undefined
+
+        }
+
+        // send token in user cookie
+
+    } catch (error) {
+        console.error('Error message:', error.message);
+        res.status(500).send({
+            message: 'Internal Server Error'
+        });
+    }
+}

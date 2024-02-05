@@ -5,7 +5,8 @@ const bodyparser = require('body-parser');
 const path = require('path');
 
 // importing connectDB
-const connectDB = require('./server/database/connection')
+const connectDB = require('./server/database/connection');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -20,6 +21,8 @@ connectDB();
 
 // parse request to body-parser
 app.use(bodyparser.urlencoded({ extended: true }));
+
+app.use(cookieParser());
 
 // set view engine
 app.set('view engine', 'ejs');
