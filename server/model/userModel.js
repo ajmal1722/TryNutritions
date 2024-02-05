@@ -7,13 +7,11 @@ const Schema = new mongoose.Schema({
     },
     phone: {
         type: Number,
-        required: true,
-        unique: true
+        required: true
     },
     email: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     password: {
         type: String,
