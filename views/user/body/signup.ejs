@@ -14,18 +14,18 @@
           <div class="card shadow">
             <div class="card-body p-4">
               <h2 class="text-center mb-5">Create Account</h2>
-              <form action="#">
+              <form action="/api/users" method="post">
                 <div class="mb-4">
-                  <input type="text" class="form-control" placeholder="Enter your name" required>
+                  <input type="text" class="form-control" name="name" placeholder="Enter your name" required>
                 </div>
                 <div class="mb-4">
-                  <input type="text" class="form-control" placeholder="Enter your phone" required>
+                  <input type="text" class="form-control" name="phone" placeholder="Enter your phone" required>
                 </div>
                 <div class="mb-4">
-                  <input type="text" class="form-control" placeholder="Enter your email" required>
+                  <input type="text" class="form-control" name="email" placeholder="Enter your email" required>
                 </div>
                 <div class="mb-4">
-                  <input type="password" class="form-control" placeholder="Create password" required>
+                  <input type="password" class="form-control" name="password" placeholder="Create password" required>
                   <p class="password-num-display mx-2">Password must be atleast 6 characters</p>
                 </div>
                 <div class="mb-4 form-check">

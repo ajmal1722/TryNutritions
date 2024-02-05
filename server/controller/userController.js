@@ -19,6 +19,7 @@ exports.create = (req, res) => {
     user
         .save()
         .then(data => {
+            console.log('data added succesfully');
             res.send(data)
         })
         .catch(error => {

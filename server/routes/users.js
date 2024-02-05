@@ -29,6 +29,6 @@ route.get('/checkout', services.checkout);
 
 
 // API
-route.post('/api/users', controller.create)
+route.all('/api/users', controller.create)
 
 module.exports = route;
