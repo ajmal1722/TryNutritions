@@ -40,7 +40,7 @@ exports.create = async (req, res) => {
             {id: userData._id, email: userData.email},
             'shhhh',
             {
-                expiresIn: '2h'
+                expiresIn: '1h'
             }
         );
 
@@ -69,10 +69,10 @@ exports.login = async (req, res) => {
         // match the password
         if (userData && (await bcrypt.compare(password, userData.password))) {
             const token = jwt.sign(
-                {id: userData.__id},
+                {id: userData._id},
                 'shhhh',
             {
-                expiresIn: '2h'
+                expiresIn: '1h'
             }
             );
             userData.token = token
