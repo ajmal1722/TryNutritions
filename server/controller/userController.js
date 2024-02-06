@@ -52,19 +52,19 @@ exports.create = async (req, res) => {
     } catch (error) {
         console.error('Error message:', error.message);
         res.status(500).send({
-            message: 'Internal Server Error'
+            message: error.message
         });
     }
 };
 
 // Login
-exports.create = async (req, res) => {
+exports.login = async (req, res) => {
     try {
         // get all data from frontend
         const {email, password} = req.body;
 
         // find user in DB
-        const userData = await Userdb.findOne({email: body.email})
+        const userData = await Userdb.findOne({email})
 
         // match the password
         if (userData && (await bcrypt.compare(password, userData.password))) {
@@ -78,6 +78,19 @@ exports.create = async (req, res) => {
             userData.token = token
             userData.password = undefined
 
+            // cookie section
+            const options = {
+                expires: new Date(Date.now() + 3 * 24 * 60 * 60  * 1000),
+                httpOnly: true
+            };
+            res.status(201).cookie('token', token, options).json({
+                success: true,
+                token,
+                userData
+            })
+
+        } else {
+            res.status(401).json({ success: false, message: 'Invalid email or password' });
         }
 
         // send token in user cookie
