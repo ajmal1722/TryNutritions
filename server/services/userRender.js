@@ -2,9 +2,6 @@
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
 
-// login page
-exports.userLogin = (req, res) => res.render('user/body/login');
-
 // shop
 exports.shop = (req, res) => res.render('user/body/shop');
 

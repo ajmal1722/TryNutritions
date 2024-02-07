@@ -9,11 +9,11 @@ const controller = require('../controller/userController')
 // home route (home page)
 route.get('/',controller.homeRoutes);
 
+// login
+route.get('/login', controller.userLogin);
+
 // signup
 route.get('/signup', services.userSigup);
-
-// login
-route.get('/login', services.userLogin);
 
 // shop
 route.get('/shop', services.shop);

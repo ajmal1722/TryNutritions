@@ -6,13 +6,31 @@ const cookieParser = require('cookie-parser');
 
 // home route (home page)
 exports.homeRoutes = (req, res) => {
-    // console.log(req.cookie.jwt)
-    if (req.cookies.jwt) {
-        const verify = jwt.verify(req.cookies.jwt, 'shhhh')
-        console.log(verify.name)
-        res.status(201).render('user/body/sample', {username: verify.name});
-    } else {
-        res.redirect('/login')
+    try {
+        const verify = jwt.verify(req.cookies.jwt, 'shhhh');
+        res.status(201).render('user/body/sample', { username: verify.name });
+    } catch (error) {
+        if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
+            res.status(201).render('user/body/sample', { username: undefined });
+        } else {
+            res.status(500).send(error);
+        }
+    }
+    
+};
+
+// login page
+exports.userLogin = (req, res) => {
+    try {
+        if (req.cookies.jwt) {
+            const verify = jwt.verify(req.cookies.jwt, 'shhhh')
+            res.status(201).render('user/body/sample', {username: verify.name});
+        } else {
+            res.render('user/body/login')
+        }
+    } catch (error) {
+        res.status(500).send(error)
+        
     }
 };
 
