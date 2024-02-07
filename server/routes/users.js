@@ -27,6 +27,9 @@ route.get('/cart', services.cart);
 // checkout
 route.get('/checkout', services.checkout);
 
+// my account
+route.get('/myAccount', services.myAccount)
+
 
 // API
 route.post('/api/users', controller.create);

@@ -6,16 +6,17 @@ const cookieParser = require('cookie-parser');
 
 // home route (home page)
 exports.homeRoutes = (req, res) => {
-    try {
-        const verify = jwt.verify(req.cookies.jwt, 'shhhh');
-        res.status(201).render('user/body/sample', { username: verify.name });
-    } catch (error) {
-        if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
-            res.status(201).render('user/body/sample', { username: undefined });
-        } else {
-            res.status(500).send(error);
-        }
-    }
+    // try {
+    //     const verify = jwt.verify(req.cookies.jwt, 'shhhh');
+    //     res.status(201).render('user/body/sample', { username: verify.name });
+    // } catch (error) {
+    //     if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
+    //         res.status(201).render('user/body/sample', { username: undefined });
+    //     } else {
+    //         res.status(500).send(error);
+    //     }
+    // }
+    res.render('user/body/home');
     
 };
 
