@@ -3,6 +3,19 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 
+
+// home route (home page)
+exports.homeRoutes = (req, res) => {
+    // console.log(req.cookie.jwt)
+    if (req.cookies.jwt) {
+        const verify = jwt.verify(req.cookies.jwt, 'shhhh')
+        console.log(verify.name)
+        res.status(201).render('user/body/sample', {username: verify.name});
+    } else {
+        res.redirect('/login')
+    }
+};
+
 // create and save user (signup)
 exports.create = async (req, res) => {
     try {
@@ -37,7 +50,7 @@ exports.create = async (req, res) => {
 
         // generate a token for user
         const token = jwt.sign(
-            {id: userData._id, email: userData.email},
+            {id: userData._id, name: userData.name, email: userData.email},
             'shhhh',
             {
                 expiresIn: '1h'
@@ -47,7 +60,7 @@ exports.create = async (req, res) => {
         userData.token = token
         userData.password = undefined
         
-        res.status(201).json(userData);
+        res.status(201).render('user/body/sample', {username: userData.name});
 
     } catch (error) {
         console.error('Error message:', error.message);
@@ -69,7 +82,7 @@ exports.login = async (req, res) => {
         // match the password
         if (userData && (await bcrypt.compare(password, userData.password))) {
             const token = jwt.sign(
-                {id: userData._id},
+                { id: userData._id, name: userData.name },
                 'shhhh',
             {
                 expiresIn: '1h'
@@ -83,11 +96,8 @@ exports.login = async (req, res) => {
                 expires: new Date(Date.now() + 3 * 24 * 60 * 60  * 1000),
                 httpOnly: true
             };
-            res.status(201).cookie('token', token, options).json({
-                success: true,
-                token,
-                userData
-            })
+            res.cookie('jwt', token, options)
+            res.status(201).render('user/body/sample', {username: userData.name})
 
         } else {
             res.status(401).json({ success: false, message: 'Invalid email or password' });

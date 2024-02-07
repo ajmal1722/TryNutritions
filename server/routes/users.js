@@ -7,7 +7,7 @@ const services = require('../services/userRender');
 const controller = require('../controller/userController')
 
 // home route (home page)
-route.get('/',services.homeRoutes);
+route.get('/',controller.homeRoutes);
 
 // signup
 route.get('/signup', services.userSigup);

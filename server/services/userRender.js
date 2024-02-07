@@ -1,10 +1,8 @@
-// home route (home page)
-exports.homeRoutes = (req, res) => res.render('user/body/home');
 
-// signup
+// signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
 
-// login
+// login page
 exports.userLogin = (req, res) => res.render('user/body/login');
 
 // shop
