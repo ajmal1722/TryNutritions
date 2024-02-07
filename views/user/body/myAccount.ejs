@@ -1,0 +1,95 @@
+<!-- Include layoutHead -->
+<%- include('../partials/_layoutHead')%>
+<!-- /Include layoutHead -->
+
+
+
+<!-- include Header -->
+    <%- include('../partials/_header')%>
+<!-- include Header -->
+
+
+<!-- include single page header -->
+<%- include('../partials/_header2')%>
+<!--/include single page header -->
+
+<div class="container mt-5">
+    <div class="row">
+      <div class="col-md-3 mt-5">
+        <!-- Sidebar/Menu -->
+        <div class="list-group">
+          <a href="#" class="list-group-item list-group-item-action active">Dashboard</a>
+          <a href="#" class="list-group-item list-group-item-action">My Orders</a>
+          <a href="#" class="list-group-item list-group-item-action">My Profile</a>
+          <a href="#" class="list-group-item list-group-item-action">Settings</a>
+          <a href="#" class="list-group-item list-group-item-action">Logout</a>
+        </div>
+      </div>
+
+      <div class="col-md-9">
+        <!-- Content -->
+        <h2>My Account</h2>
+        <p>Welcome, Username!</p>
+
+        <!-- Example Content: Orders -->
+        <div class="card">
+          <div class="card-header">
+            Orders
+          </div>
+          <div class="card-body">
+            <!-- Display a list of orders here -->
+            <!-- Example: -->
+            <ul class="list-group">
+              <li class="list-group-item">Order #12345 - Date: [Order Date]</li>
+              <li class="list-group-item">Order #67890 - Date: [Order Date]</li>
+              <!-- Add more order items as needed -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- Example Content: Profile -->
+        <div class="card mt-3">
+          <div class="card-header">
+            Profile
+          </div>
+          <div class="card-body">
+            <!-- Display user profile information and edit options -->
+            <!-- Example: -->
+            <p>Name: [User Name]</p>
+            <p>Email: [User Email]</p>
+            <p>Phone: [User Phone]</p>
+            <p>Address: [User Address]</p>
+            <a href="#" class="btn btn-primary">Edit Profile</a>
+          </div>
+        </div>
+
+        <div id="addAddress" class="card mt-3">
+            <div class="card-header">
+              Add Address
+            </div>
+            <div class="card-body">
+              <!-- Display address information and edit options -->
+              <!-- Example: -->
+              <p>Address 1: [User Address 1]</p>
+              <p>Address 2: [User Address 2]</p>
+              <p>City: [User City]</p>
+              <p>State: [User State]</p>
+              <p>Zip Code: [User Zip Code]</p>
+              <a href="#" class="btn btn-primary">Edit Address</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Include Footer -->
+<%- include('../partials/_footer')%>
+<!-- /Include Footer -->
+
+
+ <!-- Include layoutFoot -->
+ <%- include('../partials/_layoutFoot')%>
+ <!-- /Include layoutFoot -->

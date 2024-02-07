@@ -7,13 +7,13 @@ const services = require('../services/userRender');
 const controller = require('../controller/userController')
 
 // home route (home page)
-route.get('/',services.homeRoutes);
+route.get('/',controller.homeRoutes);
+
+// login
+route.get('/login', controller.userLogin);
 
 // signup
 route.get('/signup', services.userSigup);
-
-// login
-route.get('/login', services.userLogin);
 
 // shop
 route.get('/shop', services.shop);
@@ -27,8 +27,13 @@ route.get('/cart', services.cart);
 // checkout
 route.get('/checkout', services.checkout);
 
+// my account
+route.get('/myAccount', services.myAccount)
+
 
 // API
-route.all('/api/users', controller.create)
+route.post('/api/users', controller.create);
+
+route.post('/api/login', controller.login)
 
 module.exports = route;
