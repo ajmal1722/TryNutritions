@@ -30,8 +30,11 @@ exports.userLogin = (req, res) => {
             res.render('user/body/login')
         }
     } catch (error) {
-        res.status(500).send(error)
-        
+        if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
+            res.status(201).render('user/body/login');
+        } else {
+            res.status(500).send(error);
+        }
     }
 };
 
