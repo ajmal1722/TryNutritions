@@ -29,7 +29,7 @@
       <div class="col-md-9">
         <!-- Content -->
         <h2>My Account</h2>
-        <p>Welcome, Username!</p>
+        <p>Welcome <%= userName %>!</p>
 
         <!-- Example Content: Orders -->
         <div class="card">
@@ -55,11 +55,26 @@
           <div class="card-body">
             <!-- Display user profile information and edit options -->
             <!-- Example: -->
-            <p>Name: [User Name]</p>
-            <p>Email: [User Email]</p>
-            <p>Phone: [User Phone]</p>
-            <p>Address: [User Address]</p>
-            <a href="#" class="btn btn-primary">Edit Profile</a>
+            <form id="profileForm">
+              <div class="form-group">
+                <label for="userName">Name:</label>
+                <input type="text" class="form-control" id="userName" value="[User Name]" readonly>
+              </div>
+              <div class="form-group">
+                <label for="userEmail">Email:</label>
+                <input type="email" class="form-control" id="userEmail" value="[User Email]" readonly>
+              </div>
+              <div class="form-group">
+                <label for="userPhone">Phone:</label>
+                <input type="tel" class="form-control" id="userPhone" value="[User Phone]" readonly>
+              </div>
+              <div class="form-group">
+                <label for="userAddress">Address:</label>
+                <textarea class="form-control" id="userAddress" rows="3" readonly>[User Address]</textarea>
+              </div>
+              <button type="button" class="btn btn-primary mt-3" onclick="enableEdit()">Edit Profile</button>
+              <button type="button" class="btn btn-success" onclick="saveProfile()" style="display: none;">Save Changes</button>
+            </form>
           </div>
         </div>
 
