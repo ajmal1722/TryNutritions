@@ -80,7 +80,7 @@ exports.create = async (req, res) => {
         userData.token = token
         userData.password = undefined
         
-        res.status(201).render('user/body/home', {username: userData.name});
+        res.status(201).redirect('/');
 
     } catch (error) {
         console.error('Error message:', error.message);
@@ -117,7 +117,7 @@ exports.login = async (req, res) => {
                 httpOnly: true
             };
             res.cookie('jwt', token, options)
-            res.status(201).render('user/body/home')
+            res.status(201).redirect('/')
 
         } else {
             res.status(401).json({ success: false, message: 'Invalid email or password' });
@@ -131,4 +131,9 @@ exports.login = async (req, res) => {
             message: 'Internal Server Error'
         });
     }
+}
+
+exports.logout = (req, res) => {
+    res.clearCookie('jwt'); // Clear the 'jwt' cookie
+    res.redirect('/'); // Redirect to the login page or any other desired page
 }
