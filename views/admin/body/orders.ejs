@@ -1,0 +1,251 @@
+
+<!-- Include sidebar -->
+<%- include('../partials/_sidebar.ejs')%>
+<!-- /Include sidebar -->
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		
+		
+		<!-- include NAVBAR -->
+		<%- include('../partials/_navbar.ejs')%>
+		<!-- include NAVBAR -->
+
+
+		<!-- MAIN -->
+
+<!-- NOTIFICATION BALLOON -->
+<div id="notificationBalloon" class="notification-balloon">
+    <span class="notification-content"><ul>
+      <li>notification 1</li>
+      <li>notification 1</li>
+      <li>notification 1</li>
+    </ul></span>
+  </div>
+		
+	<!-- PRODUCT ADDING PAGE -->
+<section class="container product-adding-page mt-5">
+    <form action="/add-product" method="post" enctype="multipart/form-data">
+      <div class="row">
+        <div class="col-lg-6">
+          <!-- Product Name -->
+          <div class="mb-3">
+            <label for="productName" class="form-label">Product Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="name"
+              placeholder="Enter product name"
+            />
+          </div>
+          <!-- Product Media -->
+          <div class="mb-3">
+            <label for="productMedia" class="form-label">Product Media</label>
+            <input type="file" class="form-control" id="productMedia" name="image" />
+          </div>
+          <!-- Pricing -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="price"
+                  placeholder="Enter price"
+                  name="mrp"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="discountedPrice" class="form-label">Discounted Price</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="discountedPrice"
+                  placeholder="Qty"
+                  name="price"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Size -->
+         <div class="mb-3">
+                    
+          </div>
+          <div class="row">
+            <label for="Size">Stock </label>
+            <div class="col-md-1 mt-2">
+              <div class="mb-3">
+                <label class="mt-2" for="">S</label>
+              </div>
+            </div>
+            <div class="col-md-3 mt-2">
+              <div class="mb-3">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="discountedPrice"
+                  placeholder="Qty"
+                  value="0"
+                  name="sizes[S]"
+                />
+              </div>
+            </div>
+    
+            <div class="col-md-1 mt-2">
+              <div class="mb-3">
+                <label class="mt-2" for="">M</label>
+              </div>
+            </div>
+            <div class="col-md-3 mt-2">
+              <div class="mb-3">
+                <input
+                  type="number"
+                  class="form-control"
+                  id=""
+                  placeholder=""
+                  value="0"
+                  name="sizes[M]"
+                />
+              </div>
+            </div>
+    
+            <div class="col-md-1 mt-2">
+              <div class="mb-3">
+                <label class="mt-2" for="">L</label>
+              </div>
+            </div>
+            <div class="col-md-3 mt-2">
+              <div class="mb-3">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="discountedPrice"
+                  placeholder="Qty"
+                  value="0"
+                  name="sizes[L]"
+                />
+              </div>
+            </div>
+    
+            <div class="col-md-1 mt-2">
+              <div class="mb-3">
+                <label class="mt-2" for="">XL</label>
+              </div>
+            </div>
+            <div class="col-md-3 mt-2">
+              <div class="mb-3">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="discountedPrice"
+                  placeholder="Qty"
+                  value="0"
+                  name="sizes[XL]"
+                />
+              </div>
+            </div>
+    
+            <div class="col-md-1 mt-2">
+              <div class="mb-3">
+                <label class="mt-2" for="">XXL</label>
+              </div>
+            </div>
+            <div class="col-md-3 mt-2">
+              <div class="mb-3">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="discountedPrice"
+                  placeholder="Qty"
+                  value="0"
+                  name="sizes[XXL]"
+                />
+              </div>
+            </div>
+          </div>
+    
+          <!-- Variants -->
+        <div class="mb-3" id="variants-container">
+        <label for="variants" class="form-label">Variants</label>
+        <select class="form-select mb-2" id="productCategory" name="category">
+              <option selected>Select varient</option>
+              <option value="Home">Home</option>
+              <option value="Home">Away</option>
+              <option value="Third">Third</option>
+              <option value="Fourth">Fourth</option>
+              <option value="GK">GK</option>
+              <!-- Add more category options as needed -->
+            </select>
+            <div class="col-md-6">
+                      <input type="text" class="form-control" name="variants[0][productLink]" placeholder="Search Product">
+                      <div id="search-results-0"></div>
+                    </div>
+        <div id="variant-inputs">
+        <!-- Variant input fields will be added here dynamically -->
+    
+        </div>
+        <button type="button" class="btn btn-primary mt-2" onclick="addVariant()">Add Variant</button>
+        </div>
+        </div>
+        
+        <div class="col-lg-6">
+          <!-- Product Description -->
+          <div class="mb-3">
+            <label for="productDescription" class="form-label">Product Description</label>
+            <textarea
+              class="form-control"
+              id="productDescription"
+              rows="4"
+              placeholder="Enter product description"
+              name="description"
+            ></textarea>
+          </div>
+          <!-- Advanced Description -->
+          <div class="mb-3">
+            <label for="advancedDescription" class="form-label">Advanced Description</label>
+            <textarea
+              class="form-control"
+              id="advancedDescription"
+              rows="4"
+              placeholder="Enter advanced description"
+              name="richdescription"
+            ></textarea>
+          </div>
+          <!-- Product Category -->
+          <div class="mb-3">
+            <label for="productCategory" class="form-label">Product Category</label>
+            <select class="form-select" id="productCategory" name="category">
+              <option selected>Select category</option>
+              <option value="1">Category 1</option>
+              <option value="2">Category 2</option>
+              <!-- Add more category options as needed -->
+            </select>
+          </div>
+          <!-- Product Subcategory -->
+          <div class="mb-3">
+            <label for="productSubcategory" class="form-label" name="category">Product Subcategory</label>
+            <select class="form-select" id="productSubcategory">
+              <option selected>Select subcategory</option>
+              <option value="1">Subcategory 1</option>
+              <option value="2">Subcategory 2</option>
+              <!-- Add more subcategory options as needed -->
+            </select>
+          </div>
+          <!-- Submit Button -->
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary mx-auto d-block mt-1 mb-3">Add Product</button>
+      </form>
+		<!-- MAIN -->
+	</section>
+	<!-- CONTENT -->
+	
+
+	<script src="/admin/js/script.js"></script>
+</body>
+</html>

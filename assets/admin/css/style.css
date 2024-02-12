@@ -64,6 +64,9 @@ body {
 	overflow-x: hidden;
 	scrollbar-width: none;
 }
+.icon-box{
+	padding-left: 0;
+}
 #sidebar::--webkit-scrollbar {
 	display: none;
 }
@@ -589,4 +592,33 @@ body {
 	#content main .table-data .todo .todo-list {
 		min-width: 420px;
 	}
+}
+
+/* extra css added  */
+
+/* Notification Balloon Styles */
+.notification-balloon {
+  position: absolute;
+  top: 50px; /* Adjust the distance from the top as needed */
+  left: 90%; /* Center horizontally */
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 10px 20px;
+  border-radius: 10px;
+  z-index: 1000; /* Ensure the balloon is above other content */
+  display: none; /* Hidden by default */
+}
+
+.notification-content {
+  color: #333333;
+}
+
+.close-btn {
+  background-color: transparent;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 10px;
 }
