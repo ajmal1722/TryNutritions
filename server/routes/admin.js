@@ -27,4 +27,6 @@ route.get('/settings', services.settings);
 
 route.get('/products', services.products);
 
+route.post('/signup', controller.signup);
+
 module.exports = route;
