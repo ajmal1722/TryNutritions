@@ -22,7 +22,7 @@ exports.checkAuth = async (req, res, next) => {
         // check if the user exists in database
         const user = await admin.findById(decoded.id)
         if (!user){
-            return res.status(200).redirect('/admin/login')
+            return res.status(200).redirect('/login')
         }
 
         req.user = user
@@ -36,3 +36,15 @@ exports.checkAuth = async (req, res, next) => {
         }
     }
 }
+
+// Middleware to check if the user is authenticated
+exports.checkAuthenticated = (req, res, next) => {
+    // Check if the user is authenticated (has a valid token)
+    if (req.cookies.jwt) {
+        // Redirect to the dashboard
+        return res.redirect('/admin');
+    }
+
+    // If not authenticated, proceed to the next middleware or route handler
+    next();
+};

@@ -11,7 +11,7 @@ const services = require('../services/adminRender')
 route.get('/admin/', adminAuth.checkAuth, services.admindashboard);
 
 // admin login
-route.get('/login', services.adminLogin);
+route.get('/login', adminAuth.checkAuthenticated, services.adminLogin);
 
 // category
 route.get('/category', services.category)
