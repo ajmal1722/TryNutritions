@@ -1,5 +1,6 @@
 const express = require('express');
 const route = express.Router();
+const adminAuth = require('../middlewares/adminAuth');
 
 // require controller
 const controller = require('../controller/adminController');
@@ -7,7 +8,10 @@ const controller = require('../controller/adminController');
 const services = require('../services/adminRender')
 
 // admin dashboard
-route.get('/admin/', services.admindashboard);
+route.get('/admin/', adminAuth.checkAuth, services.admindashboard);
+
+// admin login
+route.get('/login', services.adminLogin);
 
 // category
 route.get('/category', services.category)
@@ -28,5 +32,7 @@ route.get('/settings', services.settings);
 route.get('/products', services.products);
 
 route.post('/signup', controller.signup);
+
+route.post('/login', controller.login);
 
 module.exports = route;
