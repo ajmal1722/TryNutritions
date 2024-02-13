@@ -13,7 +13,7 @@ exports.checkAuth = async (req, res, next) => {
 
         // If token is not present redirect to login page
         if (!token) {
-            return res.status(200).redirect('/login')
+            return res.status(200).redirect('/admin/login')
         }
 
         // Verify token
@@ -22,7 +22,7 @@ exports.checkAuth = async (req, res, next) => {
         // check if the user exists in database
         const user = await admin.findById(decoded.id)
         if (!user){
-            return res.status(200).redirect('/login')
+            return res.status(200).redirect('/admin/login')
         }
 
         req.user = user
@@ -30,7 +30,7 @@ exports.checkAuth = async (req, res, next) => {
         next()
     } catch (error) {
         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError'){
-            res.redirect('/login')
+            res.redirect('/admin/login')
         } else {
             res.status(500).send(error);
         }

@@ -35,4 +35,5 @@ route.post('/signup', controller.signup);
 
 route.post('/login', controller.login);
 
+route.get('/logout', controller.logout);
 module.exports = route;
