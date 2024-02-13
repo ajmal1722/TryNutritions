@@ -7,10 +7,13 @@ const services = require('../services/userRender');
 const controller = require('../controller/userController')
 
 // home route (home page)
-route.get('/',controller.homeRoutes);
+route.get('/', controller.homeRoutes);
 
 // login
 route.get('/login', controller.userLogin);
+
+// logout
+route.get('/logout', controller.logout);
 
 // signup
 route.get('/signup', services.userSigup);
@@ -28,7 +31,10 @@ route.get('/cart', services.cart);
 route.get('/checkout', services.checkout);
 
 // my account
-route.get('/myAccount', services.myAccount)
+route.get('/myAccount', services.myAccount);
+
+// contact us
+route.get('/contact', services.contact)
 
 
 // API

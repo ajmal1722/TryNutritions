@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="/users/css/signup.css">
+</head>
+
+<body class="">
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-12 col-sm-10 col-md-6">
+                <div class="card shadow">
+                    <div class="card-body p-4">
+                        <h2 class="text-center heading mb-5">Sign in</h2>
+                        <form id="signInForm" action="/admin/login" method="post" onsubmit="return validateForm()">
+                            <div class="mb-4">
+                                <input type="text" class="form-control" name="email" id="email" placeholder="Your email or phone number">
+                                <span id="emailError" class="text-danger"></span>
+                            </div>
+                            <div class="mb-4">
+                                <input type="password" class="form-control" name="password" id="password" placeholder="Create password">
+                                <span id="passwordError" class="text-danger"></span>
+                            </div>
+                            <div class="mb-4">
+                                <button type="submit" class="btn w-100">Sign in</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        function validateForm() {
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+
+            let emailValid = /^[\w.-]+@[\w-]+\.+[\w-]{2,}$/.test(email);
+            let passwordValid = /^[A-Za-z\d]{6,}$/.test(password);
+
+            // Reset error messages
+            document.getElementById("emailError").innerHTML = "";
+            document.getElementById("passwordError").innerHTML = "";
+
+            if (!emailValid) {
+                document.getElementById("emailError").innerHTML =
+                    "Enter a valid email or phone number";
+            }
+
+            if (!passwordValid) {
+                document.getElementById("passwordError").innerHTML =
+                    "Password must be 6 characters";
+            }
+
+            // If any validation fails, return false
+            return emailValid && passwordValid;
+        }
+    </script>
+</body>
+
+</html>

@@ -6,18 +6,16 @@ const cookieParser = require('cookie-parser');
 
 // home route (home page)
 exports.homeRoutes = (req, res) => {
-    // try {
-    //     const verify = jwt.verify(req.cookies.jwt, 'shhhh');
-    //     res.status(201).render('user/body/sample', { username: verify.name });
-    // } catch (error) {
-    //     if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
-    //         res.status(201).render('user/body/sample', { username: undefined });
-    //     } else {
-    //         res.status(500).send(error);
-    //     }
-    // }
-    res.render('user/body/home');
-    
+    try {
+        const verify = jwt.verify(req.cookies.jwt, 'shhhh');
+        res.status(201).render('user/body/home', { username: verify.name });
+    } catch (error) {
+        if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
+            res.status(201).render('user/body/home', { username: undefined });
+        } else {
+            res.status(500).send(error);
+        }
+    }
 };
 
 // login page
@@ -25,7 +23,7 @@ exports.userLogin = (req, res) => {
     try {
         if (req.cookies.jwt) {
             const verify = jwt.verify(req.cookies.jwt, 'shhhh')
-            res.status(201).render('user/body/sample', {username: verify.name});
+            res.status(201).render('user/body/home', {username: verify.name});
         } else {
             res.render('user/body/login')
         }
@@ -82,7 +80,7 @@ exports.create = async (req, res) => {
         userData.token = token
         userData.password = undefined
         
-        res.status(201).render('user/body/sample', {username: userData.name});
+        res.status(201).redirect('/');
 
     } catch (error) {
         console.error('Error message:', error.message);
@@ -119,7 +117,7 @@ exports.login = async (req, res) => {
                 httpOnly: true
             };
             res.cookie('jwt', token, options)
-            res.status(201).render('user/body/sample', {username: userData.name})
+            res.status(201).redirect('/')
 
         } else {
             res.status(401).json({ success: false, message: 'Invalid email or password' });
@@ -133,4 +131,9 @@ exports.login = async (req, res) => {
             message: 'Internal Server Error'
         });
     }
+}
+
+exports.logout = (req, res) => {
+    res.clearCookie('jwt'); // Clear the 'jwt' cookie
+    res.redirect('/'); // Redirect to the login page or any other desired page
 }

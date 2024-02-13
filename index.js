@@ -8,6 +8,9 @@ const path = require('path');
 const connectDB = require('./server/database/connection');
 const cookieParser = require('cookie-parser');
 
+// importing route page of admin
+const adminRoute = require('./server/routes/admin')
+
 const app = express();
 
 dotenv.config({ path: 'config.env' });
@@ -34,7 +37,9 @@ app.use('/js',express.static(path.resolve(__dirname,'assets/js')));
 app.use('/img',express.static(path.resolve(__dirname,'assets/img')));
 
 // load routers
-app.use('/', require('./server/routes/users'))
+app.use('/', require('./server/routes/users'));
+app.use('/', require('./server/routes/admin'));
+app.use('/admin', adminRoute);
 
 app.listen(PORT, () => {
     console.log(`server is running on http://localhost:${PORT}`)
