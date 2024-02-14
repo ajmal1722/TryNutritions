@@ -31,6 +31,8 @@ route.get('/settings', services.settings);
 
 route.get('/products', services.products);
 
+route.get('/users', services.users);
+
 route.post('/signup', controller.signup);
 
 route.post('/login', controller.login);

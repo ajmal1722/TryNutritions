@@ -19,3 +19,5 @@ exports.banners = (req, res) => res.render('admin/body/banner');
 exports.payments = (req, res) => res.render('admin/body/payments');
 
 exports.settings = (req, res) => res.render('admin/body/settings');
+
+exports.users = (req, res) => res.render('admin/body/users')
