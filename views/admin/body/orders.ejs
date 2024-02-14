@@ -25,17 +25,18 @@
   </div>
 		
 	<!-- PRODUCT ADDING PAGE -->
+
+<main>
+    <!-- include HEAD TITLE -->
+<%- include('../partials/_headTitle.ejs')%>
+<!-- /include HEAD TITLE -->   
+</div>
+</main>
+
 <section class="container product-adding-page mt-5">
+
   <div class="container">
-    <h2 class="mb-4">Orders Management</h2>
-
-    <!-- Add Order Button -->
-    <!-- <div class="mb-3 add-order-button">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addOrderModal">
-            Add Order
-        </button>
-    </div> -->
-
+    
     <!-- Orders Table -->
     <div class="table-responsive">
         <table class="table table-bordered text-center">
@@ -77,35 +78,7 @@
     </div>
 </div>
 
-<!-- Add Order Modal (for demonstration purposes) -->
-<div class="modal fade" id="addOrderModal" tabindex="-1" aria-labelledby="addOrderModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addOrderModalLabel">Add Order</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Form for adding an order (for demonstration purposes) -->
-                <form>
-                    <div class="mb-3">
-                        <label for="customerName" class="form-label">Customer Name:</label>
-                        <input type="text" class="form-control" id="customerName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="totalAmount" class="form-label">Total Amount:</label>
-                        <input type="text" class="form-control" id="totalAmount" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="orderStatus" class="form-label">Order Status:</label>
-                        <input type="text" class="form-control" id="orderStatus" required>
-                    </div>
-                    <button type="button" class="btn btn-primary">Add Order</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->

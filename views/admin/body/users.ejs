@@ -15,51 +15,56 @@
 
 		<!-- MAIN -->
 
-        <div class="container">
+        <main>
             <div class="container">
-                <h2 class="m-4">User Management</h2>
-            
-                <!-- User Table -->
-                <div class="table-responsive">
-                    <table class="table table-striped text-center">
-                        <thead>
-                        <tr>
-                            <th class="py-3">User ID</th>
-                            <th class="py-3">Username</th>
-                            <th class="py-3">Email</th>
-                            <th class="py-3">Status</th>
-                            <th class="py-3">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- Sample User Rows -->
-                        <tr>
-                            <td>1</td>
-                            <td>john_doe</td>
-                            <td>john@example.com</td>
-                            <td>Active</td>
-                            <td>
-                                <!-- View and Block buttons -->
-                                <button type="button" class="btn btn-info">View</button>
-                                <button type="button" class="btn btn-danger">Block</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>jane_smith</td>
-                            <td>jane@example.com</td>
-                            <td>Blocked</td>
-                            <td>
-                                <!-- View and Block buttons -->
-                                <button type="button" class="btn btn-info">View</button>
-                                <button type="button" class="btn btn-danger">Block</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div> 
-        </div>
+                <div class="container">
+                        <!-- include HEAD TITLE -->
+                        <%- include('../partials/_headTitle.ejs')%>
+                        <!-- /include HEAD TITLE -->   
+                    </div>
+                
+                    <!-- User Table -->
+                    <div class="table-responsive">
+                        <table class="table table-striped text-center">
+                            <thead>
+                            <tr>
+                                <th class="py-3">User ID</th>
+                                <th class="py-3">Username</th>
+                                <th class="py-3">Email</th>
+                                <th class="py-3">Status</th>
+                                <th class="py-3">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Sample User Rows -->
+                            <tr>
+                                <td>1</td>
+                                <td>john_doe</td>
+                                <td>john@example.com</td>
+                                <td>Active</td>
+                                <td>
+                                    <!-- View and Block buttons -->
+                                    <button type="button" class="btn btn-info">View</button>
+                                    <button type="button" class="btn btn-danger">Block</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>jane_smith</td>
+                                <td>jane@example.com</td>
+                                <td>Blocked</td>
+                                <td>
+                                    <!-- View and Block buttons -->
+                                    <button type="button" class="btn btn-info">View</button>
+                                    <button type="button" class="btn btn-danger">Block</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div> 
+            </div>
+        </main>
        
 
         <!-- /MAIN -->
