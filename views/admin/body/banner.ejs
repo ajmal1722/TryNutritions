@@ -21,14 +21,13 @@
                     <!-- include HEAD TITLE -->
                     <%- include('../partials/_headTitle.ejs')%>
                     <!-- /include HEAD TITLE -->
+
+                    <!-- Add Banner Button -->
+                    <a data-bs-toggle="modal" data-bs-target="#addBannerModal" class="btn-download">
+                        <span class="text mx-md-2">Add Banner</span>
+                    </a>
                 </div>
             
-                <!-- Add Banner Button -->
-                <div class="mb-3 mx-md-3 add-banner-button d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBannerModal">
-                        Add Banner
-                    </button>
-                </div>
             
                 <!-- Banner Table -->
                 <div class="table-responsive">
@@ -66,7 +65,7 @@
             </div>
             
             <!-- Add Banner Modal -->
-            <div class="modal fade" id="addBannerModal" tabindex="-1" aria-labelledby="addBannerModalLabel" aria-hidden="true">
+            <div class="modal fade modal-dialog-centered" id="addBannerModal" tabindex="-1" aria-labelledby="addBannerModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">

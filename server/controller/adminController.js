@@ -59,12 +59,17 @@ exports.login = async (req, res) => {
             const token = jwt.sign(
                 { id: userData._id, email: userData.email },
                 process.env.SECRET_STR,
-                { expiresIn: '1h' }
+                { expiresIn: '3d' }
             )
             userData.token = token
 
-            // cookie section 
-            res.cookie('jwt', token, { httpOnly: true })
+            // cookie section
+            const options = {
+                expires: new Date(Date.now() + 3 * 24 * 60 * 60  * 1000),
+                httpOnly: true
+            };
+
+            res.cookie('jwt', token, options)
             res.status(201).redirect('/admin');
         } else {
             res.status(401).json({ success: false, message: 'Invalid email or password' });

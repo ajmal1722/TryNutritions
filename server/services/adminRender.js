@@ -1,23 +1,25 @@
 // admin dashboard
-exports.admindashboard = (req, res) => res.render('admin/body/dashboard');
+exports.admindashboard = (req, res) => res.render('admin/body/dashboard', { pageName: 'Home' });
 
 // admin login
 exports.adminLogin = (req, res) => res.render('admin/body/login');
 
 // orders
-exports.orders = (req, res) => res.render('admin/body/orders')
+exports.orders = (req, res) => res.render('admin/body/orders', { pageName: 'Orders' })
 
 // category
-exports.category = (req, res) => res.render('admin/body/category');
+exports.category = (req, res) => res.render('admin/body/category', { pageName: 'Category' });
 
-exports.products = (req, res) => res.render('admin/body/products');
+exports.products = (req, res) => res.render('admin/body/products', { pageName: 'Products' });
 
-exports.coupons = (req, res) => res.render('admin/body/coupons');
+exports.addProducts = (req, res) => res.render('admin/body/add_products', { pageName: 'Add Products' })
 
-exports.banners = (req, res) => res.render('admin/body/banner');
+exports.coupons = (req, res) => res.render('admin/body/coupons', { pageName: 'Coupons' });
 
-exports.payments = (req, res) => res.render('admin/body/payments');
+exports.banners = (req, res) => res.render('admin/body/banner', { pageName: 'Banners' });
 
-exports.settings = (req, res) => res.render('admin/body/settings');
+exports.payments = (req, res) => res.render('admin/body/payments', { pageName: 'Payments' });
 
-exports.users = (req, res) => res.render('admin/body/users')
+exports.settings = (req, res) => res.render('admin/body/settings', { pageName: 'Settings' });
+
+exports.users = (req, res) => res.render('admin/body/users', { pageName: 'Users' })
