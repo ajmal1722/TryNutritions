@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const bodyparser = require('body-parser');
 const path = require('path');
+const multer = require('multer');
 
 // importing connectDB
 const connectDB = require('./server/database/connection');
@@ -12,6 +13,7 @@ const cookieParser = require('cookie-parser');
 const adminRoute = require('./server/routes/admin')
 
 const app = express();
+const upload = multer();
 
 dotenv.config({ path: 'config.env' });
 const PORT = process.env.PORT || 8080
@@ -24,6 +26,9 @@ connectDB();
 
 // parse request to body-parser
 app.use(bodyparser.urlencoded({ extended: true }));
+
+// This middleware is used to handle multipart/form-data with no files
+app.use(upload.none());
 
 app.use(cookieParser());
 

@@ -44,7 +44,7 @@
                   </div>
                   <!-- Product Media -->
                   <div class="mb-3">
-                    <label for="productMedia" class="form-label">Product Media</label>
+                    <label for="productMedia" class="form-label">Product Image</label>
                     <input type="file" class="form-control" id="productMedia" name="productImage" />
                   </div>
                   <!-- Variant -->
@@ -81,7 +81,7 @@
                           class="form-control"
                           id="price"
                           placeholder="Enter price"
-                          name="price"
+                          name="sellingPrice"
                         />
                       </div>
                     </div>
@@ -91,7 +91,34 @@
                     <label for="size" class="form-label">Stock</label><br>
                     <div class="col-md-2">
                       <label for="S"></label>
-                      <input type="number" class="form-control" id="S" name="stock.S">
+                      <input type="number" class="form-control" id="S" name="stock">
+                    </div>
+                  </div>
+                  <!-- Brand and Manufactured by -->
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="brand" class="form-label">Brand</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="brand"
+                          placeholder="Enter Brand name"
+                          name="brand"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="manufacture" class="form-label">Price</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="manufacture"
+                          placeholder="manufactured by"
+                          name="manufacture"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -115,27 +142,27 @@
                       id="advancedDescription"
                       rows="4"
                       placeholder="Enter advanced description"
-                      name="richdescription"
+                      name="advancedDescription"
                     ></textarea>
                   </div>
                   <!-- Product Category -->
-                  <div class="mb-3">
+                  <!-- <div class="mb-3">
                     <label for="productCategory" class="form-label">Product Category</label>
                     <select class="form-select" id="productCategory" name="category">
                       {{#each data}}
                       <option value="{{this.name}}">{{this.name}}</option>
                       {{/each}}
                     </select>
-                  </div>
+                  </div> -->
                   <!-- Product Subcategory -->
-                  <div class="mb-3">
+                  <!-- <div class="mb-3">
                     <label for="productSubcategory" class="form-label">Product Subcategory</label>
                     <select class="form-select" id="productSubcategory" name="subcategory">
                       {{#each file}}
                       <option value="{{this.subCategoryName}}">{{this.subCategoryName}}</option>
                       {{/each}}
                     </select>
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <button type="submit" class="btn btn-success mx-auto d-block my-4">Add Product</button>

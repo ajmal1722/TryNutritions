@@ -6,16 +6,12 @@ const Schema = new mongoose.Schema({
         required: true
     },
     category: {
-        type: String,
-        required: true
+        type: String
     },
     brand: {
         type: String
     },
     manufacture: {
-        type: String
-    },
-    description: {
         type: String
     },
     mrp: {
@@ -26,7 +22,16 @@ const Schema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    image: {
+    productImage: {
+        type: String
+    },
+    stock: {
+        type: Number
+    },
+    description: {
+        type: String
+    },
+    advancedDescription: {
         type: String
     }
 })

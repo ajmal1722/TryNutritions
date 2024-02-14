@@ -92,7 +92,7 @@ exports.logout = async (req, res) => {
 // add products
 exports.addProduct = async (req, res) => {
     try {
-        // const datas = {
+        // const data = {
         //     name: req.body.name,
         //     category: req.body.category,
         //     brand: req.body.brand,
@@ -102,13 +102,11 @@ exports.addProduct = async (req, res) => {
         //     sellingPrice: req.body.sellingPrice
         // }
 
-        const datas = req.body;
-        const create = await products.create(req.body)
+        const data = req.body;
+        console.log(data)
+        const create = await products.create(data);
     
-        res.status(200).json({
-            status: 'success',
-            datas: {...datas}
-        })
+        res.status(200).send('success');
     } catch (error){
         res.json({
             status: 'failed',
