@@ -1,4 +1,6 @@
 const admin = require('../model/adminModel');
+const products = require('../model/products');
+
 require('dotenv').config();
 
 const bcrypt = require('bcryptjs');
@@ -84,5 +86,33 @@ exports.login = async (req, res) => {
 
 exports.logout = async (req, res) => {
     res.clearCookie('jwt');
-    res.redirect('/')
+    res.redirect('/');
+}
+
+// add products
+exports.addProduct = async (req, res) => {
+    try {
+        // const datas = {
+        //     name: req.body.name,
+        //     category: req.body.category,
+        //     brand: req.body.brand,
+        //     manufacture: req.body.manufacture,
+        //     description: req.body.description,
+        //     mrp: req.body.mrp,
+        //     sellingPrice: req.body.sellingPrice
+        // }
+
+        const datas = req.body;
+        const create = await products.create(req.body)
+    
+        res.status(200).json({
+            status: 'success',
+            datas: {...datas}
+        })
+    } catch (error){
+        res.json({
+            status: 'failed',
+            message: error.message
+        })
+    }
 }

@@ -40,4 +40,7 @@ route.post('/signup', controller.signup);
 route.post('/login', controller.login);
 
 route.get('/logout', controller.logout);
+
+route.post('/addProducts', controller.addProduct);
+
 module.exports = route;
