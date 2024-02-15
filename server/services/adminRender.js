@@ -22,4 +22,4 @@ exports.payments = (req, res) => res.render('admin/body/payments', { pageName: '
 
 exports.settings = (req, res) => res.render('admin/body/settings', { pageName: 'Settings' });
 
-exports.users = (req, res) => res.render('admin/body/users', { pageName: 'Users' })
+exports.users = (req, res) => res.render('admin/body/users', { pageName: 'Users' });
