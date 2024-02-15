@@ -1,6 +1,7 @@
 const express = require('express');
 const route = express.Router();
 const adminAuth = require('../middlewares/adminAuth');
+const mullter = require('../middlewares/multer');
 
 // require controller
 const controller = require('../controller/adminController');
@@ -41,6 +42,6 @@ route.post('/login', controller.login);
 
 route.get('/logout', controller.logout);
 
-route.post('/addProducts', controller.addProduct);
+route.post('/addProducts', mullter.single('productImage'), controller.addProduct);
 
 module.exports = route;

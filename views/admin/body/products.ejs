@@ -37,21 +37,35 @@
                     <thead>
                       <tr class="">
                         <th scope="col">Image</th>
-                        <th scope="col">Name</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Brand</th>
+                        <th scope="col">manufacture</th>
+                        <th scope="col">MRP</th>
                         <th scope="col">Price</th>
+                        <th scope="col">Stock</th>
                         <th scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td class="w-25"><img src="/images/product-09.jpg" alt="Product 1" class="rounded img-thumbnail h-25 w-25"></td>
-                        <td>Product 1</td>
-                        <td>$19.99</td>
-                        <td>
-                          <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i> Edit</button>
-                          <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</button>
-                        </td>
-                      </tr>
+
+                      <% products.forEach(item => { %>
+                        <tr>
+                          <td class="w-25"><img src="<%= item.productImage %>" alt="Product 1" class="rounded img-thumbnail h-25 w-25"></td>
+                          <td><%= item.name %></td>
+                          <td><%= item.category %></td>
+                          <td><%= item.brand %></td>
+                          <td><%= item.manufacture %></td>
+                          <td><%= item.mrp %></td>
+                          <td><%= item.sellingPrice %></td>
+                          <td><%= item.stock %></td>
+                          <td>
+                            <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</button>
+                          </td>
+                        </tr>
+                      <% }) %> 
+                      
                       <tr>
                         <td><img src="/images/product-10.jpg" alt="Product 2" class="rounded img-thumbnail w-25"></td>
                         <td>Product 2</td>
