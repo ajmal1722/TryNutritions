@@ -4,12 +4,12 @@ const mullter = require('multer');
 const storage = mullter.diskStorage({
     destination: (req, file, cb) => {
          // Specify the destination folder for uploaded files
-        cb(null, 'uploads');
+        cb(null, 'assets/images');
     }, 
     filename: (req, file, cb) => {
         const ext = file.originalname.substr(file.originalname.lastIndexOf('.'))
 
-        cb(null, file.filename + '-' + Date.now() + ext)
+        cb(null, file.fieldname + '-' + Date.now() + ext)
     }
 });
 

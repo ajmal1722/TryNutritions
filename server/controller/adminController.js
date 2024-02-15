@@ -101,12 +101,12 @@ exports.addProduct = async (req, res) => {
         //     mrp: req.body.mrp,
         //     sellingPrice: req.body.sellingPrice
         // }
-
+        const files = req.file;
         const data = req.body;
         console.log(data)
         const create = await products.create(data);
     
-        res.status(200).send('success');
+        res.status(200).json(files);
     } catch (error){
         res.json({
             status: 'failed',
