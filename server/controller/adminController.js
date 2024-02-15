@@ -1,5 +1,6 @@
 const admin = require('../model/adminModel');
 const products = require('../model/products');
+const fs = require('fs');
 
 require('dotenv').config();
 
@@ -103,12 +104,30 @@ exports.addProduct = async (req, res) => {
         // }
         const files = req.file;
         const data = req.body;
+
+        // Read the image file as a Buffer
+        const imgBuffer = fs.readFileSync(files.path);
+
+        // Convert the Buffer to a base64-encoded string
+        const imgBase64 = imgBuffer.toString('base64');
+        
         console.log(data)
-        const create = await products.create(data);
+        const create = await products.create({
+            ...data,
+            productImage: {
+                filename: files.originalname,
+                contentType: files.mimetype,
+                imageBase64: imgBase64
+            }
+        });
     
-        res.status(200).json(files);
+        res.status(200).json({
+            status: 'success',
+            message: 'Product added successfully',
+            product: create
+        });
     } catch (error){
-        res.json({
+        res.status(500).json({
             status: 'failed',
             message: error.message
         })

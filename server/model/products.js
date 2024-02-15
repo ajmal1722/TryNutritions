@@ -23,7 +23,9 @@ const Schema = new mongoose.Schema({
         required: true
     },
     productImage: {
-        type: String
+        filename: String,
+        contentType: String,
+        imageBase64: String
     },
     stock: {
         type: Number
