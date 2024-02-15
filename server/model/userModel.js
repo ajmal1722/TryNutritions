@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: [true, 'Name is required field']
     },
     phone: {
         type: Number,

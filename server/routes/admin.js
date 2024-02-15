@@ -31,8 +31,16 @@ route.get('/settings', services.settings);
 
 route.get('/products', services.products);
 
+route.get ('/addProducts', services.addProducts);
+
+route.get('/users', services.users);
+
 route.post('/signup', controller.signup);
 
 route.post('/login', controller.login);
+
+route.get('/logout', controller.logout);
+
+route.post('/addProducts', controller.addProduct);
 
 module.exports = route;

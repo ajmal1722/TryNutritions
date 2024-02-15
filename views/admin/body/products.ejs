@@ -15,12 +15,22 @@
 
 		<!-- MAIN -->
 
-        <div class="container-fluid product-management mt-5">
+        
+         
+        <main>
+          <!-- include HEAD TITLE -->
+          <%- include('../partials/_headTitle.ejs')%>
+          <!-- /include HEAD TITLE -->
+
+            <a href="/admin/addProducts" class="btn-download">
+              <span class="text mx-md-2">Add Products</span>
+            </a>
+          </div>
+
+          <div class="container my-4">
             <div class="row justify-content-center">
-              <div class="col-md-10">
-                <div class="add-product mb-4 d-flex justify-content-end align-content-end">
-                  <a href="addproduct"><button class="btn btn-primary btn-lg"><i class="fas fa-plus"></i> Add Product</button></a>
-                </div>
+              <div class="">
+                
           
                 <div class="product-list table-responsive">
                   <table class="table table-striped text-center">
@@ -57,8 +67,7 @@
               </div>
             </div>
           </div>
-         
-        
+        </main>
         
         
 
