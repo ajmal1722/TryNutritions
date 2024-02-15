@@ -13,7 +13,7 @@ const cookieParser = require('cookie-parser');
 const adminRoute = require('./server/routes/admin')
 
 const app = express();
-const upload = multer();
+// const upload = multer();
 
 dotenv.config({ path: 'config.env' });
 const PORT = process.env.PORT || 8080
@@ -28,7 +28,7 @@ connectDB();
 app.use(bodyparser.urlencoded({ extended: true }));
 
 // This middleware is used to handle multipart/form-data with no files
-app.use(upload.none());
+// app.use(upload.none());
 
 app.use(cookieParser());
 
