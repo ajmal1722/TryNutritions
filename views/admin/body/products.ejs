@@ -51,7 +51,7 @@
 
                       <% productsList.forEach(item => { %>
                         <tr>
-                          <td class="w-25"><img src="<%= item.productImage %>" alt="Product 1" class="rounded img-thumbnail h-25 w-25"></td>
+                          <td class="w-25"><img src="data:<%= item.productImage.contentType %>;base64,<%= item.productImage.imageBase64 %>" alt="Product 1" class="rounded img-thumbnail h-25 w-25"></td>
                           <td><%= item.name %></td>
                           <td><%= item.category %></td>
                           <td><%= item.brand %></td>
