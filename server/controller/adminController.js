@@ -111,7 +111,7 @@ exports.addProduct = async (req, res) => {
         // Convert the Buffer to a base64-encoded string
         const imgBase64 = imgBuffer.toString('base64');
         
-        console.log(data)
+        // console.log(data)
         const create = await products.create({
             ...data,
             productImage: {

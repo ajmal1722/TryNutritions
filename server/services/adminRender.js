@@ -1,3 +1,5 @@
+const Product = require("../model/products");
+
 // admin dashboard
 exports.admindashboard = (req, res) => res.render('admin/body/dashboard', { pageName: 'Home' });
 
@@ -9,8 +11,20 @@ exports.orders = (req, res) => res.render('admin/body/orders', { pageName: 'Orde
 
 // category
 exports.category = (req, res) => res.render('admin/body/category', { pageName: 'Category' });
+// res.render('admin/body/products', { pageName: 'Products' });
+exports.products = async (req, res) => {
+    try {
+        const items = await Product.find({}).exec();
 
-exports.products = (req, res) => res.render('admin/body/products', { pageName: 'Products' });
+        res.render('admin/body/products', {
+            productsList: items,
+            pageName: 'Products'
+        });
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).send(error.message);
+    }
+};
 
 exports.addProducts = (req, res) => res.render('admin/body/add_products', { pageName: 'Add Products' })
 
