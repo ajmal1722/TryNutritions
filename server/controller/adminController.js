@@ -121,11 +121,9 @@ exports.addProduct = async (req, res) => {
             }
         });
     
-        res.status(200).json({
-            status: 'success',
-            message: 'Product added successfully',
-            product: create
-        });
+        res.status(200).render('admin/body/add_products', {
+            pageName: 'Add Products'
+        })
     } catch (error){
         res.status(500).json({
             status: 'failed',

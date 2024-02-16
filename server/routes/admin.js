@@ -44,4 +44,8 @@ route.get('/logout', controller.logout);
 
 route.post('/addProducts', mullter.single('productImage'), controller.addProduct);
 
+route.get('/deleteProduct', services.deleteProduct);
+
+route.get('/editProduct', services.editProduct);
+
 module.exports = route;

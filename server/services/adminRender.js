@@ -37,3 +37,24 @@ exports.payments = (req, res) => res.render('admin/body/payments', { pageName: '
 exports.settings = (req, res) => res.render('admin/body/settings', { pageName: 'Settings' });
 
 exports.users = (req, res) => res.render('admin/body/users', { pageName: 'Users' });
+
+exports.deleteProduct = async (req, res) => {
+    try {
+        const productId = req.query.id;
+        console.log(productId);
+
+        const deletedProduct = await Product.findByIdAndDelete(productId);
+        
+        res.status(200).redirect('admin/products')
+    } catch (error) {
+        res.status(500).send(error.message);
+    } 
+}
+
+exports.editProduct = async (req, res) => {
+    try {
+        
+    } catch (error) {
+        res.status(500).send(error.message);
+    } 
+}

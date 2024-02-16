@@ -7,6 +7,8 @@ const Schema = new mongoose.Schema({
     },
     category: {
         type: String
+    },subCategory: {
+        type: String
     },
     brand: {
         type: String

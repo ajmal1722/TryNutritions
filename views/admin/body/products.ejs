@@ -33,18 +33,19 @@
                 
           
                 <div class="product-list table-responsive">
-                  <table class="table table-striped text-center">
+                  <table class="table table-bordered table-striped text-center">
                     <thead>
                       <tr class="">
                         <th scope="col">Image</th>
                         <th scope="col">Product Name</th>
                         <th scope="col">Category</th>
-                        <th scope="col">Brand</th>
+                        <th scope="col">Sub Category</th>
+                        <th scope="col" class="px-4">Brand</th>
                         <th scope="col">manufacture</th>
                         <th scope="col">MRP</th>
                         <th scope="col">Price</th>
                         <th scope="col">Stock</th>
-                        <th scope="col">Action</th>
+                        <th class="px-5" scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -54,14 +55,15 @@
                           <td class="w-25"><img src="data:<%= item.productImage.contentType %>;base64,<%= item.productImage.imageBase64 %>" alt="Product 1" class="rounded img-thumbnail h-25 w-25"></td>
                           <td><%= item.name %></td>
                           <td><%= item.category %></td>
+                          <td><%= item.subCategory %></td>
                           <td><%= item.brand %></td>
                           <td><%= item.manufacture %></td>
                           <td><%= item.mrp %></td>
                           <td><%= item.sellingPrice %></td>
                           <td><%= item.stock %></td>
                           <td>
-                            <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i> Edit</button>
-                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</button>
+                            <a class="btn button btn-primary bg-success my-2" href="/editProduct?id=<%= item._id %>" role="button">Edit</a><br>
+                            <a class="btn button btn-primary bg-danger" href="/deleteProduct?id=<%= item._id %>" role="button">Delete</a>
                           </td>
                         </tr>
                       <% }) %> 
@@ -77,6 +79,8 @@
 
         <!-- /MAIN -->
           
+
+        
 
 
 	<script src="/admin/js/script.js"></script>
