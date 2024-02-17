@@ -11,7 +11,7 @@ exports.orders = (req, res) => res.render('admin/body/orders', { pageName: 'Orde
 
 // category
 exports.category = (req, res) => res.render('admin/body/category', { pageName: 'Category' });
-// res.render('admin/body/products', { pageName: 'Products' });
+
 exports.products = async (req, res) => {
     try {
         const items = await Product.find({}).exec();
@@ -53,7 +53,33 @@ exports.deleteProduct = async (req, res) => {
 
 exports.editProduct = async (req, res) => {
     try {
+        const productId = req.query.id;
+
+        const product = await Product.findOne({ _id: productId })
+
+        res.status(200).render('admin/body/update_product', {
+            pageName: 'Upadate Product',
+            Product: product
+        });
+    } catch (error) {
+        res.status(500).send(error.message);
+    } 
+}
+
+exports.updateProduct = async (req, res) => {
+    try {
+        const productId = req.params.id;
+
+        console.log('productId', productId)
         
+        const product = await Product.findOne({ _id: productId });
+        const updatedProduct = req.body;
+
+        console.log('updatedProduct:', updatedProduct)
+
+        const data = await Product.findByIdAndUpdate(productId, updatedProduct, {new: true});
+
+        res.status(200).redirect('/admin/products');
     } catch (error) {
         res.status(500).send(error.message);
     } 

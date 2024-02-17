@@ -48,4 +48,6 @@ route.get('/deleteProduct', services.deleteProduct);
 
 route.get('/editProduct', services.editProduct);
 
+route.post('/admin/updateProduct/:id', mullter.single('productImage'), services.updateProduct)
+
 module.exports = route;

@@ -1,0 +1,186 @@
+ 
+<!-- Include sidebar -->
+<%- include('../partials/_sidebar.ejs')%>
+<!-- /Include sidebar -->
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		
+		
+		<!-- include NAVBAR -->
+		<%- include('../partials/_navbar.ejs')%>
+		<!-- include NAVBAR -->
+
+
+		<!-- MAIN -->
+
+        
+         
+        <main>
+          <!-- include HEAD TITLE -->
+          <%- include('../partials/_headTitle.ejs')%>
+          <!-- /include HEAD TITLE -->
+
+            <!-- <a href="/admin/addProducts" class="btn-download">
+              <span class="text mx-md-2">Add Products</span>
+            </a> -->
+          </div>
+
+          <section class="container product-adding-page mt-5">
+            <form action="/admin/updateProduct/<%= Product._id %>" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <!-- Product Name -->
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Product Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="name"
+                                name="name"
+                                value="<%= Product.name %>"
+                                placeholder="Enter product name"
+                            />
+                        </div>
+                        <!-- Product Media -->
+                        <div class="mb-3">
+                            <label for="productMedia" class="form-label">Product Image</label>
+                            <input type="file" class="form-control" id="productMedia" name="productImage" />
+                        </div>
+                        <!-- Variant -->
+                        <div class="mb-3">
+                            <label for="variants" class="form-label">Select Variant</label>
+                            <select class="form-select mb-2" id="variant" name="variant">
+                                <option value="home">Home</option>
+                                <option value="away">Away</option>
+                                <option value="third">Third</option>
+                                <option value="fourth">Fourth</option>
+                                <option value="specialEdition">Special Edition</option>
+                                <option value="gk">GK</option>
+                            </select>
+                        </div>
+                        <!-- Pricing -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="mrp" class="form-label">MRP</label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        id="mrp"
+                                        placeholder="Enter MRP"
+                                        value="<%= Product.mrp %>"
+                                        name="mrp"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Price</label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        id="price"
+                                        placeholder="Enter price"
+                                        value="<%= Product.sellingPrice %>"
+                                        name="sellingPrice"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Stock -->
+                        <div class="row">
+                            <label for="size" class="form-label">Stock</label><br>
+                            <div class="col-md-2">
+                                <label for="S"></label>
+                                <input type="number" class="form-control" id="S" name="stock" value="<%= Product.stock %>">
+                            </div>
+                        </div>
+                        <!-- Brand and Manufactured by -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="brand" class="form-label">Brand</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand"
+                                        placeholder="Enter Brand name"
+                                        name="brand"
+                                        value="<%= Product.brand %>"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="manufacture" class="form-label">Origin</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="manufacture"
+                                        placeholder="Origin"
+                                        name="manufacture"
+                                        value="<%= Product.manufacture %>"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <!-- Product Description -->
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Product Description</label>
+                            <textarea
+                                class="form-control"
+                                id="productDescription"
+                                rows="4"
+                                placeholder="Enter product description"
+                                name="description"
+                            ><%= Product.description %></textarea>
+                        </div>
+                        <!-- Advanced Description -->
+                        <div class="mb-3">
+                            <label for="advancedDescription" class="form-label">Advanced Description</label>
+                            <textarea
+                                class="form-control"
+                                id="advancedDescription"
+                                rows="4"
+                                placeholder="Enter advanced description"
+                                name="advancedDescription"
+                            ><%= Product.advancedDescription %></textarea>
+                        </div>
+                        <!-- Product Category -->
+                        <!-- <div class="mb-3">
+                            <label for="productCategory" class="form-label">Product Category</label>
+                            <select class="form-select" id="productCategory" name="category">
+                                {{#each data}}
+                                <option value="{{this.name}}">{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div> -->
+                        <!-- Product Subcategory -->
+                        <!-- <div class="mb-3">
+                            <label for="productSubcategory" class="form-label">Product Subcategory</label>
+                            <select class="form-select" id="productSubcategory" name="subcategory">
+                                {{#each file}}
+                                <option value="{{this.subCategoryName}}">{{this.subCategoryName}}</option>
+                                {{/each}}
+                            </select>
+                        </div> -->
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success mx-auto d-block my-4 px-3">Update Product</button>
+            </form>
+        </section>
+        
+        
+
+        <!-- /MAIN -->
+          
+
+
+	<script src="/admin/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
