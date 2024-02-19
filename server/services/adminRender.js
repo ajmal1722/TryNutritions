@@ -1,5 +1,6 @@
 const Product = require("../model/products");
-const Users = require('../model/userModel')
+const Users = require('../model/userModel');
+const Category = require('../model/category');
 
 // admin dashboard
 exports.admindashboard = (req, res) => res.render('admin/body/dashboard', { pageName: 'Home' });
