@@ -1,10 +1,17 @@
 const jwt = require('jsonwebtoken');
+const Products = require('../model/products')
 
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
 
 // shop
-exports.shop = (req, res) => res.render('user/body/shop', { pageName: 'Shop' });
+exports.shop = async (req, res) => {
+    const product = await Products.find({}).exec();
+    res.render('user/body/shop', {
+        pageName: 'Shop',
+        Products: product
+    });
+} 
 
 // shop-details
 exports.shopDetails = (req, res) => res.render('user/body/shop-details', { pageName: 'Shop-details' });
