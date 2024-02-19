@@ -28,9 +28,9 @@
                         <table class="table table-striped text-center">
                             <thead>
                             <tr>
-                                <th class="py-3">User ID</th>
-                                <th class="py-3">Username</th>
+                                <th class="py-3">Name</th>
                                 <th class="py-3">Email</th>
+                                <th class="py-3">Phone</th>
                                 <th class="py-3">Status</th>
                                 <th class="py-3">Action</th>
                             </tr>
@@ -55,10 +55,43 @@
                                 <td>Blocked</td>
                                 <td>
                                     <!-- View and Block buttons -->
-                                    <button type="button" class="btn btn-info">View</button>
-                                    <button type="button" class="btn btn-danger">Block</button>
+                                    <button type="button" class="btn button btn-info mx-2">View</button>
+                                    <button type="button" class="btn button btn-danger">Block</button>
                                 </td>
                             </tr>
+                            <% userList.forEach(item => { %>
+                                <tr>
+                                    <td><%= item.name %></td>
+                                    <td><%= item.email %></td>
+                                    <td><%= item.phone %></td>
+                                    <td>
+                                      <a class="btn button btn-info mx-2" href="/viewUser?id=<%= item._id %>" role="button">View</a>
+                                      <!-- Button trigger modal -->
+                                      <button type="button" class="btn button btn-danger" data-bs-toggle="modal" data-bs-target="#blockUserModal">
+                                        Block
+                                      </button>
+                                    </td>
+                                  </tr>
+
+                                  <!-- modal  -->
+                                  <div class="modal fade" id="blockUserModal" tabindex="-1" aria-labelledby="blockUserModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="blockUserModalLabel">Block User</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          Are you sure you want to block this user?
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                          <a href="/blockUser?id=<%= item._id %>" class="btn btn-danger">Block User</a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                              <% }) %> 
                             </tbody>
                         </table>
                     </div>
@@ -69,6 +102,7 @@
 
         <!-- /MAIN -->
           
+        
 
 
 	<script src="/admin/js/script.js"></script>

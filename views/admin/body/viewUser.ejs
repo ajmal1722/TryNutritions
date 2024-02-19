@@ -1,0 +1,68 @@
+
+
+<!-- Include sidebar -->
+<%- include('../partials/_sidebar.ejs')%>
+<!-- /Include sidebar -->
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		
+		
+		<!-- include NAVBAR -->
+		<%- include('../partials/_navbar.ejs')%>
+		<!-- include NAVBAR -->
+
+
+		<!-- MAIN -->
+
+        
+        <main>
+            <div class="container">
+                <div class="container">
+                        <!-- include HEAD TITLE -->
+                        <%- include('../partials/_headTitle.ejs')%>
+                        <!-- /include HEAD TITLE -->   
+                    </div>
+                
+                    <div class="card mt-3">
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <!-- User Information -->
+                              <h5 class="card-title mb-4">User Information</h5>
+                              <ul class="list-group">
+                                <li class="list-group-item"><strong>User ID :</strong> <%= user._id %></li>
+                                <li class="list-group-item"><strong>Name :</strong> <%= user.name %></li>
+                                <li class="list-group-item"><strong>Email :</strong> <%= user.email %></li>
+                                <li class="list-group-item"><strong>Phone :</strong> <%= user.phone %></li>
+                              </ul>
+                            </div>
+                            
+                          </div>
+                          <div class="">
+                            <!-- Address Information -->
+                            <h5 class="card-title my-4">Address</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item bg-light border border-secondary rounded">
+                                  <strong>Address 1:</strong> <%= user.address %>
+                                </li>
+                            </ul>  
+                          </div>
+                        </div>
+                    </div>
+                      
+                </div> 
+            </div>
+        </main>
+       
+
+        <!-- /MAIN -->
+          
+
+
+	<script src="/admin/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

@@ -1,4 +1,5 @@
 const Product = require("../model/products");
+const Users = require('../model/userModel')
 
 // admin dashboard
 exports.admindashboard = (req, res) => res.render('admin/body/dashboard', { pageName: 'Home' });
@@ -36,7 +37,14 @@ exports.payments = (req, res) => res.render('admin/body/payments', { pageName: '
 
 exports.settings = (req, res) => res.render('admin/body/settings', { pageName: 'Settings' });
 
-exports.users = (req, res) => res.render('admin/body/users', { pageName: 'Users' });
+exports.users = async (req, res) => {
+    const users = await Users.find({}).exec();
+
+    res.render('admin/body/users', {
+        pageName: 'Users',
+        userList: users
+    });
+} 
 
 exports.deleteProduct = async (req, res) => {
     try {
@@ -84,3 +92,12 @@ exports.updateProduct = async (req, res) => {
         res.status(500).send(error.message);
     } 
 }
+
+exports.viewUser = async (req, res) => {
+    const userId = req.query.id;
+    const userData = await Users.findOne({_id: userId});
+    res.render('admin/body/viewUser', {
+        pageName: 'User Information',
+        user: userData
+    })
+} 

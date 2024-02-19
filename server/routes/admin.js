@@ -50,4 +50,6 @@ route.get('/editProduct', services.editProduct);
 
 route.post('/admin/updateProduct/:id', mullter.single('productImage'), services.updateProduct)
 
+route.get('/viewUser', services.viewUser);
+
 module.exports = route;
