@@ -56,4 +56,6 @@ route.post('/addCategory', services.addCategory);
 
 route.get('/deleteCategory', services.deleteCategory);
 
+route.get('/blockUser', services.blockUser)
+
 module.exports = route;

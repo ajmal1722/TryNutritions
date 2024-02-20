@@ -107,6 +107,7 @@ exports.updateProduct = async (req, res) => {
     } 
 }
 
+// Users
 exports.viewUser = async (req, res) => {
     const userId = req.query.id;
     const userData = await Users.findOne({_id: userId});
@@ -115,6 +116,25 @@ exports.viewUser = async (req, res) => {
         user: userData
     })
 } 
+
+exports.blockUser = async (req, res) => {
+    try {
+        const userId = req.query.id;
+
+        const user = await Users.findOne({ _id: userId })
+        console.log('user' ,user)
+    if (user){
+        user.isBlocked = 'Blocked'
+        await user.save()
+    } else {
+        res.send('user not found');
+    }
+
+    res.status(200).redirect('/admin/users');
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
 
 // Category
 
