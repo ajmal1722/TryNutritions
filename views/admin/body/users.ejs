@@ -41,12 +41,12 @@
                                   <td><%= item.name %></td>
                                   <td><%= item.email %></td>
                                   <td><%= item.phone %></td>
-                                  <td><%= item.isBlocked %></td>
+                                  <td class="<%= item.isBlocked === 'Active' ? 'text-success' : 'text-danger' %> fw-normal"><%= item.isBlocked %></td>
                                   <td>
                                       <a class="btn button btn-info mx-2" href="/viewUser?id=<%= item._id %>" role="button">View</a>
                                       <!-- Button trigger modal -->
-                                      <button type="button" class="btn button btn-danger" data-bs-toggle="modal" data-bs-target="#blockUserModal<%= item._id %>">
-                                          Block
+                                      <button type="button" class="btn button <%= item.isBlocked === 'Active' ? 'btn-danger' : 'btn-warning' %> text-light" data-bs-toggle="modal" data-bs-target="#blockUserModal<%= item._id %>">
+                                        <%= item.isBlocked === 'Active' ? 'Block' : 'Unblock' %>
                                       </button>
                                   </td>
                               </tr>
@@ -60,11 +60,13 @@
                                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                           </div>
                                           <div class="modal-body">
-                                              Are you sure you want to block this user?
+                                              Are you sure want to <%= item.isBlocked === 'Active' ? 'block' : 'unblock' %> <%= item.name %>?
                                           </div>
                                           <div class="modal-footer">
                                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                              <a href="/admin/blockUser?id=<%= item._id %>" class="btn btn-danger">Block User</a>
+                                              <a href="/admin/blockUser?id=<%= item._id %>" class="btn btn-danger">
+                                                <%= item.isBlocked === 'Active' ? 'Block' : 'Unblock' %>
+                                              </a>
                                           </div>
                                       </div>
                                   </div>
