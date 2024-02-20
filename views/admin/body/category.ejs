@@ -44,14 +44,15 @@
                             <tr>
                                 <td><%= item.category %></td>
                                 <td>
-                                    <!-- Add any action buttons here -->
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal">
+                                    <!-- Add unique modal IDs for each category -->
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal<%= item._id %>">
                                         Delete
                                     </button>
                                 </td>
                             </tr>
                             <!-- Bootstrap Delete Category Modal -->
-                            <div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="deleteCategoryModal<%= item._id %>" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+                                <!-- Use unique modal IDs for each category -->
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -63,11 +64,13 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                            <a href="/admin/deleteCategory" class="btn btn-danger" id="confirmDeleteCategoryBtn">Delete</a>                                        </div>
+                                            <a href="/admin/deleteCategory?id=<%= item._id %>" class="btn btn-danger" id="confirmDeleteCategoryBtn">Delete</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         <% }) %>
+                        
                         </tbody>
                     </table>
                 </div>

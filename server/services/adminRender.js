@@ -69,7 +69,7 @@ exports.deleteProduct = async (req, res) => {
         res.status(200).redirect('admin/products')
     } catch (error) {
         res.status(500).send(error.message);
-    } 
+    }
 }
 
 exports.editProduct = async (req, res) => {
@@ -122,4 +122,14 @@ exports.addCategory = async (req, res) => {
     const data = req.body;
     const createCategory = await Category.create(data)
     res.status(200).redirect('admin/category')
+}
+
+exports.deleteCategory = async (req, res) => {
+    // get the id from query string
+    const categoryId = req.query.id;
+
+    // match the id and delete
+    const category = await Category.findByIdAndDelete({ _id: categoryId });
+
+    res.redirect('/admin/category');
 }
