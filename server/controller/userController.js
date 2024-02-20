@@ -97,7 +97,17 @@ exports.login = async (req, res) => {
         const {email, password} = req.body;
 
         // find user in DB
-        const userData = await Userdb.findOne({email})
+        const userData = await Userdb.findOne({email});
+
+        // check if the user exists
+        if (!userData) {
+            return res.status(401).json({ success: false, message: 'user does not exist' });
+        }
+
+        // check if the user is Active or Blocked
+        if (userData.isBlocked === 'Blocked') {
+            return res.status(403).json({ success: false, message: 'Your account is blocked. Contact support.' });
+        }
 
         // match the password
         if (userData && (await bcrypt.compare(password, userData.password))) {
