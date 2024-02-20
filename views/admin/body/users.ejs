@@ -36,34 +36,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <!-- Sample User Rows -->
-                            <tr>
-                                <td>1</td>
-                                <td>john_doe</td>
-                                <td>john@example.com</td>
-                                <td>Active</td>
-                                <td>
-                                    <!-- View and Block buttons -->
-                                    <button type="button" class="btn btn-info">View</button>
-                                    <button type="button" class="btn btn-danger">Block</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>jane_smith</td>
-                                <td>jane@example.com</td>
-                                <td>Blocked</td>
-                                <td>
-                                    <!-- View and Block buttons -->
-                                    <button type="button" class="btn button btn-info mx-2">View</button>
-                                    <button type="button" class="btn button btn-danger">Block</button>
-                                </td>
-                            </tr>
                             <% userList.forEach(item => { %>
                               <tr>
                                   <td><%= item.name %></td>
                                   <td><%= item.email %></td>
                                   <td><%= item.phone %></td>
+                                  <td><%= item.isBlocked %></td>
                                   <td>
                                       <a class="btn button btn-info mx-2" href="/viewUser?id=<%= item._id %>" role="button">View</a>
                                       <!-- Button trigger modal -->

@@ -123,12 +123,12 @@ exports.blockUser = async (req, res) => {
 
         const user = await Users.findOne({ _id: userId })
         console.log('user' ,user)
-    if (user){
-        user.isBlocked = 'Blocked'
+    if (!user){
+        return res.send('user not found');
+    } 
+
+        user.isBlocked = user.isBlocked === 'Blocked' ? 'Active' : 'Blocked';
         await user.save()
-    } else {
-        res.send('user not found');
-    }
 
     res.status(200).redirect('/admin/users');
     } catch (error) {
