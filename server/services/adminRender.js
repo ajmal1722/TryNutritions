@@ -12,7 +12,13 @@ exports.adminLogin = (req, res) => res.render('admin/body/login');
 exports.orders = (req, res) => res.render('admin/body/orders', { pageName: 'Orders' })
 
 // category
-exports.category = (req, res) => res.render('admin/body/category', { pageName: 'Category' });
+exports.category = async (req, res) => {
+    const categories = await Category.find({}).exec();
+    res.render('admin/body/category', {
+        pageName: 'Category',
+        Category: categories
+    });
+} 
 
 exports.products = async (req, res) => {
     try {
@@ -28,7 +34,13 @@ exports.products = async (req, res) => {
     }
 };
 
-exports.addProducts = (req, res) => res.render('admin/body/add_products', { pageName: 'Add Products' })
+exports.addProducts = async (req, res) => {
+    const categories = await Category.find({}).exec();
+     res.render('admin/body/add_products', {
+        pageName: 'Add Products',
+        Category: categories
+    })
+} 
 
 exports.coupons = (req, res) => res.render('admin/body/coupons', { pageName: 'Coupons' });
 
@@ -102,3 +114,11 @@ exports.viewUser = async (req, res) => {
         user: userData
     })
 } 
+
+// Category
+
+exports.addCategory = async (req, res) => {
+    const data = req.body;
+    const createCategory = await Category.create(data)
+    res.status(200).redirect('admin/category')
+}

@@ -125,12 +125,18 @@
                 <div class="col-lg-6">
                   <!-- Product Category -->
                   <div class="mb-3">
+                    
+                   <div class="mb-3">
+                    
                     <label for="category" class="form-label">Select Category</label>
+                    
                     <select class="form-select mb-2" id="category" name="category">
-                      <option value="Fruits">Fruits</option>
-                      <option value="Vegetables">Vegetables</option>
-                      <option value="Grains">Grains</option>
-                      <option value="Dry Fruits">Dry Fruits</option>
+                      <% Category.forEach(item => { %>
+                        <option value="<%= item.category %>"><%= item.category %></option>
+                      <% }) %>
+                    </select>
+                  </div>
+                    
                   </div>
                   <!-- Product Description -->
                   <div class="mb-3">

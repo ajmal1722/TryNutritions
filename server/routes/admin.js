@@ -52,4 +52,6 @@ route.post('/admin/updateProduct/:id', mullter.single('productImage'), services.
 
 route.get('/viewUser', services.viewUser);
 
+route.post('/addCategory', services.addCategory)
+
 module.exports = route;

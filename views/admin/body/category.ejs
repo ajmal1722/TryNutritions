@@ -29,41 +29,26 @@
                     </a>
                 </div>
             
-                
-                <div class="mb-3 mx-md-4 add-category-button d-flex justify-content-end ">
-                    <button type="button" class="btn btn-primary">
-                        
-                    </button>
-                </div>
-            
                 <!-- Category Table (Prettier and Responsive) -->
                 <div class="table-responsive">
                     <table class="table table-bordered text-center">
                         <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Name</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <!-- Sample Category Rows -->
-                        <tr>
-                            <td>1</td>
-                            <td>Category 1</td>
-                            <td>
-                                <!-- Add any action buttons here -->
-                                <button type="button" class="btn btn-danger">Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Category 2</td>
-                            <td>
-                                <!-- Add any action buttons here -->
-                                <button type="button" class="btn btn-danger">Delete</button>
-                            </td>
-                        </tr>
+                        <!-- Category Rows -->
+                        <% Category.forEach(item => { %>
+                            <tr>
+                                <td><%= item.category %></td>
+                                <td>
+                                    <!-- Add any action buttons here -->
+                                    <button type="button" class="btn btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        <% }) %>
                         </tbody>
                     </table>
                 </div>
@@ -78,13 +63,13 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <!-- Add your form or content for adding a category here -->
-                            <form>
+                            <!-- Form for adding a category -->
+                            <form id="addCategoryForm" action="/addCategory" method="post">
                                 <div class="mb-3">
                                     <label for="categoryName" class="form-label">Category Name:</label>
-                                    <input type="text" class="form-control" id="categoryName" required>
+                                    <input type="text" class="form-control" id="category" name="category" required>
                                 </div>
-                                <button type="button" class="btn btn-primary">Add Category</button>
+                                <button type="submit" class="btn btn-primary">Add Category</button>
                             </form>
                         </div>
                     </div>
