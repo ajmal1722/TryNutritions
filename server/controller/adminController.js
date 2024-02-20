@@ -1,5 +1,6 @@
 const admin = require('../model/adminModel');
 const products = require('../model/products');
+const Category = require('../model/category');
 const fs = require('fs');
 
 require('dotenv').config();
@@ -105,6 +106,8 @@ exports.addProduct = async (req, res) => {
         const files = req.file;
         const data = req.body;
 
+        const categories = await Category.find({}).exec();
+
         // Read the image file as a Buffer
         const imgBuffer = fs.readFileSync(files.path);
 
@@ -122,7 +125,8 @@ exports.addProduct = async (req, res) => {
         });
     
         res.status(200).render('admin/body/add_products', {
-            pageName: 'Add Products'
+            pageName: 'Add Products',
+            Category: categories
         })
     } catch (error){
         res.status(500).json({

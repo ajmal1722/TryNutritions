@@ -49,7 +49,7 @@
                             <input type="file" class="form-control" id="productMedia" name="productImage" />
                         </div>
                         <!-- Variant -->
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <label for="variants" class="form-label">Select Variant</label>
                             <select class="form-select mb-2" id="variant" name="variant">
                                 <option value="home">Home</option>
@@ -59,7 +59,7 @@
                                 <option value="specialEdition">Special Edition</option>
                                 <option value="gk">GK</option>
                             </select>
-                        </div>
+                        </div> -->
                         <!-- Pricing -->
                         <div class="row">
                             <div class="col-md-6">
@@ -128,6 +128,18 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
+                        <!-- Product Category -->
+                        <div class="mb-3">
+                            <div class="mb-3">
+                             <label for="category" class="form-label">Select Category</label>
+                             <select class="form-select mb-2" id="category" name="category">
+                               <% Category.forEach(item => { %>
+                                <option value="<%= item.category %>" <%= item.category === Product.category ? 'selected' : '' %>>
+                                    <%= item.category %>
+                                </option>
+                               <% }) %>
+                             </select>
+                           </div>
                         <!-- Product Description -->
                         <div class="mb-3">
                             <label for="productDescription" class="form-label">Product Description</label>

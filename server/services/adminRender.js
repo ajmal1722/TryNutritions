@@ -75,12 +75,13 @@ exports.deleteProduct = async (req, res) => {
 exports.editProduct = async (req, res) => {
     try {
         const productId = req.query.id;
-
+        const categories = await Category.find({}).exec();
         const product = await Product.findOne({ _id: productId })
 
         res.status(200).render('admin/body/update_product', {
             pageName: 'Upadate Product',
-            Product: product
+            Product: product,
+            Category: categories
         });
     } catch (error) {
         res.status(500).send(error.message);
