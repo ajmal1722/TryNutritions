@@ -44,6 +44,7 @@
                         <th scope="col">manufacture</th>
                         <th scope="col">MRP</th>
                         <th scope="col">Price</th>
+                        <th scope="col">Weight</th>
                         <th scope="col">Stock</th>
                         <th class="px-5" scope="col">Action</th>
                       </tr>
@@ -60,6 +61,7 @@
                           <td><%= item.manufacture %></td>
                           <td><%= item.mrp %></td>
                           <td><%= item.sellingPrice %></td>
+                          <td><%= item.weight %></td>
                           <td><%= item.stock %></td>
                           <td>
                             <a class="btn button btn-primary bg-success my-2" href="/editProduct?id=<%= item._id %>" role="button">Edit</a><br>

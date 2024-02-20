@@ -89,13 +89,29 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Stock -->
+                        <!-- Weight -->
                         <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="weight" class="form-label">Weight</label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        id="weight"
+                                        placeholder="Enter weight"
+                                        name="weight"
+                                        value="<%= Product.weight %>"
+                                    />
+                                </div>
+                            </div>
+                            <!-- Stock -->
+                            <div class="col-md-6">
                             <label for="size" class="form-label">Stock</label><br>
-                            <div class="col-md-2">
+                            <div class="">
                                 <label for="S"></label>
                                 <input type="number" class="form-control" id="S" name="stock" value="<%= Product.stock %>">
                             </div>
+                        </div>
                         </div>
                         <!-- Brand and Manufactured by -->
                         <div class="row">
@@ -182,7 +198,9 @@
                         </div> -->
                     </div>
                 </div>
-                <button type="submit" class="btn btn-success mx-auto d-block my-4 px-3">Update Product</button>
+                <div class="my-4">
+                    <button type="submit" class="btn btn-success mx-auto d-block my-4 px-4">Update Product</button>
+                </div>
             </form>
         </section>
         
