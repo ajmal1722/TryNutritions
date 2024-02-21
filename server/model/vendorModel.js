@@ -2,12 +2,10 @@ const mongoose = require('mongoose');
 
 const Schema = new mongoose.Schema({
     vendorName: {
-        type: String,
-        required: true
+        type: String
     },
     phone: {
-        type: Number,
-        required: true
+        type: Number
     },
     email: {
         type: String,

@@ -1,0 +1,111 @@
+
+<!-- Include sidebar -->
+<%- include('../partials/_sidebar.ejs')%>
+<!-- /Include sidebar -->
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		
+		
+		<!-- include NAVBAR -->
+		<%- include('../partials/_navbar.ejs')%>
+		<!-- include NAVBAR -->
+
+
+		<!-- MAIN -->
+
+        
+        <main>
+            <div class="container">
+                
+                    <!-- include HEAD TITLE -->
+                    <%- include('../partials/_headTitle.ejs')%>
+                    <!-- /include HEAD TITLE -->
+
+                    <!-- Add Category Button -->
+                    <a  data-bs-toggle="modal" data-bs-target="#addCategoryModal"class="btn-download">
+                        <span class="text mx-md-2">Add Category</span>
+                    </a>
+                </div>
+            
+                <!-- Category Table (Prettier and Responsive) -->
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Category Rows -->
+                        <% Category.forEach(item => { %>
+                            <tr>
+                                <td><%= item.category %></td>
+                                <td>
+                                    <!-- Add unique modal IDs for each category -->
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal<%= item._id %>">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- Bootstrap Delete Category Modal -->
+                            <div class="modal fade" id="deleteCategoryModal<%= item._id %>" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+                                <!-- Use unique modal IDs for each category -->
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteCategoryModalLabel">Delete Category</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete this category?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <a href="/admin/deleteCategory?id=<%= item._id %>" class="btn btn-danger" id="confirmDeleteCategoryBtn">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Add Category Modal -->
+            <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Form for adding a category -->
+                            <form id="addCategoryForm" action="/addCategory" method="post">
+                                <div class="mb-3">
+                                    <label for="categoryName" class="form-label">Category Name:</label>
+                                    <input type="text" class="form-control" id="category" name="category" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Add Category</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        
+
+        <!-- /MAIN -->
+          
+
+
+	<script src="/admin/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
