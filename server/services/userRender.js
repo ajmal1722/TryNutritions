@@ -35,6 +35,10 @@ exports.cart = (req, res) => {
 // checkout
 exports.checkout = (req, res) => res.render('user/body/checkout', { pageName: 'Checkout' });
 
+// Error Messages
+exports.errorMessage = (req, res) => res.render('user/body/error');
+    
+
 // my account
 exports.myAccount = (req, res) => {
     try {

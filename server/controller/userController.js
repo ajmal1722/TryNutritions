@@ -106,7 +106,11 @@ exports.login = async (req, res) => {
 
         // check if the user is Active or Blocked
         if (userData.isBlocked === 'Blocked') {
-            return res.status(403).json({ success: false, message: 'Your account is blocked. Contact support.' });
+            return res.status(403).render('user/body/error', {
+                pageName: '403 Error',
+                statusCode: 403,
+                errorMessage: "You're Account has been blocked by Admin.. "
+            });
         }
 
         // match the password
