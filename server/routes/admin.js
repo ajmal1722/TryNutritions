@@ -28,6 +28,8 @@ route.get('/banners', services.banners);
 
 route.get('/payments', services.payments);
 
+route.get('/vendors', services.vendors);
+
 route.get('/settings', services.settings);
 
 route.get('/products', services.products);

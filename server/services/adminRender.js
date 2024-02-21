@@ -1,6 +1,7 @@
 const Product = require("../model/products");
 const Users = require('../model/userModel');
 const Category = require('../model/category');
+const Vendors = require('../model/vendorModel');
 
 // admin dashboard
 exports.admindashboard = (req, res) => res.render('admin/body/dashboard', { pageName: 'Home' });
@@ -48,7 +49,15 @@ exports.banners = (req, res) => res.render('admin/body/banner', { pageName: 'Ban
 
 exports.payments = (req, res) => res.render('admin/body/payments', { pageName: 'Payments' });
 
-exports.settings = (req, res) => res.render('admin/body/settings', { pageName: 'Settings' });
+exports.settings = (req, res) => res.render('admin/body/settings', { pageName: 'settings' });
+
+exports.vendors = async (req, res) => {
+    const vendor = await Vendors.find({}).exec();
+    res.render('admin/body/vendors', {
+        pageName: 'Vendor Details',
+        vendorList: vendor
+    });
+} 
 
 exports.users = async (req, res) => {
     const users = await Users.find({}).exec();
