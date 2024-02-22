@@ -186,7 +186,7 @@ exports.toggleVendorAccess = async (req, res) => {
         vendor.vendorAccessEnabled = vendor.vendorAccessEnabled === 'Denied' ? 'Enabled' : 'Denied';
         await vendor.save();
 
-        res.status(200).redirect('/admin/vendor');
+        res.status(200).redirect('/admin/vendors');
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
