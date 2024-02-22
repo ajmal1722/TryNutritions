@@ -1,0 +1,72 @@
+
+
+<!-- Include sidebar -->
+<%- include('../partials/_sidebar.ejs')%>
+<!-- /Include sidebar -->
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		
+		
+		<!-- include NAVBAR -->
+		<%- include('../partials/_navbar.ejs')%>
+		<!-- include NAVBAR -->
+
+
+		<!-- MAIN -->
+
+        
+        <main>
+            <div class="container">
+                <div class="container">
+                        <!-- include HEAD TITLE -->
+                        <%- include('../partials/_headTitle.ejs')%>
+                        <!-- /include HEAD TITLE -->   
+                    </div>
+                
+                    <div class="card mt-3">
+                      <div class="card-body">
+                          <div class="row">
+                              <div class="col-md-6">
+                                  <!-- User Information -->
+                                  <h5 class="card-title mb-4">User Information</h5>
+                                  <ul class="list-group">
+                                      <li class="list-group-item">
+                                          <span class="text-primary">User ID:</span> <span class="ms-2"><%= user._id %></span>
+                                      </li>
+                                      <li class="list-group-item">
+                                          <span class="text-primary">Name:</span> <span class="ms-2"><%= user.vendorName %></span>
+                                      </li>
+                                      <li class="list-group-item">
+                                          <span class="text-primary">Email:</span> <span class="ms-2"><%= user.email %></span>
+                                      </li>
+                                      <li class="list-group-item">
+                                          <span class="text-primary">Phone:</span> <span class="ms-2"><%= user.phone %></span>
+                                      </li>
+                                  </ul>
+                              </div>
+                          </div>
+                          <div class="">
+                              <!-- Address Information -->
+                              <h5 class="card-title my-4">Address</h5>
+                              <p class="bg-light border border-secondary rounded p-2" style="min-height: 150px;">
+                                  <span class="text-primary">Address:</span> <span class="ms-2"><%= user.address %></span>
+                              </p>
+                          </div>
+                      </div>
+                  </div>   
+                </div> 
+            </div>
+        </main>
+       
+
+        <!-- /MAIN -->
+          
+
+
+	<script src="/admin/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

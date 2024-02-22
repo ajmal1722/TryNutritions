@@ -58,6 +58,9 @@ route.post('/addCategory', services.addCategory);
 
 route.get('/deleteCategory', services.deleteCategory);
 
-route.get('/blockUser', services.blockUser)
+route.get('/blockUser', services.blockUser);
+
+route.get('/viewVendor', services.viewVendor);
+route.get('/toggleVendorAccess', services.toggleVendorAccess);
 
 module.exports = route;

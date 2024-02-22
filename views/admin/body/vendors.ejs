@@ -36,42 +36,44 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <% vendorList.forEach(item => { %>
-                              <tr>
-                                  <td><%= item.name %></td>
-                                  <td><%= item.email %></td>
-                                  <td><%= item.phone %></td>
-                                  <td class="<%= item.isBlocked === 'Active' ? 'text-success' : 'text-danger' %> fw-normal"><%= item.isBlocked %></td>
-                                  <td>
-                                      <a class="btn button btn-info mx-2" href="/viewUser?id=<%= item._id %>" role="button">View</a>
-                                      <!-- Button trigger modal -->
-                                      <button type="button" class="btn button <%= item.isBlocked === 'Active' ? 'btn-danger' : 'btn-warning' %> text-light" data-bs-toggle="modal" data-bs-target="#blockUserModal<%= item._id %>">
-                                        <%= item.isBlocked === 'Active' ? 'Block' : 'Unblock' %>
-                                      </button>
-                                  </td>
-                              </tr>
-                          
-                              <!-- modal  -->
-                              <div class="modal fade" id="blockUserModal<%= item._id %>" tabindex="-1" aria-labelledby="blockUserModalLabel" aria-hidden="true">
-                                  <div class="modal-dialog">
-                                      <div class="modal-content">
-                                          <div class="modal-header">
-                                              <h5 class="modal-title" id="blockUserModalLabel">Block User</h5>
-                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                          </div>
-                                          <div class="modal-body">
-                                              Are you sure want to <%= item.isBlocked === 'Active' ? 'block' : 'unblock' %> <%= item.name %>?
-                                          </div>
-                                          <div class="modal-footer">
-                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                              <a href="/admin/blockUser?id=<%= item._id %>" class="btn btn-danger">
-                                                <%= item.isBlocked === 'Active' ? 'Block' : 'Unblock' %>
-                                              </a>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          <% }) %>                          
+                                <% vendorList.forEach(item => { %>
+                                    <tr>
+                                        <td><%= item.vendorName %></td>
+                                        <td><%= item.email %></td>
+                                        <td><%= item.phone %></td>
+                                        <td class="<%= item.vendorAccessEnabled === 'Enabled' ? 'text-success' : 'text-danger' %> fw-normal"><%= item.vendorAccessEnabled %></td>
+                                        <td>
+                                            <a class="btn button btn-info mx-2" href="/admin/viewVendor?id=<%= item._id %>" role="button">View</a>
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="btn button <%= item.vendorAccessEnabled === 'Enabled' ? 'btn-success' : 'btn-danger' %> text-light" data-bs-toggle="modal" data-bs-target="#toggleVendorAccessModal<%= item._id %>">
+                                                <%= item.vendorAccessEnabled === 'Enabled' ? 'Deny' : 'Enable' %>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                
+                                    <!-- modal  -->
+                                    <div class="modal fade" id="toggleVendorAccessModal<%= item._id %>" tabindex="-1" aria-labelledby="toggleVendorAccessModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="toggleVendorAccessModalLabel">
+                                                        <%= item.vendorAccessEnabled === 'Enabled' ? 'Deny' : 'Enable' %> Vendor Access
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to <%= item.vendorAccessEnabled === 'Enabled' ? 'deny' : 'enable' %> access for <%= item.vendorName %>?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <a href="/admin/toggleVendorAccess?id=<%= item._id %>" class="btn <%= item.vendorAccessEnabled === 'Enabled' ? 'btn-danger' : 'btn-success' %>">
+                                                        <%= item.vendorAccessEnabled === 'Enabled' ? 'Deny' : 'Enable' %> Access
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }) %>                                                         
                             </tbody>
                         </table>
                     </div>

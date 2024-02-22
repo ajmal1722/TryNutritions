@@ -15,9 +15,9 @@ const Schema = new mongoose.Schema({
         type: String,
         required: true
     },
-    isBlocked: {
+    vendorAccessEnabled: {
         type: String,
-        default: 'Active'
+        default: 'Denied'
     }  
 })
 

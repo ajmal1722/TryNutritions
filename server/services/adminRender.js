@@ -162,3 +162,33 @@ exports.deleteCategory = async (req, res) => {
 
     res.redirect('/admin/category');
 }
+
+// vendor
+exports.viewVendor = async (req, res) => {
+    const userId = req.query.id;
+    const userData = await Vendors.findOne({_id: userId});
+    res.render('admin/body/viewVendor', {
+        pageName: 'Vendor Information',
+        user: userData
+    })
+}
+
+exports.toggleVendorAccess = async (req, res) => {
+    try {
+        const vendorId = req.query.id;
+
+        const vendor = await Vendors.findById(vendorId);
+
+        if (!vendor) {
+            return res.send('Vendor not found');
+        }
+
+        vendor.vendorAccessEnabled = vendor.vendorAccessEnabled === 'Denied' ? 'Enabled' : 'Denied';
+        await vendor.save();
+
+        res.status(200).redirect('/admin/vendor');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
