@@ -2,16 +2,20 @@ const Userdb = require('../model/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-
+const Category = require('../model/category');
 
 // home route (home page)
-exports.homeRoutes = (req, res) => {
+exports.homeRoutes = async (req, res) => {
+    const category = await Category.find({}).exec();
     try {
         const verify = jwt.verify(req.cookies.jwt, 'shhhh');
-        res.status(201).render('user/body/home', { username: verify.name });
+        res.status(201).render('user/body/home', {
+            username: verify.name,
+            Categories: category
+        })
     } catch (error) {
         if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
-            res.status(201).render('user/body/home', { username: undefined });
+            res.status(201).render('user/body/home', { username: undefined, Categories: category });
         } else {
             res.status(500).send(error);
         }
@@ -19,11 +23,12 @@ exports.homeRoutes = (req, res) => {
 };
 
 // login page
-exports.userLogin = (req, res) => {
+exports.userLogin = async (req, res) => {
     try {
+        const category = await Category.find({}).exec();
         if (req.cookies.jwt) {
             const verify = jwt.verify(req.cookies.jwt, 'shhhh')
-            res.status(201).render('user/body/home', {username: verify.name});
+            res.status(201).redirect('/');
         } else {
             res.render('user/body/login')
         }

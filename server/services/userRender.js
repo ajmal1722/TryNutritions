@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Products = require('../model/products');
-const Category = require('../model/category')
+const Category = require('../model/category');
 
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
