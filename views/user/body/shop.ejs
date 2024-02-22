@@ -56,30 +56,14 @@
                                                 <span></span>
                                             </div>
                                         </li>
-                                        <li>
-                                            <div class="d-flex justify-content-between fruite-name">
-                                                <a href="#"><i class="fas fa-apple-alt me-2"></i>Fruits</a>
-                                                <span>(5)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="d-flex justify-content-between fruite-name">
-                                                <a href="#"><i class="fas fa-apple-alt me-2"></i>Vegetables</a>
-                                                <span>(2)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="d-flex justify-content-between fruite-name">
-                                                <a href="#"><i class="fas fa-apple-alt me-2"></i>Graines</a>
-                                                <span>(8)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="d-flex justify-content-between fruite-name">
-                                                <a href="#"><i class="fas fa-apple-alt me-2"></i>Dry Fruits</a>
-                                                <span>(5)</span>
-                                            </div>
-                                        </li>
+                                        <% Categories.forEach(item => { %>
+                                            <li>
+                                                <div class="d-flex justify-content-between fruite-name">
+                                                    <a href="#"><i class="fas fa-apple-alt me-2"></i><%= item.category %></a>
+                                                    <span>(8)</span>
+                                                </div>
+                                            </li>
+                                        <% }) %>
                                     </ul>
                                 </div>
                             </div>
@@ -93,10 +77,10 @@
                             <div class="col-lg-12">
                                 <div class="mb-3">
                                     <h4>Additional</h4>
-                                    <div class="mb-2">
-                                        <input type="radio" class="me-2" id="Categories-1" name="Categories-1" value="Beverages">
-                                        <label for="Categories-1"> Organic</label>
-                                    </div>
+                                        <div class="mb-2">
+                                            <input type="radio" class="me-2" id="Categories-1" name="Categories-1" value="Beverages">
+                                            <label for="Categories-1"> Organic</label>
+                                        </div>
                                     <div class="mb-2">
                                         <input type="radio" class="me-2" id="Categories-2" name="Categories-1" value="Beverages">
                                         <label for="Categories-2"> Fresh</label>
