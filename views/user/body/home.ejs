@@ -145,7 +145,7 @@
                             <ul class="nav nav-pills d-inline-flex text-center mb-5">
                                 <% Categories.forEach(item => { %>
                                     <li class="nav-item">
-                                        <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#<%= item.category %>">
+                                        <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#<%= item.category.replace(/\s+/g, '') %>">
                                             <span class="text-dark" style="width: 130px;"><%= item.category %></span>
                                         </a>
                                     </li>
@@ -155,7 +155,7 @@
                     </div>
                     <div class="tab-content">
                         <% Categories.forEach(category => { %>
-                            <div id="<%= category.category %>" class="tab-pane fade show p-0">
+                            <div id="<%= category.category.replace(/\s+/g, '') %>" class="tab-pane fade show p-0">
                                 <div class="row g-4">
                                     <div class="col-lg-12">
                                         <div class="row g-4">
