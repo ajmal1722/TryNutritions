@@ -28,6 +28,8 @@ route.get('/banners', services.banners);
 
 route.get('/payments', services.payments);
 
+route.get('/vendors', services.vendors);
+
 route.get('/settings', services.settings);
 
 route.get('/products', services.products);
@@ -36,12 +38,29 @@ route.get ('/addProducts', services.addProducts);
 
 route.get('/users', services.users);
 
-route.post('/signup', controller.signup);
+// route.post('/signup', controller.signup);
 
 route.post('/login', controller.login);
 
 route.get('/logout', controller.logout);
 
 route.post('/addProducts', mullter.single('productImage'), controller.addProduct);
+
+route.get('/deleteProduct', services.deleteProduct);
+
+route.get('/editProduct', services.editProduct);
+
+route.post('/admin/updateProduct/:id', mullter.single('productImage'), services.updateProduct)
+
+route.get('/viewUser', services.viewUser);
+
+route.post('/addCategory', services.addCategory);
+
+route.get('/deleteCategory', services.deleteCategory);
+
+route.get('/blockUser', services.blockUser);
+
+route.get('/viewVendor', services.viewVendor);
+route.get('/toggleVendorAccess', services.toggleVendorAccess);
 
 module.exports = route;

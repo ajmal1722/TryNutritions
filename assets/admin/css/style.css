@@ -622,3 +622,7 @@ body {
   padding: 0;
   margin-left: 10px;
 }
+.button{
+	width: 85px;
+	border-style: none;
+}

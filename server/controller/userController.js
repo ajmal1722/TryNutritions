@@ -2,16 +2,28 @@ const Userdb = require('../model/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-
+const Category = require('../model/category');
+const Products = require('../model/products');
 
 // home route (home page)
-exports.homeRoutes = (req, res) => {
+exports.homeRoutes = async (req, res) => {
+    const category = await Category.find({}).exec();
+    const product = await Products.find({}).exec();
     try {
         const verify = jwt.verify(req.cookies.jwt, 'shhhh');
-        res.status(201).render('user/body/home', { username: verify.name });
+        
+        res.status(201).render('user/body/home', {
+            username: verify.name,
+            Categories: category,
+            Products: product
+        })
     } catch (error) {
         if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
-            res.status(201).render('user/body/home', { username: undefined });
+            res.status(201).render('user/body/home', {
+                username: undefined, 
+                Categories: category,
+                Products: product
+            });
         } else {
             res.status(500).send(error);
         }
@@ -19,11 +31,12 @@ exports.homeRoutes = (req, res) => {
 };
 
 // login page
-exports.userLogin = (req, res) => {
+exports.userLogin = async (req, res) => {
     try {
+        const category = await Category.find({}).exec();
         if (req.cookies.jwt) {
             const verify = jwt.verify(req.cookies.jwt, 'shhhh')
-            res.status(201).render('user/body/home', {username: verify.name});
+            res.status(201).redirect('/');
         } else {
             res.render('user/body/login')
         }
@@ -97,7 +110,21 @@ exports.login = async (req, res) => {
         const {email, password} = req.body;
 
         // find user in DB
-        const userData = await Userdb.findOne({email})
+        const userData = await Userdb.findOne({email});
+
+        // check if the user exists
+        if (!userData) {
+            return res.status(401).json({ success: false, message: 'user does not exist' });
+        }
+
+        // check if the user is Active or Blocked
+        if (userData.isBlocked === 'Blocked') {
+            return res.status(403).render('user/body/error', {
+                pageName: '403 Error',
+                statusCode: 403,
+                errorMessage: "You're Account has been blocked by Admin.. "
+            });
+        }
 
         // match the password
         if (userData && (await bcrypt.compare(password, userData.password))) {

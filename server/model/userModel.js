@@ -16,7 +16,11 @@ const Schema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }   
+    },
+    isBlocked: {
+        type: String,
+        default: 'Active'
+    }  
 })
 
 const Userdb = mongoose.model('users', Schema);

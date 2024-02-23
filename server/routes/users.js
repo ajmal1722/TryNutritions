@@ -30,6 +30,9 @@ route.get('/cart', services.cart);
 // checkout
 route.get('/checkout', services.checkout);
 
+// Error
+route.get('/error', services.errorMessage)
+
 // my account
 route.get('/myAccount', services.myAccount);
 

@@ -1,10 +1,21 @@
 const jwt = require('jsonwebtoken');
+const Products = require('../model/products');
+const Category = require('../model/category');
 
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
 
 // shop
-exports.shop = (req, res) => res.render('user/body/shop', { pageName: 'Shop' });
+exports.shop = async (req, res) => {
+    const product = await Products.find({}).exec();
+    const category = await Category.find({}).exec();
+
+    res.render('user/body/shop', {
+        pageName: 'Shop',
+        Products: product,
+        Categories: category,
+    });
+} 
 
 // shop-details
 exports.shopDetails = (req, res) => res.render('user/body/shop-details', { pageName: 'Shop-details' });
@@ -27,6 +38,10 @@ exports.cart = (req, res) => {
 
 // checkout
 exports.checkout = (req, res) => res.render('user/body/checkout', { pageName: 'Checkout' });
+
+// Error Messages
+exports.errorMessage = (req, res) => res.render('user/body/error');
+    
 
 // my account
 exports.myAccount = (req, res) => {

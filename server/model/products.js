@@ -7,6 +7,8 @@ const Schema = new mongoose.Schema({
     },
     category: {
         type: String
+    },subCategory: {
+        type: String
     },
     brand: {
         type: String
@@ -19,6 +21,10 @@ const Schema = new mongoose.Schema({
         required: true
     },
     sellingPrice: {
+        type: Number,
+        required: true
+    },
+    weight: {
         type: Number,
         required: true
     },

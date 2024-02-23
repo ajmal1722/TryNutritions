@@ -1,0 +1,121 @@
+
+
+<!-- Include sidebar -->
+<%- include('../partials/_sidebar.ejs')%>
+<!-- /Include sidebar -->
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		
+		
+		<!-- include NAVBAR -->
+		<%- include('../partials/_navbar.ejs')%>
+		<!-- include NAVBAR -->
+
+
+		<!-- MAIN -->
+
+        
+        
+        <main>
+            <div class="container">
+                
+                    <!-- include HEAD TITLE -->
+                    <%- include('../partials/_headTitle.ejs')%>
+                    <!-- /include HEAD TITLE -->
+
+
+                    <a class="btn-download" data-bs-toggle="modal" data-bs-target="#addCouponModal">
+                        <span class="text mx-md-2">Add Coupon</span>
+                    </a>
+                </div>
+            
+                <!-- Add Coupon Button -->
+                
+                <!-- Coupon Table -->
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center">
+                        <thead>
+                        <tr>
+                            <th>Coupon Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Max Price Offer</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Sample Coupon Rows -->
+                        <tr>
+                            <td>Coupon 1</td>
+                            <td>2024-02-15</td>
+                            <td>2024-03-15</td>
+                            <td>$50 off</td>
+                            <td>
+                                <!-- Edit and Delete buttons -->
+                                <button type="button" class="btn btn-warning">Edit</button>
+                                <button type="button" class="btn btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Coupon 2</td>
+                            <td>2024-03-01</td>
+                            <td>2024-04-01</td>
+                            <td>$25 off</td>
+                            <td>
+                                <!-- Edit and Delete buttons -->
+                                <button type="button" class="btn btn-warning">Edit</button>
+                                <button type="button" class="btn btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Add Coupon Modal -->
+            <div class="modal fade" id="addCouponModal" tabindex="-1" aria-labelledby="addCouponModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addCouponModalLabel">Add Coupon</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Form for adding a coupon -->
+                            <form>
+                                <div class="mb-3">
+                                    <label for="couponName" class="form-label">Coupon Name:</label>
+                                    <input type="text" class="form-control" id="couponName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="startDate" class="form-label">Start Date:</label>
+                                    <input type="date" class="form-control" id="startDate" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="endDate" class="form-label">End Date:</label>
+                                    <input type="date" class="form-control" id="endDate" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="maxPriceOffer" class="form-label">Max Price Offer:</label>
+                                    <input type="text" class="form-control" id="maxPriceOffer" required>
+                                </div>
+                                <button type="button" class="btn btn-primary">Add Coupon</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        
+
+        <!-- /MAIN -->
+          
+
+
+	<script src="/admin/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
