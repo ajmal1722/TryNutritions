@@ -3,19 +3,26 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const Category = require('../model/category');
+const Products = require('../model/products');
 
 // home route (home page)
 exports.homeRoutes = async (req, res) => {
     const category = await Category.find({}).exec();
+    const product = await Products.find({}).exec();
     try {
         const verify = jwt.verify(req.cookies.jwt, 'shhhh');
         res.status(201).render('user/body/home', {
             username: verify.name,
-            Categories: category
+            Categories: category,
+            Products: product
         })
     } catch (error) {
         if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
-            res.status(201).render('user/body/home', { username: undefined, Categories: category });
+            res.status(201).render('user/body/home', {
+                username: undefined, 
+                Categories: category,
+                Products: product
+            });
         } else {
             res.status(500).send(error);
         }
