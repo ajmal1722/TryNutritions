@@ -38,7 +38,7 @@ route.get ('/addProducts', services.addProducts);
 
 route.get('/users', services.users);
 
-route.post('/signup', controller.signup);
+// route.post('/signup', controller.signup);
 
 route.post('/login', controller.login);
 

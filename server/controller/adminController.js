@@ -13,7 +13,6 @@ const { options } = require('../routes/admin');
 
 exports.signup = async (req, res) => {
     try {
-        
         const data = {
             name: req.body.name,
             email: req.body.email,
