@@ -41,6 +41,9 @@ const Schema = new mongoose.Schema({
     },
     advancedDescription: {
         type: String
+    },
+    originOfProduct: {
+        type: String
     }
 })
 

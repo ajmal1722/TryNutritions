@@ -162,20 +162,22 @@
                                             <% Products.forEach(product => { %>
                                                 <% if (category.category === product.category){ %>
                                                     <div class="col-md-6 col-lg-4 col-xl-3">
-                                                        <div class="rounded position-relative fruite-item border border-secondary rounded-bottom">
-                                                            <div class="fruite-img">
-                                                                <img src="data:<%= product.productImage.contentType %>;base64,<%= product.productImage.imageBase64 %>" class="img-fluid w-100 rounded-top" alt="">
-                                                            </div>
-                                                            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;"><%= product.category %></div>
-                                                            <div class="p-4 ">
-                                                                <h4><%= product.name %></h4>
-                                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                                <div class="d-flex justify-content-between flex-lg-wrap">
-                                                                    <p class="text-dark fs-5 fw-bold mb-0"><%= product.sellingPrice %> / kg</p>
-                                                                    <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                        <a href="/shop-details?id=<%= product._id %>" class="text-decoration-none">
+                                                            <div class="rounded position-relative fruite-item border border-secondary rounded-bottom">
+                                                                <div class="fruite-img">
+                                                                    <img src="data:<%= product.productImage.contentType %>;base64,<%= product.productImage.imageBase64 %>" class="img-fluid w-100 rounded-top" alt="">
+                                                                </div>
+                                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;"><%= product.category %></div>
+                                                                <div class="p-4">
+                                                                    <h4><%= product.name %></h4>
+                                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                                                                    <div class="d-flex justify-content-between flex-lg-wrap">
+                                                                        <p class="text-dark fs-5 fw-bold mb-0"><%= product.sellingPrice %> / kg</p>
+                                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </a>
                                                     </div>
                                                 <% } %>
                                             <% }) %>

@@ -18,7 +18,15 @@ exports.shop = async (req, res) => {
 } 
 
 // shop-details
-exports.shopDetails = (req, res) => res.render('user/body/shop-details', { pageName: 'Shop-details' });
+exports.shopDetails = async (req, res) => {
+    const productId = req.query.id;
+    const product = await Products.findById(productId);
+
+    res.render('user/body/shop-details', {
+        pageName: 'Shop-details',
+        Product: product
+    });
+} 
 
 exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Contact us' });
 
