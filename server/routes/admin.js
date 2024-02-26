@@ -15,28 +15,26 @@ route.get('/admin/', adminAuth.checkAuth, services.admindashboard);
 route.get('/login', adminAuth.checkAuthenticated, services.adminLogin);
 
 // category
-route.get('/category', services.category)
+route.get('/category', adminAuth.checkAuth, services.category)
 
 // orders
-route.get('/orders', services.orders);
+route.get('/orders', adminAuth.checkAuth, services.orders);
 
-route.get('/products', services.products);
+route.get('/products', adminAuth.checkAuth, services.products);
 
-route.get('/coupons', services.coupons);
+route.get('/coupons', adminAuth.checkAuth, services.coupons);
 
-route.get('/banners', services.banners);
+route.get('/banners', adminAuth.checkAuth, services.banners);
 
-route.get('/payments', services.payments);
+route.get('/payments', adminAuth.checkAuth, services.payments);
 
-route.get('/vendors', services.vendors);
+route.get('/vendors', adminAuth.checkAuth, services.vendors);
 
-route.get('/settings', services.settings);
-
-route.get('/products', services.products);
+route.get('/settings', adminAuth.checkAuth, services.settings);
 
 route.get ('/addProducts', services.addProducts);
 
-route.get('/users', services.users);
+route.get('/users', adminAuth.checkAuth, services.users);
 
 // route.post('/signup', controller.signup);
 
