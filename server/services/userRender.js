@@ -21,10 +21,12 @@ exports.shop = async (req, res) => {
 exports.shopDetails = async (req, res) => {
     const productId = req.query.id;
     const product = await Products.findById(productId);
+    const category = await Category.find({}).exec()
 
     res.render('user/body/shop-details', {
         pageName: 'Shop-details',
-        Product: product
+        Product: product,
+        Categories: category
     });
 } 
 
