@@ -19,7 +19,7 @@ route.get('/logout', controller.logout);
 route.get('/signup', services.userSigup);
 
 // shop
-route.get('/shop', services.shop);
+route.get('/shop' || '/shop/shop', services.shop);
 
 // shop-details
 route.get('/shop-details', services.shopDetails);

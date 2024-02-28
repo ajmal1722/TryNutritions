@@ -7,8 +7,8 @@ exports.userSigup = (req, res) => res.render('user/body/signup');
 
 // shop
 exports.shop = async (req, res) => {
-    const product = await Products.find({}).exec();
-    const category = await Category.find({}).exec();
+    const product = await Products.find(req.query).exec();
+    const category = await Category.find().exec();
 
     res.render('user/body/shop', {
         pageName: 'Shop',
