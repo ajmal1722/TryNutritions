@@ -114,14 +114,17 @@ exports.addProduct = async (req, res) => {
         const imgBase64 = imgBuffer.toString('base64');
         
         // console.log(data)
-        const create = await products.create({
+        const newProduct = new products({
             ...data,
             productImage: {
-                filename: files.originalname,
-                contentType: files.mimetype,
-                imageBase64: imgBase64
+              filename: files.originalname,
+              contentType: files.mimetype,
+              imageBase64: imgBase64
             }
         });
+
+        // Save the new product to the database
+        const create = await newProduct.save();
     
         res.status(200).render('admin/body/add_products', {
             pageName: 'Add Products',

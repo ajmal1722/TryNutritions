@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const Schema = new mongoose.Schema({
     name: {
@@ -7,7 +7,8 @@ const Schema = new mongoose.Schema({
     },
     category: {
         type: String
-    },subCategory: {
+    },
+    subCategory: {
         type: String
     },
     brand: {
@@ -45,7 +46,7 @@ const Schema = new mongoose.Schema({
     originOfProduct: {
         type: String
     }
-})
+}, { timestamps: true });
 
 const products = mongoose.model('Products', Schema);
 
