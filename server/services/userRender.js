@@ -9,11 +9,17 @@ exports.userSigup = (req, res) => res.render('user/body/signup');
 exports.shop = async (req, res) => {
     const product = await Products.find(req.query).exec();
     const category = await Category.find().exec();
+    
+    const feauturedProduct = await Products.find({})
+                                            .sort({ discount: -1 })
+                                            .limit(3)
+                                            .exec()
 
     res.render('user/body/shop', {
         pageName: 'Shop',
         Products: product,
         Categories: category,
+        feauturedProducts: feauturedProduct
     });
 } 
 
