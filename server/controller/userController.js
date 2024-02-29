@@ -12,7 +12,11 @@ exports.homeRoutes = async (req, res) => {
     const latestProduct = await Products.find({})
                                 .sort({createdAt: -1})
                                 .limit(8)
-                                .exec()
+                                .exec();
+    const bestSellerProduct = await Products.find({})
+                                .sort({salesCount: -1})
+                                .limit(9)
+                                .exec();
     try {
         const verify = jwt.verify(req.cookies.jwt, 'shhhh');
         
@@ -20,7 +24,8 @@ exports.homeRoutes = async (req, res) => {
             username: verify.name,
             Categories: category,
             Products: product,
-            latestProducts: latestProduct
+            latestProducts: latestProduct,
+            bestSellerProducts: bestSellerProduct
         })
     } catch (error) {
         if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
@@ -28,7 +33,8 @@ exports.homeRoutes = async (req, res) => {
                 username: undefined, 
                 Categories: category,
                 Products: product,
-                latestProducts: latestProduct
+                latestProducts: latestProduct,
+                bestSellerProducts: bestSellerProduct
             });
         } else {
             res.status(500).send(error);
