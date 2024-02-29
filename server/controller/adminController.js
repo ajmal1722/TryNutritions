@@ -1,6 +1,7 @@
 const admin = require('../model/adminModel');
 const products = require('../model/products');
 const Category = require('../model/category');
+const jsScript = require('../middlewares/script');
 const fs = require('fs');
 
 require('dotenv').config();
@@ -107,6 +108,8 @@ exports.addProduct = async (req, res) => {
 
         const categories = await Category.find({}).exec();
 
+        const productDiscount = await jsScript.calculateDiscount(req.body.mrp, req.body.sellingPrice);
+
         // Read the image file as a Buffer
         const imgBuffer = fs.readFileSync(files.path);
 
@@ -120,7 +123,8 @@ exports.addProduct = async (req, res) => {
               filename: files.originalname,
               contentType: files.mimetype,
               imageBase64: imgBase64
-            }
+            },
+            discount: productDiscount
         });
 
         // Save the new product to the database

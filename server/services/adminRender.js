@@ -2,6 +2,7 @@ const Product = require("../model/products");
 const Users = require('../model/userModel');
 const Category = require('../model/category');
 const Vendors = require('../model/vendorModel');
+const jsScript = require('../middlewares/script');
 
 // admin dashboard
 exports.admindashboard = (req, res) => res.render('admin/body/dashboard', { pageName: 'Home' });
@@ -104,9 +105,14 @@ exports.updateProduct = async (req, res) => {
         console.log('productId', productId)
         
         const product = await Product.findOne({ _id: productId });
-        const updatedProduct = req.body;
+        const productDiscount = await jsScript.calculateDiscount(req.body.mrp, req.body.sellingPrice);
 
-        console.log('updatedProduct:', updatedProduct)
+        const updatedProduct = {
+            ...req.body,
+            discount: productDiscount
+        };
+
+        // console.log('updatedProduct:', updatedProduct)
 
         const data = await Product.findByIdAndUpdate(productId, updatedProduct, {new: true});
 

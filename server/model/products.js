@@ -49,6 +49,9 @@ const Schema = new mongoose.Schema({
     salesCount: {
         type: Number,
         default: 0
+    },
+    discount: {
+        type: Number
     }
 }, { timestamps: true });
 
