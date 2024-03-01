@@ -42,9 +42,12 @@ route.get('/myAccount', authentication.checkAuth, services.myAccount);
 route.get('/contact', services.contact)
 
 
-// API
+
 route.post('/api/users', controller.create);
 
-route.post('/api/login', controller.login)
+route.post('/api/login', controller.login);
+
+
+route.post('/add-to-cart', authentication.checkAuth, services.addToCart)
 
 module.exports = route;
