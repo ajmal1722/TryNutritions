@@ -27,7 +27,7 @@ route.get('/shop' || '/shop/shop', services.shop);
 route.get('/shop-details', services.shopDetails);
 
 // cart
-route.get('/cart', services.cart);
+route.get('/cart', authentication.checkAuth, services.cart);
 
 // checkout
 route.get('/checkout', services.checkout);
@@ -36,7 +36,7 @@ route.get('/checkout', services.checkout);
 route.get('/error', services.errorMessage)
 
 // my account
-route.get('/myAccount', services.myAccount);
+route.get('/myAccount', authentication.checkAuth, services.myAccount);
 
 // contact us
 route.get('/contact', services.contact)

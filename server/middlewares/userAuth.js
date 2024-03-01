@@ -13,7 +13,7 @@ exports.checkAuth = async (req, res, next) => {
 
         // If token is not present redirect to login page
         if (!token) {
-            return res.status(200).redirect('/user/login');
+            return res.status(200).redirect('/login');
         }
 
         try {
@@ -24,7 +24,7 @@ exports.checkAuth = async (req, res, next) => {
             const user = await User.findById(decoded.id);
 
             if (!user) {
-                return res.status(200).redirect('/user/login');
+                return res.status(200).redirect('/login');
             }
 
             req.user = user;
@@ -32,7 +32,7 @@ exports.checkAuth = async (req, res, next) => {
         } catch (error) {
             // Handle token verification errors
             if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-                return res.status(200).redirect('/user/login');
+                return res.status(200).redirect('/login');
             }
 
             throw error; // Rethrow other errors
@@ -54,4 +54,3 @@ exports.checkAuthenticated = (redirectTo) => (req, res, next) => {
     // If not authenticated, proceed to the next middleware or route handler
     next();
 };
-

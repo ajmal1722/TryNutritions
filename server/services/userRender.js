@@ -39,18 +39,7 @@ exports.shopDetails = async (req, res) => {
 exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Contact us' });
 
 // cart
-exports.cart = (req, res) => {
-    try {
-        const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR);
-        res.render('user/body/cart', { pageName: 'Cart' });
-    } catch (error) {
-        if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
-            res.status(201).redirect('/login');
-        } else {
-            res.status(500).send(error);
-        }
-    }
-} 
+exports.cart = (req, res) => res.render('user/body/cart', { pageName: 'Cart' });
 
 // checkout
 exports.checkout = (req, res) => res.render('user/body/checkout', { pageName: 'Checkout' });
@@ -58,17 +47,8 @@ exports.checkout = (req, res) => res.render('user/body/checkout', { pageName: 'C
 // Error Messages
 exports.errorMessage = (req, res) => res.render('user/body/error');
     
-
 // my account
 exports.myAccount = (req, res) => {
-    try {
-        const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR);
-        res.status(201).render('user/body/myAccount', { pageName: 'My Account', userName: verify.name });
-    } catch (error) {
-        if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
-            res.status(201).render('user/body/login');
-        } else {
-            res.status(500).send(error);
-        }
-    }
-}
+    const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR);
+    res.status(201).render('user/body/myAccount', { pageName: 'My Account', userName: verify.name });
+ }
