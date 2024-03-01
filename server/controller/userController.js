@@ -18,7 +18,7 @@ exports.homeRoutes = async (req, res) => {
                                 .limit(9)
                                 .exec();
     try {
-        const verify = jwt.verify(req.cookies.jwt, 'shhhh');
+        const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR);
         
         res.status(201).render('user/body/home', {
             username: verify.name,
@@ -47,7 +47,7 @@ exports.userLogin = async (req, res) => {
     try {
         const category = await Category.find({}).exec();
         if (req.cookies.jwt) {
-            const verify = jwt.verify(req.cookies.jwt, 'shhhh')
+            const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR)
             res.status(201).redirect('/');
         } else {
             res.render('user/body/login')
@@ -96,9 +96,9 @@ exports.create = async (req, res) => {
         // generate a token for user
         const token = jwt.sign(
             {id: userData._id, name: userData.name, email: userData.email},
-            'shhhh',
+            process.env.AUTH_STR,
             {
-                expiresIn: '1h'
+                expiresIn: '2h'
             }
         );
 
@@ -142,9 +142,9 @@ exports.login = async (req, res) => {
         if (userData && (await bcrypt.compare(password, userData.password))) {
             const token = jwt.sign(
                 { id: userData._id, name: userData.name },
-                'shhhh',
+                process.env.AUTH_STR,
             {
-                expiresIn: '1h'
+                expiresIn: '2h'
             }
             );
             userData.token = token

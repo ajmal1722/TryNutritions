@@ -41,7 +41,7 @@ exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Con
 // cart
 exports.cart = (req, res) => {
     try {
-        const verify = jwt.verify(req.cookies.jwt, 'shhhh');
+        const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR);
         res.render('user/body/cart', { pageName: 'Cart' });
     } catch (error) {
         if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
@@ -62,7 +62,7 @@ exports.errorMessage = (req, res) => res.render('user/body/error');
 // my account
 exports.myAccount = (req, res) => {
     try {
-        const verify = jwt.verify(req.cookies.jwt, 'shhhh');
+        const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR);
         res.status(201).render('user/body/myAccount', { pageName: 'My Account', userName: verify.name });
     } catch (error) {
         if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {

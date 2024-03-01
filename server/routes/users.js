@@ -1,6 +1,8 @@
 const express = require('express');
 const route = express.Router();
 
+const authentication = require('../middlewares/userAuth');
+
 // require rendering page of user
 const services = require('../services/userRender');
 // require controller
