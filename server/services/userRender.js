@@ -59,12 +59,8 @@ exports.cart = async (req, res) => {
         const user = req.user._id;
         const cart = await Cart.findOne({ user });
 
-        console.log('User: ', user);
-        console.log('Cart: ', cart);
-
-        if (!cart) {
-            return res.status(404).send({ error: 'Cart not found' });
-        }
+        // console.log('User: ', user);
+        // console.log('Cart: ', cart);
 
         res.render('user/body/cart', {
             pageName: 'Cart',
