@@ -63,9 +63,11 @@
                                         <p class="mb-0 mt-4"><%= item.price * item.quantity %></p>
                                     </td>
                                     <td>
-                                        <button class="btn btn-md rounded-circle bg-light border mt-4" >
-                                            <i class="fa fa-times text-danger"></i>
-                                        </button>
+                                        <form action="/delete-cart?id=<%= item.itemId %>" method="post">
+                                            <button class="btn btn-md rounded-circle bg-light border mt-4" type="submit">
+                                                <i class="fa fa-times text-danger"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             <% }); %>

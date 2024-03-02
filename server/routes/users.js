@@ -48,6 +48,7 @@ route.post('/api/users', controller.create);
 route.post('/api/login', controller.login);
 
 
-route.post('/add-to-cart', authentication.checkAuth, services.addToCart)
+route.post('/add-to-cart', authentication.checkAuth, services.addToCart);
+route.post('/delete-cart', authentication.checkAuth, services.deleteCart)
 
 module.exports = route;

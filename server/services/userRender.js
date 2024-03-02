@@ -121,3 +121,27 @@ exports.addToCart = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 };
+
+// Delete Cart
+exports.deleteCart = async (req, res) => {
+    try {
+        const itemID = req.query.id;
+        const userID = req.user._id;
+
+        // Find the user's cart
+        const cart = await Cart.findOne({ user: userID });
+
+        // Remove the item from the cart based on the itemId
+        cart.items = cart.items.filter(item => String(item.itemId) !== itemID);
+
+        // Recalculate the total bill
+        cart.bill = calculateTotalBill(cart.items);
+
+        // Save the updated cart
+        await cart.save();
+
+        res.status(200).send({ message: 'Item removed from the cart successfully', cart });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
