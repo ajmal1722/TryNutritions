@@ -41,9 +41,6 @@ exports.shopDetails = async (req, res) => {
 
 exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Contact us' });
 
-// cart
-exports.cart = (req, res) => res.render('user/body/cart', { pageName: 'Cart' });
-
 // checkout
 exports.checkout = (req, res) => res.render('user/body/checkout', { pageName: 'Checkout' });
 
@@ -55,6 +52,28 @@ exports.myAccount = (req, res) => {
     const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR);
     res.status(201).render('user/body/myAccount', { pageName: 'My Account', userName: verify.name });
 }
+
+// cart
+exports.cart = async (req, res) => {
+    try {
+        const user = req.user._id;
+        const cart = await Cart.findOne({ user });
+
+        console.log('User: ', user);
+        console.log('Cart: ', cart);
+
+        if (!cart) {
+            return res.status(404).send({ error: 'Cart not found' });
+        }
+
+        res.render('user/body/cart', {
+            pageName: 'Cart',
+            cart: cart,
+        });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+} 
 
 // Add to cart
 exports.addToCart = async (req, res) => {
