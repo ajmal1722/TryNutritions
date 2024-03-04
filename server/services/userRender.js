@@ -30,12 +30,14 @@ exports.shop = async (req, res) => {
 exports.shopDetails = async (req, res) => {
     const productId = req.query.id;
     const product = await Products.findById(productId);
-    const category = await Category.find({}).exec()
+    const category = await Category.find({}).exec();
+    const relatedProduct = await Products.find({ category: product.category }).limit(6)
 
     res.render('user/body/shop-details', {
         pageName: 'Shop-details',
         Product: product,
-        Categories: category
+        Categories: category,
+        relatedProducts: relatedProduct
     });
 } 
 
@@ -116,6 +118,7 @@ exports.addToCart = async (req, res) => {
         // Save the updated cart
         await cart.save();
 
+        console.log('Product added to cart successfully', cart)
         res.status(200).send({ message: 'Product added to cart successfully', cart });
     } catch (error) {
         res.status(500).send({ error: error.message });
@@ -140,7 +143,8 @@ exports.deleteCart = async (req, res) => {
         // Save the updated cart
         await cart.save();
 
-        res.status(200).send({ message: 'Item removed from the cart successfully', cart });
+        console.log('Item removed from the cart successfully', cart);
+        res.status(200).redirect('/cart');
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
