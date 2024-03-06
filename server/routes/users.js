@@ -1,6 +1,8 @@
 const express = require('express');
 const route = express.Router();
 
+const authentication = require('../middlewares/userAuth');
+
 // require rendering page of user
 const services = require('../services/userRender');
 // require controller
@@ -19,13 +21,13 @@ route.get('/logout', controller.logout);
 route.get('/signup', services.userSigup);
 
 // shop
-route.get('/shop', services.shop);
+route.get('/shop' || '/shop/shop', services.shop);
 
 // shop-details
 route.get('/shop-details', services.shopDetails);
 
 // cart
-route.get('/cart', services.cart);
+route.get('/cart', authentication.checkAuth, services.cart);
 
 // checkout
 route.get('/checkout', services.checkout);
@@ -34,15 +36,20 @@ route.get('/checkout', services.checkout);
 route.get('/error', services.errorMessage)
 
 // my account
-route.get('/myAccount', services.myAccount);
+route.get('/myAccount', authentication.checkAuth, services.myAccount);
 
 // contact us
 route.get('/contact', services.contact)
 
 
-// API
+
 route.post('/api/users', controller.create);
 
-route.post('/api/login', controller.login)
+route.post('/api/login', controller.login);
+
+
+route.post('/add-to-cart', authentication.checkAuth, services.addToCart);
+route.post('/delete-cart', authentication.checkAuth, services.deleteCart);
+route.post('/update-cart-quantity', authentication.checkAuth, services.changeQuantity);
 
 module.exports = route;

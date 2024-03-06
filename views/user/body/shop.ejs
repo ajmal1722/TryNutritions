@@ -52,19 +52,22 @@
                                     <ul class="list-unstyled fruite-categorie">
                                         <li>
                                             <div class="d-flex justify-content-between fruite-name">
-                                                <a href="#"><i class="fas fa-apple-alt me-2"></i>All products</a>
-                                                <span></span>
+                                                <a href="/shop"><i class="fas fa-apple-alt me-2"></i>All products</a>
                                             </div>
                                         </li>
                                         <% Categories.forEach(item => { %>
                                             <li>
                                                 <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-apple-alt me-2"></i><%= item.category %></a>
-                                                    <span>(8)</span>
+                                                    <a href="/shop/?category=<%= item.category %>"><i class="fas fa-apple-alt me-2"></i><%= item.category %></a>
                                                 </div>
                                             </li>
                                         <% }) %>
+                                        <div class="d-flex justify-content-between fruite-name mt-2">
+                                            <h6 class="fw-bold me-2">Total Products</h6>
+                                            <span>(<%= Products.length %>)</span>
+                                        </div>
                                     </ul>
+                                    
                                 </div>
                             </div>
                             <div class="col-lg-12">
@@ -120,44 +123,29 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-center justify-content-start">
-                                    <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                        <img src="users/img/featur-2.jpg" class="img-fluid rounded" alt="">
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-2">Big Banana</h6>
-                                        <div class="d-flex mb-2">
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star"></i>
+                                <% feauturedProducts.forEach(item => { %>
+                                    <a href="/shop-details?id=<%= item._id %>" class="text-decoration-none">
+                                        <div class="d-flex align-items-center justify-content-start">
+                                            <div class="rounded me-4" style="width: 100px; height: 100px;">
+                                                <img src="data:<%= item.productImage.contentType %>;base64,<%= item.productImage.imageBase64 %>" class="img-fluid rounded" alt="" style="width: 80px; height: 80px;">
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-2"><%= item.name %></h6>
+                                                <div class="d-flex mb-2">
+                                                    <i class="fa fa-star text-secondary"></i>
+                                                    <i class="fa fa-star text-secondary"></i>
+                                                    <i class="fa fa-star text-secondary"></i>
+                                                    <i class="fa fa-star text-secondary"></i>
+                                                    <i class="fa fa-star"></i>
+                                                </div>
+                                                <div class="d-flex mb-2">
+                                                    <h5 class="fw-bold me-2">₹ <%= item.sellingPrice %></h5>
+                                                    <h5 class="text-danger text-decoration-line-through">₹ <%= item.mrp %></h5>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="d-flex mb-2">
-                                            <h5 class="fw-bold me-2">2.99 $</h5>
-                                            <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-start">
-                                    <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                        <img src="users/img/featur-3.jpg" class="img-fluid rounded" alt="">
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-2">Big Banana</h6>
-                                        <div class="d-flex mb-2">
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                        <div class="d-flex mb-2">
-                                            <h5 class="fw-bold me-2">2.99 $</h5>
-                                            <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                        </div>
-                                    </div>
-                                </div>
+                                    </a>
+                                <% }) %>
                                 <div class="d-flex justify-content-center my-4">
                                     <a href="#" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">Vew More</a>
                                 </div>
@@ -174,7 +162,7 @@
                     </div>
                     <div class="col-lg-9">
                         <div class="row g-4 justify-content-center">
-                            <div class="col-md-6 col-lg-6 col-xl-4">
+                            <!-- <div class="col-md-6 col-lg-6 col-xl-4">
                                 <div class="rounded position-relative fruite-item">
                                     <div class="fruite-img">
                                         <img src="users/img/fruite-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
@@ -189,7 +177,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <% Products.forEach(item => { %>
                                 <div class="col-md-6 col-lg-6 col-xl-4">
                                     <a href="/shop-details?id=<%= item._id %>" class="text-decoration-none">
@@ -203,7 +191,11 @@
                                                 <p><%= item.description %></p>
                                                 <div class="d-flex justify-content-between flex-lg-wrap">
                                                     <p class="text-dark fs-5 fw-bold mb-0">₹<%= item.sellingPrice %> / kg</p>
-                                                    <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                    <form action="/add-to-cart?id=<%= item._id %>" method="post">
+                                                        <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
