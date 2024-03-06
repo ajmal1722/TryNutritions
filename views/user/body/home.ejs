@@ -266,6 +266,7 @@
                         </div>
                     </div>
                     <% latestProducts.forEach(product => { %>
+                        <a href="/shop-details?id=<%= product._id %>" class="text-decoration-none">
                             <div class="border border-primary rounded position-relative vesitable-item">
                                 <div class="vesitable-img" style="height: 240px;">
                                     <img src="data:<%= product.productImage.contentType %>;base64,<%= product.productImage.imageBase64 %>" class="img-fluid w-100 rounded-top" alt="">
@@ -284,6 +285,7 @@
                                     </div>
                                 </div>
                             </div>
+                        </a>   
                     <% }) %>
                     <div class="border border-primary rounded position-relative vesitable-item">
                         <div class="vesitable-img">
