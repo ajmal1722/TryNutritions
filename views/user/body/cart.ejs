@@ -47,13 +47,13 @@
                                     <td>
                                         <div class="input-group quantity mt-4" style="width: 100px;">
                                             <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border" >
+                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border" onclick="updateQuantity('<%= item.itemId %>', 'decrement')">
                                                 <i class="fa fa-minus"></i>
                                                 </button>
                                             </div>
                                             <input type="text" class="form-control form-control-sm text-center border-0" value="<%= item.quantity %>">
                                             <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border" onclick="updateQuantity('<%= item.itemId %>', 'increment')">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </div>
@@ -167,6 +167,18 @@
 <!-- Include Footer -->
 <%- include('../partials/_footer')%>
 <!-- /Include Footer -->
+
+
+<script>
+    function updateQuantity(itemId, action) {
+        // Send request to server using Axios
+        axios.post(`/update-cart-quantity?id=${itemId}&action=${action}`)
+            .then(res => {
+                window.location.href = '/cart'
+            })
+            .catch(err => console.log(err))
+    }
+</script>
 
 
  <!-- Include layoutFoot -->

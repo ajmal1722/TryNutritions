@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 const User = require('../model/userModel')
 const Products = require('../model/products');
 const Category = require('../model/category');
@@ -149,3 +150,35 @@ exports.deleteCart = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 }
+
+// increment and decrement products
+exports.changeQuantity = async (req, res) => {
+    const userId = req.user._id;
+    const itemId = req.query.id;
+    const action = req.query.action;
+
+    // Get the user's cart
+    let cart = await Cart.findOne({ user: userId });
+
+    // Find the item in the cart
+    const itemIndex = cart.items.findIndex(val => String(val.itemId) === itemId);
+
+    if (itemIndex !== -1) {
+        // Update the quantity based on the action
+        if (action === 'increment') {
+            cart.items[itemIndex].quantity += 1;
+        } else if (action === 'decrement' && cart.items[itemIndex].quantity > 1) {
+            cart.items[itemIndex].quantity -= 1;
+        }
+
+        // Update the total bill in the cart
+        cart.bill = calculateTotalBill(cart.items);
+
+        // Save the updated cart
+        await cart.save();
+        console.log('product added succesfully')
+        res.status(200).redirect('/cart');
+    } else {
+        res.status(404).send({ error: 'Item not found in the cart' });
+    }
+};
