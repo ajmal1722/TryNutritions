@@ -32,13 +32,18 @@ exports.shopDetails = async (req, res) => {
     const productId = req.query.id;
     const product = await Products.findById(productId);
     const category = await Category.find({}).exec();
-    const relatedProduct = await Products.find({ category: product.category }).limit(6)
+    const relatedProduct = await Products.find({ category: product.category }).limit(6);
+    const feauturedProduct = await Products.find({})
+                                            .sort({ discount: -1 })
+                                            .limit(4)
+                                            .exec()
 
     res.render('user/body/shop-details', {
         pageName: 'Shop-details',
         Product: product,
         Categories: category,
-        relatedProducts: relatedProduct
+        relatedProducts: relatedProduct,
+        feauturedProducts: feauturedProduct
     });
 } 
 
