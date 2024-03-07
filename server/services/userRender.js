@@ -124,8 +124,8 @@ exports.addToCart = async (req, res) => {
         // Save the updated cart
         await cart.save();
 
-        console.log('Product added to cart successfully', cart)
-        res.status(200).send({ message: 'Product added to cart successfully', cart });
+        // Redirect to the current page
+        res.status(200).redirect('back');
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
