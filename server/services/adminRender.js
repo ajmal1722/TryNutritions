@@ -3,6 +3,7 @@ const Users = require('../model/userModel');
 const Category = require('../model/category');
 const Vendors = require('../model/vendorModel');
 const jsScript = require('../middlewares/script');
+const fs = require('fs')
 
 // admin dashboard
 exports.admindashboard = (req, res) => res.render('admin/body/dashboard', { pageName: 'Home' });
@@ -101,10 +102,8 @@ exports.editProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     try {
         const productId = req.params.id;
-
-        console.log('productId', productId)
-        
         const product = await Product.findOne({ _id: productId });
+
         const productDiscount = await jsScript.calculateDiscount(req.body.mrp, req.body.sellingPrice);
 
         const updatedProduct = {
@@ -112,14 +111,29 @@ exports.updateProduct = async (req, res) => {
             discount: productDiscount
         };
 
-        // console.log('updatedProduct:', updatedProduct)
+        // Check if a new image file is uploaded
+        if (req.file) {
+            // Read the image file 
+            const file = req.file;
+            const imgBuffer = fs.readFileSync(file.path);
+            console.log('Image: ', imgBuffer);
 
-        const data = await Product.findByIdAndUpdate(productId, updatedProduct, {new: true});
+            // Convert the Buffer to a base64-encoded string
+            const imgBase64 = imgBuffer.toString('base64');
+
+            updatedProduct.productImage = {
+                filename: req.file.originalname,
+                contentType: req.file.mimetype,
+                imageBase64: imgBase64
+            };
+        }
+
+        const data = await Product.findByIdAndUpdate(productId, updatedProduct, { new: true });
 
         res.status(200).redirect('/admin/products');
     } catch (error) {
         res.status(500).send(error.message);
-    } 
+    }
 }
 
 // Users
