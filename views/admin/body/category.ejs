@@ -34,6 +34,7 @@
                     <table class="table table-bordered text-center">
                         <thead>
                         <tr>
+                            <th>Images</th>
                             <th>Name</th>
                             <th>Action</th>
                         </tr>
@@ -42,6 +43,9 @@
                         <!-- Category Rows -->
                         <% Category.forEach(item => { %>
                             <tr>
+                                <td>
+                                    <img src="<%= item.imageUrl %>" alt="<%= item.category %>" style="max-width: 100px; max-height: 100px;">
+                                </td>
                                 <td><%= item.category %></td>
                                 <td>
                                     <!-- Add unique modal IDs for each category -->
