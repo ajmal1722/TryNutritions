@@ -6,6 +6,7 @@ const jsScript = require('../middlewares/script');
 const fs = require('fs');
 const uploads = require('../middlewares/multer');
 const cloudinary = require('../middlewares/cloudinary');
+const { error } = require("console");
 
 // admin dashboard
 exports.admindashboard = (req, res) => res.render('admin/body/dashboard', { pageName: 'Home' });
@@ -196,11 +197,31 @@ exports.deleteCategory = async (req, res) => {
     // get the id from query string
     const categoryId = req.query.id;
 
-    // match the id and delete
-    const category = await Category.findByIdAndDelete({ _id: categoryId });
+    try {
+        // Find the category to get the image public_id
+        const category = await Category.findById(categoryId);
 
-    res.redirect('/admin/category');
-}
+        if (!category) {
+            return res.status(404).json({ error: error.message });
+        }
+
+        // Extract the public_id from the image URL
+        const publicId = category.imageId;
+
+        // Delete the category from the database
+        await Category.findByIdAndDelete(categoryId);
+
+        // If a public_id exists, delete the image from Cloudinary
+        if (publicId) {
+            await cloudinary.uploader.destroy(publicId);
+        }
+
+        res.redirect('/admin/category');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+};
 
 // vendor
 exports.viewVendor = async (req, res) => {
