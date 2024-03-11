@@ -86,10 +86,14 @@
                         </div>
                         <div class="modal-body">
                             <!-- Form for adding a category -->
-                            <form id="addCategoryForm" action="/addCategory" method="post">
+                            <form id="addCategoryForm" action="/addCategory" method="post" enctype="multipart/form-data">
                                 <div class="mb-3">
                                     <label for="categoryName" class="form-label">Category Name:</label>
                                     <input type="text" class="form-control" id="category" name="category" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="categoryImage" class="form-label">Category Image:</label>
+                                    <input type="file" class="form-control" id="categoryImage" name="categoryImage" accept="image/*" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Add Category</button>
                             </form>
@@ -97,6 +101,7 @@
                     </div>
                 </div>
             </div>
+            
         </main>
         
         

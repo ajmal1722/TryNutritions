@@ -3,7 +3,9 @@ const Users = require('../model/userModel');
 const Category = require('../model/category');
 const Vendors = require('../model/vendorModel');
 const jsScript = require('../middlewares/script');
-const fs = require('fs')
+const fs = require('fs');
+const uploads = require('../middlewares/multer');
+const cloudinary = require('../middlewares/cloudinary');
 
 // admin dashboard
 exports.admindashboard = (req, res) => res.render('admin/body/dashboard', { pageName: 'Home' });
@@ -168,10 +170,27 @@ exports.blockUser = async (req, res) => {
 // Category
 
 exports.addCategory = async (req, res) => {
-    const data = req.body;
-    const createCategory = await Category.create(data)
-    res.status(200).redirect('admin/category')
-}
+    try {
+        const file = req.file;
+
+        // Upload image to Cloudinary
+        const result = await cloudinary.uploader.upload(file.path);
+
+        // Create a new category with the data and Cloudinary information
+        const categoryData = {
+            ...req.body,
+            imageUrl: result.secure_url, // Cloudinary image URL
+            imageId: result.public_id     // Cloudinary image ID
+        };
+
+        const createCategory = await Category.create(categoryData);
+
+        res.status(200).redirect('admin/category');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};
 
 exports.deleteCategory = async (req, res) => {
     // get the id from query string
