@@ -55,6 +55,8 @@ route.post('/admin/updateProduct/:id', multer.single('productImage'), services.u
 route.get('/viewUser', services.viewUser);
 
 route.post('/addCategory', multer.single('categoryImage'), services.addCategory);
+route.get('/editCategory', services.editCategory);
+route.post('/updateCategory', multer.single('categoryImage'), services.updatedCategory);
 
 route.get('/deleteCategory', services.deleteCategory);
 

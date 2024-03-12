@@ -222,6 +222,57 @@ exports.deleteCategory = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+exports.editCategory = async (req, res) => {
+    try {
+        const categoryId = req.query.id;
+        console.log('Id:', categoryId);
+
+        const category = await Category.findById(categoryId);
+
+        res.redirect('back')
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+exports.updatedCategory = async (req, res) => {
+    try {
+        const categoryId = req.query.id;
+        console.log('id:', categoryId);
+        console.log('body: ', req.body);
+        console.log('File: ', req.file);
+
+        const existingCategory = await Category.findById(categoryId);
+        console.log('existingCategory:', existingCategory)
+
+        const updatedCategory = { ...req.body };
+
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(req.file.path);
+            updatedCategory.imageUrl = result.url;
+            updatedCategory.imageId = result.public_id;
+
+            console.log('url:', updatedCategory.imageUrl)
+        }
+
+        updatedCategory.category = req.body.category;
+
+        const updatedCategoryDoc = await Category.findByIdAndUpdate(
+            categoryId,
+            updatedCategory,
+            { new: true }
+        );
+
+        res.status(200).redirect('/admin/category');
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 
 // vendor
 exports.viewVendor = async (req, res) => {
