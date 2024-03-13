@@ -34,80 +34,40 @@
                 <!-- Add Coupon Button -->
                 
                 <!-- Coupon Table -->
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                    <!-- Sample Coupon Cards -->
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body text-center">
-                                <h5 class="card-title text-success mb-3">Coupon 2</h5>
-                                <p class="card-text">
-                                    <span class="text-bold text-dark font-monospace">Start Date :</span> <span class="text-secondary">2024-03-01</span>
-                                </p>
-                                <p class="card-text">
-                                    <span class="text-bold text-dark font-monospace">End Date :</span> <span class="text-secondary">2024-04-01</span>
-                                </p>
-                                <p class="card-text">
-                                    <span class="text-bold text-dark font-monospace">Max Price Offer :</span> <span class="text-secondary">$25 off</span>
-                                </p>
-                                <div class="d-flex justify-content-center">
-                                    <button type="button" class="btn btn-warning me-2" style="width: 100px;">
-                                        Update
-                                    </button>
-                                    <button type="button" class="btn btn-danger" style="width: 100px;">
-                                        Delete
-                                    </button>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 my-3">
+                    <!-- Coupon Cards -->
+                    <% Coupon.forEach(item => { %>
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title text-success mb-3"><%= item.couponName %></h5>
+                                    <p class="card-text">
+                                        <span class="text-bold text-dark font-monospace">Coupon Code :</span> <span class="text-secondary"><%= item.couponCode %></span>
+                                    </p>
+                                    <p class="card-text">
+                                        <span class="text-bold text-dark font-monospace">Discount :</span> <span class="text-secondary"><%= item.discount %>%</span>
+                                    </p>
+                                    <p class="card-text">
+                                        <span class="text-bold text-dark font-monospace">Max Price Offer :</span> <span class="text-secondary">₹<%= item.maxPriceOffer %></span>
+                                    </p>
+                                    <p class="card-text">
+                                        <span class="text-bold text-dark font-monospace">Start Date :</span> <span class="text-secondary"><%= item.startDate %></span>
+                                    </p>
+                                    <p class="card-text">
+                                        <span class="text-bold text-dark font-monospace">End Date :</span> <span class="text-secondary"><%= item.endDate %> %></span>
+                                    </p>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button" class="btn btn-warning me-2" style="width: 100px;">
+                                            Update
+                                        </button>
+                                        <button type="button" class="btn btn-danger" style="width: 100px;">
+                                            Delete
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body text-center">
-                                <h5 class="card-title text-success mb-3">Coupon 2</h5>
-                                <p class="card-text">
-                                    <span class="text-bold text-dark font-monospace">Start Date :</span> <span class="text-secondary">2024-03-01</span>
-                                </p>
-                                <p class="card-text">
-                                    <span class="text-bold text-dark font-monospace">End Date :</span> <span class="text-secondary">2024-04-01</span>
-                                </p>
-                                <p class="card-text">
-                                    <span class="text-bold text-dark font-monospace">Max Price Offer :</span> <span class="text-secondary">$25 off</span>
-                                </p>
-                                <div class="d-flex justify-content-center">
-                                    <button type="button" class="btn btn-warning me-2" style="width: 100px;">
-                                        Update
-                                    </button>
-                                    <button type="button" class="btn btn-danger" style="width: 100px;">
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body text-center">
-                                <h5 class="card-title text-success mb-3">Coupon 2</h5>
-                                <p class="card-text">
-                                    <span class="text-bold text-dark font-monospace">Start Date :</span> <span class="text-secondary">2024-03-01</span>
-                                </p>
-                                <p class="card-text">
-                                    <span class="text-bold text-dark font-monospace">End Date :</span> <span class="text-secondary">2024-04-01</span>
-                                </p>
-                                <p class="card-text">
-                                    <span class="text-bold text-dark font-monospace">Max Price Offer :</span> <span class="text-secondary">$25 off</span>
-                                </p>
-                                <div class="d-flex justify-content-center">
-                                    <button type="button" class="btn btn-warning me-2" style="width: 100px;">
-                                        Update
-                                    </button>
-                                    <button type="button" class="btn btn-danger" style="width: 100px;">
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        </div> 
+                    <% }) %>           
                 </div>
             </div>
             

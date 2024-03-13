@@ -49,7 +49,13 @@ exports.addProducts = async (req, res) => {
     })
 } 
 
-exports.coupons = (req, res) => res.render('admin/body/coupons', { pageName: 'Coupons' });
+exports.coupons = async (req, res) => {
+    coupon = await Coupon.find({}).exec()
+    res.render('admin/body/coupons', {
+        pageName: 'Coupons',
+        Coupon: coupon
+    });
+} 
 
 exports.banners = (req, res) => res.render('admin/body/banner', { pageName: 'Banners' });
 
