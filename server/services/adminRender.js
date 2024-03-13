@@ -2,6 +2,7 @@ const Product = require("../model/products");
 const Users = require('../model/userModel');
 const Category = require('../model/category');
 const Vendors = require('../model/vendorModel');
+const Coupon = require('../model/coupon');
 const jsScript = require('../middlewares/script');
 const fs = require('fs');
 const uploads = require('../middlewares/multer');
@@ -303,3 +304,17 @@ exports.toggleVendorAccess = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
+
+// Coupons
+exports.createCoupon = async (req, res) => {
+    try {
+        const couponData = req.body;
+        const coupon = await Coupon.create(couponData);
+
+        res.status(200).redirect('back');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}

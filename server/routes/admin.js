@@ -65,4 +65,6 @@ route.get('/blockUser', services.blockUser);
 route.get('/viewVendor', services.viewVendor);
 route.get('/toggleVendorAccess', services.toggleVendorAccess);
 
+route.post('/createCoupon', services.createCoupon);
+
 module.exports = route;
