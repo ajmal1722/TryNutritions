@@ -192,7 +192,7 @@ exports.changeQuantity = async (req, res) => {
 // Apply coupon
 exports.applyCoupon = async (req, res) => {
     try {
-        const couponCode = req.body.couponCode;
+        const { couponCode, cartId } = req.body;
         console.log('couponCode:', req.body);
 
         // Find the coupon in the database by its code
@@ -223,10 +223,8 @@ exports.applyCoupon = async (req, res) => {
 
         const { discount, maxPriceOffer } = coupon; // Destructuring coupon object
 
-        const userID = req.user._id; // find the userId
-
-        // find the user's cart by userID
-        const cart = await Cart.findOne({ user: userID });
+        // find the user's cart 
+        const cart = await Cart.findById(cartId);
 
         let { bill } = cart // (const bill = cart.bill) destructurnig
         

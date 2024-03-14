@@ -111,6 +111,7 @@
                 </table>
             </div>
             <div class="mt-5">
+                <input id="cartId" type="hidden" value="<%= cart._id %>"> 
                 <input id="couponCode" type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
                 <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button" onclick="return applyCoupon()">
                     Apply Coupon
@@ -186,19 +187,21 @@
     }
 
     function applyCoupon () {
-    const couponCode = document.getElementById('couponCode').value;
-    axios.post('/applyCoupon', { couponCode })
-        .then(res => {
-            console.log(res.data)
-            // Clear any previous error message
-            document.getElementById('couponErrorMessage').textContent = '';
-            window.location.href = '/cart'
-        })
-        .catch(err => {
-            document.getElementById('couponErrorMessage').textContent = err.response.data.error;
-            console.log(err.response.data.error)
-        })
-}
+        const couponCode = document.getElementById('couponCode').value;
+        const cartId = document.getElementById('cartId').value
+
+        axios.post('/applyCoupon', { couponCode, cartId })
+            .then(res => {
+                console.log(res.data)
+                // Clear any previous error message
+                document.getElementById('couponErrorMessage').textContent = '';
+                window.location.href = '/cart'
+            })
+            .catch(err => {
+                document.getElementById('couponErrorMessage').textContent = err.response.data.error;
+                console.log(err.response.data.error)
+            })
+    }
 
 </script>
 
