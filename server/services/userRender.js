@@ -4,6 +4,7 @@ const User = require('../model/userModel')
 const Products = require('../model/products');
 const Category = require('../model/category');
 const Cart = require('../model/cart');
+const Coupon = require('../model/coupon');
 const { calculateDiscount, calculateTotalBill } = require('../middlewares/script');
 
 // signup page
@@ -124,8 +125,8 @@ exports.addToCart = async (req, res) => {
         // Save the updated cart
         await cart.save();
 
-        console.log('Product added to cart successfully', cart)
-        res.status(200).send({ message: 'Product added to cart successfully', cart });
+        // Redirect to the current page
+        res.status(200).redirect('back');
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
@@ -187,3 +188,63 @@ exports.changeQuantity = async (req, res) => {
         res.status(404).send({ error: 'Item not found in the cart' });
     }
 };
+
+// Apply coupon
+exports.applyCoupon = async (req, res) => {
+    try {
+        const couponCode = req.body.couponCode;
+        console.log('couponCode:', req.body);
+
+        // Find the coupon in the database by its code
+        const coupon = await Coupon.findOne({ couponCode });
+        if (!coupon) {
+            return res.status(404).json({ error: 'Write a valid Coupon code' }); // Include error message in the response
+        }
+
+        // Check if the coupon has reached its usage limit
+        if (coupon.usageLimit <= 0) {
+            return res.status(400).json({ error: 'Coupon has already been used' });
+        }
+
+        // Check if the current date is before the start date
+        const currentDate = new Date();
+        if (currentDate < coupon.startDate) {
+            return res.status(400).json({ error: 'Coupon is not yet valid' });
+        }
+
+        // Check if the current date is after the end date
+        if (currentDate > coupon.endDate) {
+            return res.status(400).json({ error: 'Coupon has expired' });
+        }
+
+        // Decrement the usage limit of the coupon
+        coupon.usageLimit -= 1;
+        await coupon.save();
+
+        const { discount, maxPriceOffer } = coupon; // Destructuring coupon object
+
+        const userID = req.user._id; // find the userId
+
+        // find the user's cart by userID
+        const cart = await Cart.findOne({ user: userID });
+
+        let { bill } = cart // (const bill = cart.bill) destructurnig
+        
+        const discountAmount = (bill * discount) / 100;
+
+        // check if the discount amount is greater than maxPriceOffer
+        const finalDiscount = Math.min(discountAmount, maxPriceOffer);
+
+        // Apply the discount to the bill
+        bill -= finalDiscount;
+
+        // Update the user's cart with the new bill
+        await Cart.findByIdAndUpdate(cart._id, { bill });
+
+        console.log('userBill:', finalDiscount);
+        res.redirect('/cart');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}

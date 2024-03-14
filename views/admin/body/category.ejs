@@ -24,7 +24,7 @@
                     <!-- /include HEAD TITLE -->
 
                     <!-- Add Category Button -->
-                    <a  data-bs-toggle="modal" data-bs-target="#addCategoryModal"class="btn-download">
+                    <a data-bs-toggle="modal" data-bs-target="#addCategoryModal"class="btn-download">
                         <span class="text mx-md-2">Add Category</span>
                     </a>
                 </div>
@@ -34,6 +34,7 @@
                     <table class="table table-bordered text-center">
                         <thead>
                         <tr>
+                            <th>Images</th>
                             <th>Name</th>
                             <th>Action</th>
                         </tr>
@@ -42,8 +43,14 @@
                         <!-- Category Rows -->
                         <% Category.forEach(item => { %>
                             <tr>
+                                <td>
+                                    <img src="<%= item.imageUrl %>" alt="<%= item.category %>" style="max-width: 100px; max-height: 100px;">
+                                </td>
                                 <td><%= item.category %></td>
                                 <td>
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editCategoryModal_<%= item._id %>" onclick="openEditModal('<%= item._id %>')">
+                                        Edit
+                                    </button>
                                     <!-- Add unique modal IDs for each category -->
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal<%= item._id %>">
                                         Delete
@@ -69,6 +76,32 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Edit modal -->
+                            <div class="modal fade" id="editCategoryModal_<%= item._id %>" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editCategoryModalLabel">Add Category</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Form for adding a category -->
+                                            <form id="editCategoryForm" action="/admin/updateCategory?id=<%= item._id %>" method="post" enctype="multipart/form-data">
+                                                <div class="mb-3">
+                                                    <label for="categoryName" class="form-label">Category Name:</label>
+                                                    <input type="text" class="form-control" id="category" name="category" value="<%= item.category %>" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="categoryImage" class="form-label">Category Image:</label>
+                                                    <input type="file" class="form-control" id="categoryImage" name="categoryImage" accept="image/*">
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Edit</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         <% }) %>
                         
                         </tbody>
@@ -86,10 +119,14 @@
                         </div>
                         <div class="modal-body">
                             <!-- Form for adding a category -->
-                            <form id="addCategoryForm" action="/addCategory" method="post">
+                            <form id="addCategoryForm" action="/addCategory" method="post" enctype="multipart/form-data">
                                 <div class="mb-3">
                                     <label for="categoryName" class="form-label">Category Name:</label>
                                     <input type="text" class="form-control" id="category" name="category" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="categoryImage" class="form-label">Category Image:</label>
+                                    <input type="file" class="form-control" id="categoryImage" name="categoryImage" accept="image/*" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Add Category</button>
                             </form>
@@ -102,10 +139,31 @@
         
 
         <!-- /MAIN -->
-          
+    
+        
+    <script>
+        function editCategory (itemId){
+            axios.post(`/admin/editCategory?id=${itemId}`)
+                .then(res => console.log(res.data.message))
+                .catch(err => console.log(err.message))
+        }
+
+        function openEditModal(itemId) {
+            // Make an Axios GET request to retrieve data based on itemId
+            axios.get(`/admin/editCategory?id=${itemId}`)
+                .then(res => {
+                    console.log(res.data)
+                })
+                .catch(error => {
+                    console.error('Error fetching category data:', error);
+            });
+        }
+    </script>    
+    
 
 
 	<script src="/admin/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

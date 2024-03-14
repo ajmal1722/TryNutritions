@@ -2,7 +2,12 @@ const Product = require("../model/products");
 const Users = require('../model/userModel');
 const Category = require('../model/category');
 const Vendors = require('../model/vendorModel');
+const Coupon = require('../model/coupon');
 const jsScript = require('../middlewares/script');
+const fs = require('fs');
+const uploads = require('../middlewares/multer');
+const cloudinary = require('../middlewares/cloudinary');
+const { error } = require("console");
 
 // admin dashboard
 exports.admindashboard = (req, res) => res.render('admin/body/dashboard', { pageName: 'Home' });
@@ -44,7 +49,13 @@ exports.addProducts = async (req, res) => {
     })
 } 
 
-exports.coupons = (req, res) => res.render('admin/body/coupons', { pageName: 'Coupons' });
+exports.coupons = async (req, res) => {
+    coupon = await Coupon.find({}).exec()
+    res.render('admin/body/coupons', {
+        pageName: 'Coupons',
+        Coupon: coupon
+    });
+} 
 
 exports.banners = (req, res) => res.render('admin/body/banner', { pageName: 'Banners' });
 
@@ -101,10 +112,8 @@ exports.editProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     try {
         const productId = req.params.id;
-
-        console.log('productId', productId)
-        
         const product = await Product.findOne({ _id: productId });
+
         const productDiscount = await jsScript.calculateDiscount(req.body.mrp, req.body.sellingPrice);
 
         const updatedProduct = {
@@ -112,14 +121,29 @@ exports.updateProduct = async (req, res) => {
             discount: productDiscount
         };
 
-        // console.log('updatedProduct:', updatedProduct)
+        // Check if a new image file is uploaded
+        if (req.file) {
+            // Read the image file 
+            const file = req.file;
+            const imgBuffer = fs.readFileSync(file.path);
+            console.log('Image: ', imgBuffer);
 
-        const data = await Product.findByIdAndUpdate(productId, updatedProduct, {new: true});
+            // Convert the Buffer to a base64-encoded string
+            const imgBase64 = imgBuffer.toString('base64');
+
+            updatedProduct.productImage = {
+                filename: req.file.originalname,
+                contentType: req.file.mimetype,
+                imageBase64: imgBase64
+            };
+        }
+
+        const data = await Product.findByIdAndUpdate(productId, updatedProduct, { new: true });
 
         res.status(200).redirect('/admin/products');
     } catch (error) {
         res.status(500).send(error.message);
-    } 
+    }
 }
 
 // Users
@@ -154,20 +178,108 @@ exports.blockUser = async (req, res) => {
 // Category
 
 exports.addCategory = async (req, res) => {
-    const data = req.body;
-    const createCategory = await Category.create(data)
-    res.status(200).redirect('admin/category')
-}
+    try {
+        const file = req.file;
+
+        // Upload image to Cloudinary
+        const result = await cloudinary.uploader.upload(file.path);
+
+        // Create a new category with the data and Cloudinary information
+        const categoryData = {
+            ...req.body,
+            imageUrl: result.secure_url, // Cloudinary image URL
+            imageId: result.public_id     // Cloudinary image ID
+        };
+
+        const createCategory = await Category.create(categoryData);
+
+        res.status(200).redirect('admin/category');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};
 
 exports.deleteCategory = async (req, res) => {
     // get the id from query string
     const categoryId = req.query.id;
 
-    // match the id and delete
-    const category = await Category.findByIdAndDelete({ _id: categoryId });
+    try {
+        // Find the category to get the image public_id
+        const category = await Category.findById(categoryId);
 
-    res.redirect('/admin/category');
+        if (!category) {
+            return res.status(404).json({ error: error.message });
+        }
+
+        // Extract the public_id from the image URL
+        const publicId = category.imageId;
+
+        // Delete the category from the database
+        await Category.findByIdAndDelete(categoryId);
+
+        // If a public_id exists, delete the image from Cloudinary
+        if (publicId) {
+            await cloudinary.uploader.destroy(publicId);
+        }
+
+        res.redirect('/admin/category');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+};
+exports.editCategory = async (req, res) => {
+    try {
+        const categoryId = req.query.id;
+        console.log('Id:', categoryId);
+
+        const category = await Category.findById(categoryId);
+
+        res.redirect('back')
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
 }
+
+exports.updatedCategory = async (req, res) => {
+    try {
+        const categoryId = req.query.id;
+        console.log('id:', categoryId);
+        console.log('body: ', req.body);
+        console.log('File: ', req.file);
+
+        const existingCategory = await Category.findById(categoryId);
+        console.log('existingCategory:', existingCategory)
+
+        const updatedCategory = { ...req.body };
+
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(req.file.path);
+            updatedCategory.imageUrl = result.url;
+            updatedCategory.imageId = result.public_id;
+
+            console.log('url:', updatedCategory.imageUrl)
+        }
+
+        updatedCategory.category = req.body.category;
+
+        const updatedCategoryDoc = await Category.findByIdAndUpdate(
+            categoryId,
+            updatedCategory,
+            { new: true }
+        );
+
+        res.status(200).redirect('/admin/category');
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 
 // vendor
 exports.viewVendor = async (req, res) => {
@@ -198,3 +310,17 @@ exports.toggleVendorAccess = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
+
+// Coupons
+exports.createCoupon = async (req, res) => {
+    try {
+        const couponData = req.body;
+        const coupon = await Coupon.create(couponData);
+
+        res.status(200).redirect('back');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}

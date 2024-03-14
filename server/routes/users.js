@@ -52,4 +52,6 @@ route.post('/add-to-cart', authentication.checkAuth, services.addToCart);
 route.post('/delete-cart', authentication.checkAuth, services.deleteCart);
 route.post('/update-cart-quantity', authentication.checkAuth, services.changeQuantity);
 
+route.post('/applyCoupon', authentication.checkAuth, services.applyCoupon);
+
 module.exports = route;

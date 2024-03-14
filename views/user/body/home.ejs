@@ -46,22 +46,12 @@
                     <div class="col-md-12 col-lg-5">
                         <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
                             <div class="carousel-inner" role="listbox">
-                                <div class="carousel-item active rounded">
-                                    <img src="/users/img/hero-img-1.webp" class="img-fluid w-100 h-100 bg-secondary rounded" alt="First slide">
-                                    <a href="#" class="btn px-4 py-2 text-white rounded">Fruits</a>
-                                </div>
-                                <div class="carousel-item rounded">
-                                    <img src="/users/img/hero-img-2.webp" class="img-fluid w-100 h-100 rounded" alt="Second slide">
-                                    <a href="#" class="btn px-4 py-2 text-white rounded">Vegetables</a>
-                                </div>
-                                <div class="carousel-item rounded">
-                                    <img src="/users/img/hero-img-3.jpeg" class="img-fluid w-100 h-100 rounded" alt="Third slide">
-                                    <a href="#" class="btn px-4 py-2 text-white rounded">Dry Fruits</a>
-                                </div>
-                                <div class="carousel-item rounded">
-                                    <img src="/users/img/horo-img-4.jpg" class="img-fluid w-100 h-100 rounded" alt="fourth slide">
-                                    <a href="#" class="btn px-4 py-2 text-white rounded">Grains</a>
-                                </div>
+                                <% Categories.forEach((item, index) => { %>
+                                    <div class="carousel-item <%= index === 0 ? 'active' : '' %> rounded">
+                                        <img src="<%= item.imageUrl %>" class="img-fluid w-100 h-100 bg-secondary rounded" alt="<%= item.category %>">
+                                        <a href="/shop/?category=<%= item.category %>" class="btn px-4 py-2 text-white rounded"><%= item.category %></a>
+                                    </div>
+                                <% }) %>
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -173,7 +163,7 @@
                                                                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
                                                                     <div class="d-flex justify-content-between flex-lg-wrap">
                                                                         <p class="text-dark fs-5 fw-bold mb-0"><%= product.sellingPrice %> / kg</p>
-                                                                        <form action="/add-to-cart?id=<%= product._id %>" method="post">
+                                                                        <form onclick="addToCartAlert('<%= product._id %>')">
                                                                             <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
                                                                                 <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                                                             </button>
@@ -277,7 +267,7 @@
                                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
                                     <div class="d-flex justify-content-between flex-lg-wrap">
                                         <p class="text-dark fs-5 fw-bold mb-0">₹<%= product.sellingPrice %> / kg</p>
-                                        <form action="/add-to-cart?id=<%= product._id %>" method="post">
+                                        <form onclick="addToCartAlert('<%= product._id %>')">
                                             <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
                                                 <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                             </button>
@@ -373,7 +363,7 @@
                                         <img src="data:<%= product.productImage.contentType %>;base64,<%= product.productImage.imageBase64 %>" class="img-fluid rounded-circle w-100" alt="" style="height: 160px; width: 160px;">
                                     </div>
                                     <div class="col-6">
-                                        <a href="#" class="h5"><%= product.name %></a>
+                                        <a href="/shop-details?id=<%= product._id %>" class="h5"><%= product.name %></a>
                                         <div class="d-flex my-3">
                                             <i class="fas fa-star text-primary"></i>
                                             <i class="fas fa-star text-primary"></i>
@@ -382,7 +372,7 @@
                                             <i class="fas fa-star"></i>
                                         </div>
                                         <h4 class="mb-3">₹<%= product.sellingPrice %></h4>
-                                        <form action="/add-to-cart?id=<%= product._id %>" method="post">
+                                        <form onclick="addToCartAlert('<%= product._id %>')">
                                             <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
                                                 <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                             </button>

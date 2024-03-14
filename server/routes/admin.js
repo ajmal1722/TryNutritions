@@ -1,12 +1,14 @@
 const express = require('express');
 const route = express.Router();
 const adminAuth = require('../middlewares/adminAuth');
-const mullter = require('../middlewares/multer');
+const multer = require('../middlewares/multer');
+const cloudinary = require('../middlewares/cloudinary');
 
 // require controller
 const controller = require('../controller/adminController');
 // require render
-const services = require('../services/adminRender')
+const services = require('../services/adminRender');
+const upload = require('../middlewares/multer');
 
 // admin dashboard
 route.get('/admin/', adminAuth.checkAuth, services.admindashboard);
@@ -42,17 +44,19 @@ route.post('/login', controller.login);
 
 route.get('/logout', controller.logout);
 
-route.post('/addProducts', mullter.single('productImage'), controller.addProduct);
+route.post('/addProducts', multer.single('productImage'), controller.addProduct);
 
 route.get('/deleteProduct', services.deleteProduct);
 
 route.get('/editProduct', services.editProduct);
 
-route.post('/admin/updateProduct/:id', mullter.single('productImage'), services.updateProduct)
+route.post('/admin/updateProduct/:id', multer.single('productImage'), services.updateProduct)
 
 route.get('/viewUser', services.viewUser);
 
-route.post('/addCategory', services.addCategory);
+route.post('/addCategory', multer.single('categoryImage'), services.addCategory);
+route.get('/editCategory', services.editCategory);
+route.post('/updateCategory', multer.single('categoryImage'), services.updatedCategory);
 
 route.get('/deleteCategory', services.deleteCategory);
 
@@ -60,5 +64,7 @@ route.get('/blockUser', services.blockUser);
 
 route.get('/viewVendor', services.viewVendor);
 route.get('/toggleVendorAccess', services.toggleVendorAccess);
+
+route.post('/createCoupon', services.createCoupon);
 
 module.exports = route;

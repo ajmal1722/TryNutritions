@@ -14,6 +14,7 @@ const adminRoute = require('./server/routes/admin')
 
 const app = express();
 // const upload = multer();
+app.use(express.json())
 
 dotenv.config({ path: 'config.env' });
 const PORT = process.env.PORT || 8080

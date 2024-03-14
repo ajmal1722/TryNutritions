@@ -111,8 +111,13 @@
                 </table>
             </div>
             <div class="mt-5">
-                <input type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
-                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Apply Coupon</button>
+                <input id="couponCode" type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
+                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button" onclick="return applyCoupon()">
+                    Apply Coupon
+                </button>
+                <p id="couponErrorMessage" class="text-danger" style="margin-top: -20px;">
+                    
+                </p>
             </div>
             <div class="row g-4 justify-content-end">
                 <div class="col-8"></div>
@@ -129,10 +134,9 @@
                                 <div class="">
                                     <p class="mb-0">Flat rate: 
                                         <%= cart.bill >= 300 ? '₹ 0' : '₹ 30' %>
-                                    </p>                                    
+                                    </p>                                 
                                 </div>
                             </div>
-                            <p class="mb-0 text-end">Shipping to Ukraine.</p>
                         </div>
                         <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                             <h5 class="mb-0 ps-4 me-4">Total</h5>
@@ -180,6 +184,22 @@
             })
             .catch(err => console.log(err))
     }
+
+    function applyCoupon () {
+    const couponCode = document.getElementById('couponCode').value;
+    axios.post('/applyCoupon', { couponCode })
+        .then(res => {
+            console.log(res.data)
+            // Clear any previous error message
+            document.getElementById('couponErrorMessage').textContent = '';
+            window.location.href = '/cart'
+        })
+        .catch(err => {
+            document.getElementById('couponErrorMessage').textContent = err.response.data.error;
+            console.log(err.response.data.error)
+        })
+}
+
 </script>
 
 
