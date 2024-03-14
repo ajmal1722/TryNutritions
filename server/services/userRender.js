@@ -202,9 +202,9 @@ exports.applyCoupon = async (req, res) => {
         }
 
         // Check if the coupon has reached its usage limit
-        if (coupon.usageLimit <= 0) {
-            return res.status(400).json({ error: 'Coupon has already been used' });
-        }
+        // if (coupon.usageLimit <= 0) {
+        //     return res.status(400).json({ error: 'Coupon has already been used' });
+        // }
 
         // Check if the current date is before the start date
         const currentDate = new Date();
@@ -218,29 +218,30 @@ exports.applyCoupon = async (req, res) => {
         }
 
         // Decrement the usage limit of the coupon
-        coupon.usageLimit -= 1;
-        await coupon.save();
+        // coupon.usageLimit -= 1;
+        // await coupon.save();
 
         const { discount, maxPriceOffer } = coupon; // Destructuring coupon object
 
-        // find the user's cart 
+        // // find the user's cart 
         const cart = await Cart.findById(cartId);
 
         let { bill } = cart // (const bill = cart.bill) destructurnig
         
         const discountAmount = (bill * discount) / 100;
 
-        // check if the discount amount is greater than maxPriceOffer
+        // // check if the discount amount is greater than maxPriceOffer
         const finalDiscount = Math.min(discountAmount, maxPriceOffer);
 
-        // Apply the discount to the bill
-        bill -= finalDiscount;
+        res.status(200).json({ finalDiscount });
+        // // Apply the discount to the bill
+        // bill -= finalDiscount;
 
-        // Update the user's cart with the new bill
-        await Cart.findByIdAndUpdate(cart._id, { bill });
+        // // Update the user's cart with the new bill
+        // await Cart.findByIdAndUpdate(cart._id, { bill });
 
-        console.log('userBill:', finalDiscount);
-        res.redirect('/cart');
+        // console.log('userBill:', finalDiscount);
+        // res.redirect('/cart');
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
