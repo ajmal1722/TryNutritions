@@ -142,7 +142,7 @@
                             <div class="d-flex justify-content-between">
                                 <h5 class="mb-0 me-4">Coupon Discount:</h5>
                                 <div class="">
-                                    <p class="mb-0" id="coupon-discount"></p>                                 
+                                    <p class="mb-0" id="coupon-discount"></p>                                  
                                 </div>
                             </div>
                         </div>
@@ -204,6 +204,8 @@
                 document.getElementById('couponErrorMessage').textContent = '';
                 document.getElementById('apply-coupon').style.display = 'none';
                 document.getElementById('remove-coupon').style.display = 'inline-block';
+                const { finalDiscount, bill } = res.data;
+                document.getElementById('coupon-discount').textContent = '- ₹ ' + finalDiscount;
             })
             .catch(err => {
                 document.getElementById('couponErrorMessage').textContent = err.response.data.error;

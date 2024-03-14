@@ -233,7 +233,7 @@ exports.applyCoupon = async (req, res) => {
         // // check if the discount amount is greater than maxPriceOffer
         const finalDiscount = Math.min(discountAmount, maxPriceOffer);
 
-        res.status(200).json({ finalDiscount });
+        res.status(200).json({ finalDiscount, bill });
         // // Apply the discount to the bill
         // bill -= finalDiscount;
 
