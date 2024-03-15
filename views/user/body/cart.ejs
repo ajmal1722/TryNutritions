@@ -150,9 +150,9 @@
                             <h5 class="mb-0 ps-4 me-4">Total Price:</h5>
                             <p id="total" class="mb-0 pe-4">₹ <%= cart.bill >= 300 ? cart.bill : cart.bill + 30 %></p>
                         </div>
-                        <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit">
-                            Proceed Checkout
-                        </button>
+                            <button id="checkout-button" class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit" onclick="proceedToCheckout()">
+                                Proceed Checkout
+                            </button>
                     </div>
                 </div>
             </div>
@@ -210,6 +210,19 @@
                 const { finalDiscount, bill } = res.data;
                 document.getElementById('coupon-discount').textContent = '- ₹ ' + finalDiscount;
                 document.getElementById('total').textContent = bill - finalDiscount;
+                const totalValue = bill - finalDiscount;
+                
+                const checkoutButton = document.getElementById('checkout-button');
+                // checkoutButton.onclick = () => {
+                //     axios.post('/proceed-to-checkout', { cartId, totalValue })
+                //         .then(res => {
+                //             window.location.href = '/checkout'
+                //             console.log(res);
+                //             const { cartId, totalValue } = res.data;
+                //             console.log(cartId, ':cartId')
+                //         })
+                //         .catch(err => console.log(err))
+                // }
             })
             .catch(err => {
                 document.getElementById('couponErrorMessage').textContent = err.response.data.error;
@@ -219,6 +232,11 @@
 
     function removeCoupon () {
         window.location.reload()
+    }
+
+    function proceedToCheckout () {
+        const checkoutButton = document.getElementById('total').value;
+        console.log('hello :', checkoutButton)
     }
 
 </script>

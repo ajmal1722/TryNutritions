@@ -66,7 +66,7 @@
                         </div>
                     </div>
                     <!-- Form to add new address -->
-                    <div class="" style="display: none;">
+                    <div id="address-form-element" style="display: none;">
                         <form>
                             <div class="form-item">
                                 <label class="form-label my-3">Address <sup>*</sup></label>
@@ -95,6 +95,9 @@
                             <!-- <div class="form-item">
                                 <textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
                             </div> -->
+                            <button class="button btn btn-primary text-light my-3 px-4" type="submit">
+                                Submit
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -241,11 +244,16 @@
 
 
                 
-        <!-- Include Footer -->
-        <%- include('../partials/_footer')%>
-        <!-- /Include Footer -->
+<!-- Include Footer -->
+<%- include('../partials/_footer')%>
+<!-- /Include Footer -->
 
+<script>
+    function showNewAddressForm () {
+        document.getElementById('address-form-element').style.display = 'block'
+    }
+</script> 
 
-        <!-- Include layoutFoot -->
-        <%- include('../partials/_layoutFoot')%>
-        <!-- /Include layoutFoot -->
+<!-- Include layoutFoot -->
+<%- include('../partials/_layoutFoot')%>
+<!-- /Include layoutFoot -->

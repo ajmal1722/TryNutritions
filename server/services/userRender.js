@@ -247,3 +247,9 @@ exports.applyCoupon = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+// Checkout
+exports.proceedToCheckout = async (req, res) => {
+    const { cartId, totalValue } = req.body;
+    res.status(200).json({ cartId, totalValue })
+}
