@@ -324,3 +324,16 @@ exports.createCoupon = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+exports.deleteCoupon = async (req, res) => {
+    try {
+        const couponId = req.params.id;
+        console.log('couponId:', couponId);
+
+        const couponDelete = await Coupon.findByIdAndDelete(couponId);
+        res.status(200).json({ message: 'Coupon deleted succesfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}
