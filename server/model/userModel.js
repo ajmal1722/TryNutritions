@@ -7,7 +7,7 @@ const addressSchema = new mongoose.Schema({
     streetName: {
         type: String
     },
-    city: {
+    postOffice: {
         type: String
     },
     district: {
@@ -16,7 +16,7 @@ const addressSchema = new mongoose.Schema({
     state: {
         type: String
     },
-    pincode: {
+    pinCode: {
         type: Number
     }
 });

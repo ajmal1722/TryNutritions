@@ -298,3 +298,26 @@ exports.proceedToCheckout = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+exports.addNewAddress = async (req, res) => {
+    try {
+        const data = req.body;
+        const userId = req.user._id;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Push the new address object into the addresses array of the user document
+        user.addresses.push(data);
+
+        // Save the updated user document
+        await user.save();
+
+        res.status(200).json({ message: 'Address added successfully', user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}
