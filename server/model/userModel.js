@@ -1,5 +1,26 @@
 const mongoose = require('mongoose');
 
+const addressSchema = new mongoose.Schema({
+    houseName: {
+        type: String
+    },
+    streetName: {
+        type: String
+    },
+    city: {
+        type: String
+    },
+    district: {
+        type: String
+    },
+    state: {
+        type: String
+    },
+    pincode: {
+        type: Number
+    }
+});
+
 const Schema = new mongoose.Schema({
     name: {
         type: String,
@@ -20,7 +41,8 @@ const Schema = new mongoose.Schema({
     isBlocked: {
         type: String,
         default: 'Active'
-    }  
+    },
+    addresses: [addressSchema] 
 })
 
 const Userdb = mongoose.model('users', Schema);
