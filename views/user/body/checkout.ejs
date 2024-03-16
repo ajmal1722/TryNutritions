@@ -114,39 +114,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">
-                                        <div class="d-flex align-items-center mt-2">
-                                            <img src="img/vegetable-item-2.jpg" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
-                                        </div>
-                                    </th>
-                                    <td class="py-5">Awesome Brocoli</td>
-                                    <td class="py-5">$69.00</td>
-                                    <td class="py-5">2</td>
-                                    <td class="py-5">$138.00</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        <div class="d-flex align-items-center mt-2">
-                                            <img src="img/vegetable-item-5.jpg" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
-                                        </div>
-                                    </th>
-                                    <td class="py-5">Potatoes</td>
-                                    <td class="py-5">$69.00</td>
-                                    <td class="py-5">2</td>
-                                    <td class="py-5">$138.00</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        <div class="d-flex align-items-center mt-2">
-                                            <img src="img/vegetable-item-3.png" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
-                                        </div>
-                                    </th>
-                                    <td class="py-5">Big Banana</td>
-                                    <td class="py-5">$69.00</td>
-                                    <td class="py-5">2</td>
-                                    <td class="py-5">$138.00</td>
-                                </tr>
+                                <% Cart.items.forEach(item => { %>
+                                    <tr>
+                                        <th scope="row">
+                                            <div class="d-flex align-items-center mt-2">
+                                                <img src="img/vegetable-item-2.jpg" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
+                                            </div>
+                                        </th>
+                                        <td class="py-5"><%= item.name %></td>
+                                        <td class="py-5">₹ <%= item.price %></td>
+                                        <td class="py-5 text-center"><%= item.quantity %></td>
+                                        <td class="py-5"><%= item.price * item.quantity %></td>
+                                    </tr>
+                                <% }) %>
                                 <tr>
                                     <th scope="row">
                                     </th>
@@ -157,11 +137,11 @@
                                     </td>
                                     <td class="py-5">
                                         <div class="py-3 border-bottom border-top">
-                                            <p class="mb-0 text-dark">$414.00</p>
+                                            <p class="mb-0 text-dark">₹ <%= Cart.bill %></p>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <!-- <tr>
                                     <th scope="row">
                                     </th>
                                     <td class="py-5">
@@ -181,7 +161,7 @@
                                             <label class="form-check-label" for="Shipping-3">Local Pickup: $8.00</label>
                                         </div>
                                     </td>
-                                </tr>
+                                </tr> -->
                                 <tr>
                                     <th scope="row">
                                     </th>

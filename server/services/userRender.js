@@ -51,7 +51,15 @@ exports.shopDetails = async (req, res) => {
 exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Contact us' });
 
 // checkout
-exports.checkout = (req, res) => res.render('user/body/checkout', { pageName: 'Checkout' });
+exports.checkout = async (req, res) => {
+    const userId = req.user._id;
+
+    const cart = await Cart.findOne({ user: userId })
+    res.render('user/body/checkout', {
+        pageName: 'Checkout',
+        Cart: cart
+     })
+};
 
 // Error Messages
 exports.errorMessage = (req, res) => res.render('user/body/error');
@@ -250,6 +258,15 @@ exports.applyCoupon = async (req, res) => {
 
 // Checkout
 exports.proceedToCheckout = async (req, res) => {
-    const { cartId, totalValue } = req.body;
-    res.status(200).json({ cartId, totalValue })
+    try {
+        const { cartId, totalValue } = req.body;
+        console.log('cartId:', cartId, totalValue);
+
+        const cart = await Cart.findById(cartId);
+        console.log(cart)
+        res.status(200).json({ cartId, totalValue })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
 }

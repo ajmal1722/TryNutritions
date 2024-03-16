@@ -60,7 +60,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <p class="mb-0 mt-4"><%= item.price * item.quantity %></p>
+                                        <p class="mb-0 mt-4">₹ <%= item.price * item.quantity %></p>
                                     </td>
                                     <td>
                                         <form action="/delete-cart?id=<%= item.itemId %>" method="post">
@@ -213,16 +213,16 @@
                 const totalValue = bill - finalDiscount;
                 
                 const checkoutButton = document.getElementById('checkout-button');
-                // checkoutButton.onclick = () => {
-                //     axios.post('/proceed-to-checkout', { cartId, totalValue })
-                //         .then(res => {
-                //             window.location.href = '/checkout'
-                //             console.log(res);
-                //             const { cartId, totalValue } = res.data;
-                //             console.log(cartId, ':cartId')
-                //         })
-                //         .catch(err => console.log(err))
-                // }
+                checkoutButton.onclick = () => {
+                    axios.post('/proceed-to-checkout', { cartId, totalValue })
+                        .then(res => {
+                            window.location.href = '/checkout'
+                            console.log(res);
+                            const { cartId, totalValue } = res.data;
+                            console.log(cartId, ':cartId')
+                        })
+                        .catch(err => console.log(err))
+                }
             })
             .catch(err => {
                 document.getElementById('couponErrorMessage').textContent = err.response.data.error;

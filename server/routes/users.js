@@ -30,7 +30,7 @@ route.get('/shop-details', services.shopDetails);
 route.get('/cart', authentication.checkAuth, services.cart);
 
 // checkout
-route.get('/checkout', services.checkout);
+route.get('/checkout', authentication.checkAuth, services.checkout);
 
 // Error
 route.get('/error', services.errorMessage)
