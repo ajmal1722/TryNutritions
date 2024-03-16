@@ -55,6 +55,6 @@ route.post('/update-cart-quantity', authentication.checkAuth, services.changeQua
 route.post('/applyCoupon', authentication.checkAuth, services.applyCoupon);
 
 // route.get('proceed-to-checkout', services.checkout)
-route.post('/proceed-to-checkout', services.proceedToCheckout);
+route.post('/proceed-to-checkout', authentication.checkAuth, services.proceedToCheckout);
 
 module.exports = route;

@@ -53,11 +53,20 @@ exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Con
 // checkout
 exports.checkout = async (req, res) => {
     const userId = req.user._id;
+    const token = req.cookies.jwt;
+
+    // Decode the JWT token
+    const decodedToken = jwt.verify(token, process.env.AUTH_STR);
+    console.log('decodedToken:', decodedToken)
+    // Extract the totalValue from the decoded payload
+    const totalValue = decodedToken.totalValue;
+    console.log('totalValue:', totalValue)
 
     const cart = await Cart.findOne({ user: userId })
     res.render('user/body/checkout', {
         pageName: 'Checkout',
-        Cart: cart
+        Cart: cart,
+        total: totalValue
      })
 };
 
@@ -259,12 +268,31 @@ exports.applyCoupon = async (req, res) => {
 // Checkout
 exports.proceedToCheckout = async (req, res) => {
     try {
-        const { cartId, totalValue } = req.body;
-        console.log('cartId:', cartId, totalValue);
+        // Check if the JWT token exists in the cookie
+        if (!req.cookies.jwt) {
+            return res.status(401).json({ error: 'Unauthorized: No JWT token provided' });
+        }
 
-        const cart = await Cart.findById(cartId);
-        console.log(cart)
-        res.status(200).json({ cartId, totalValue })
+        // Get the existing JWT token from the Authorization header.
+        const existingToken = req.cookies.jwt;
+
+        try {
+            // Decode the existing token.
+            const decodedToken = jwt.verify(existingToken, process.env.AUTH_STR);
+
+            // Add the new value to the decoded payload.
+            decodedToken.totalValue = req.body.totalValue;
+
+            // Create a new token with the updated payload.
+            const newToken = jwt.sign(decodedToken, process.env.AUTH_STR);
+
+            // Send the new token in the response
+            res.cookie('jwt', newToken, { httpOnly: true });
+            res.status(200).json({ newToken });
+        } catch (err) {
+            // Handle token verification errors
+            return res.status(401).json({ error: 'Unauthorized: Invalid JWT token' });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
