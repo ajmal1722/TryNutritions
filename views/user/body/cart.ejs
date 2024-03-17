@@ -214,7 +214,7 @@
                 
                 const checkoutButton = document.getElementById('checkout-button');
                 checkoutButton.onclick = () => {
-                    axios.post('/proceed-to-checkout', { cartId, totalValue })
+                    axios.post('/proceed-to-checkout', { cartId, finalDiscount })
                         .then(res => {
                             window.location.href = '/checkout'
                             console.log(res);
@@ -235,8 +235,18 @@
     }
 
     function proceedToCheckout () {
-        const checkoutButton = document.getElementById('total').value;
-        console.log('hello :', checkoutButton)
+        const couponCode = document.getElementById('couponCode').value;
+        if (couponCode === ''){
+            const checkoutButton = document.getElementById('checkout-button');
+            const finalDiscount = 0;
+                checkoutButton.onclick = () => {
+                    axios.post('/proceed-to-checkout', { cartId, finalDiscount })
+                        .then(res => {
+                            window.location.href = '/checkout'
+                        })
+                        .catch(err => console.log(err))
+                }
+        }
     }
 
 </script>

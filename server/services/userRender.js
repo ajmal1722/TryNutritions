@@ -59,14 +59,14 @@ exports.checkout = async (req, res) => {
     const decodedToken = jwt.verify(token, process.env.AUTH_STR);
     console.log('decodedToken:', decodedToken)
     // Extract the totalValue from the decoded payload
-    const totalValue = decodedToken.totalValue;
-    console.log('totalValue:', totalValue)
+    const finalDiscount = decodedToken.finalDiscount;
+    console.log('finalDiscount:', finalDiscount)
 
     const cart = await Cart.findOne({ user: userId })
     res.render('user/body/checkout', {
         pageName: 'Checkout',
         Cart: cart,
-        total: totalValue
+        finalDiscount: finalDiscount
      })
 };
 
@@ -281,7 +281,7 @@ exports.proceedToCheckout = async (req, res) => {
             const decodedToken = jwt.verify(existingToken, process.env.AUTH_STR);
 
             // Add the new value to the decoded payload.
-            decodedToken.totalValue = req.body.totalValue;
+            decodedToken.finalDiscount = req.body.finalDiscount;
 
             // Create a new token with the updated payload.
             const newToken = jwt.sign(decodedToken, process.env.AUTH_STR);
