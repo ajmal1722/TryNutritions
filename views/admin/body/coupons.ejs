@@ -51,13 +51,13 @@
                                         <span class="text-bold text-dark font-monospace">Max Price Offer :</span> <span class="text-secondary">₹<%= item.maxPriceOffer %></span>
                                     </p>
                                     <p class="card-text">
-                                        <span class="text-bold text-dark font-monospace">Start Date :</span> <span class="text-secondary"><%= item.startDate %></span>
+                                        <span class="text-bold text-dark font-monospace">Start Date :</span> <span class="text-secondary"><%= item.startDate.toString().substring(0, 25) %></span>
                                     </p>
                                     <p class="card-text">
-                                        <span class="text-bold text-dark font-monospace">End Date :</span> <span class="text-secondary"><%= item.endDate %> %></span>
+                                        <span class="text-bold text-dark font-monospace">End Date :</span> <span class="text-secondary"><%= item.endDate.toString().substring(0, 25) %> %></span>
                                     </p>
                                     <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-warning me-2" style="width: 100px;">
+                                        <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#editCouponModal_<%= item._id %>" style="width: 100px;">
                                             Update
                                         </button>
                                         <button type="button" class="btn btn-danger" style="width: 100px;" onclick="deleteCoupon('<%= item._id %>')">
@@ -67,6 +67,51 @@
                                 </div>
                             </div>
                         </div> 
+
+                        <!-- Edit modal -->
+                        <div class="modal fade" id="editCouponModal_<%= item._id %>" tabindex="-1" aria-labelledby="editCouponModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editCouponModalLabel">Add Category</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Form for adding a category -->
+                                        <form action="/admin/updateCoupon" method="post">
+                                            <div class="mb-3">
+                                                <input type="hidden" id="hiddenField" name="_id" value="<%= item._id %>">
+                                                <label for="couponName" class="form-label">Coupon Name:</label>
+                                                <input type="text" class="form-control" id="couponName" name="couponName" value="<%= item.couponName %>">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="couponCode" class="form-label">Coupon Code:</label>
+                                                <input type="text" class="form-control" id="couponCode" name="couponCode" value="<%= item.couponCode %>">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="startDate" class="form-label">Start Date:</label>
+                                                <input type="date" class="form-control" id="startDate" name="startDate" value="<%= item.startDate.toISOString().substring(0, 10) %>">
+                                            </div>                                            
+                                            <div class="mb-3">
+                                                <label for="endDate" class="form-label">End Date:</label>
+                                                <input type="date" class="form-control" id="endDate" name="endDate" value="<%= item.endDate.toISOString().substring(0, 10) %>">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="discount" class="form-label">Discount:</label>
+                                                <input type="text" class="form-control" id="discount" name="discount" value="<%= item.discount %>">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="maxPriceOffer" class="form-label">Max Price Offer:</label>
+                                                <input type="text" class="form-control" id="maxPriceOffer" name="maxPriceOffer" value="<%= item.maxPriceOffer %>">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">
+                                                Update Coupon
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     <% }) %>           
                 </div>
             </div>

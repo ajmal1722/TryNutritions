@@ -337,3 +337,18 @@ exports.deleteCoupon = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+exports.updateCoupon = async (req, res) => {
+    try {
+        const couponId = req.body._id;
+        console.log('id:', couponId)
+        const data = req.body;
+
+        console.log(data)
+        const updatedData = await Coupon.findByIdAndUpdate(couponId, data, { new: true });
+        res.status(200).redirect('back');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}
