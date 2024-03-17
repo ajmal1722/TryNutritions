@@ -96,7 +96,7 @@
                                     <a href="/shop-details?id=<%= item._id %>" class="text-decoration-none">
                                         <div class="d-flex align-items-center justify-content-start">
                                             <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                                <img src="data:<%= item.productImage.contentType %>;base64,<%= item.productImage.imageBase64 %>" class="img-fluid rounded" alt="" style="width: 80px; height: 80px;">
+                                                <img src="<%= item.imageUrl %>" class="img-fluid rounded" alt="" style="width: 80px; height: 80px;">
                                             </div>
                                             <div>
                                                 <h6 class="mb-2"><%= item.name %></h6>
@@ -152,7 +152,7 @@
                                     <a href="/shop-details?id=<%= item._id %>" class="text-decoration-none">
                                         <div class="rounded position-relative fruite-item border border-secondary rounded-bottom">
                                             <div class="fruite-img" style="height: 220px;">
-                                                <img src="data:<%= item.productImage.contentType %>;base64,<%= item.productImage.imageBase64 %>" class="img-fluid w-100 rounded-top" alt="">
+                                                <img src="<%= item.imageUrl %>" class="img-fluid w-100 rounded-top" alt="">
                                             </div>
                                             <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;"><%= item.category %></div>
                                             <div class="p-4">
