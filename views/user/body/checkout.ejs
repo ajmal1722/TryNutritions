@@ -41,27 +41,18 @@
                             <!-- Address Selection -->
                             <div id="address-selection" class="border p-3">
                                 <!-- Sample Addresses -->
-                                <div class="form-check my-3 border-bottom" style="padding-bottom: 20px;">
-                                    <input class="form-check-input" type="radio" name="address" id="address1" value="address1">
-                                    <label class="form-check-label" for="address1">
-                                        <span>Name</span>
-                                        <span>Phone</span> 
-                                        <p class="mt-2">
-                                            House name, place Name, city name, post office
-                                        </p>
-                                    </label>
-                                </div>
-                                <div class="form-check my-3 border-bottom" style="padding-bottom: 20px;">
-                                    <input class="form-check-input" type="radio" name="address" id="address1" value="address1">
-                                    <label class="form-check-label" for="address1">
-                                        <span>Name</span>
-                                        <span>Phone</span> 
-                                        <p class="mt-2">
-                                            House name, place Name, city name, post office
-                                        </p>
-                                    </label>
-                                </div>
-                                <!-- Add more address options as needed -->
+                                <% User.addresses.forEach(item => { %>
+                                    <div class="form-check my-3 border-bottom" style="padding-bottom: 20px;">
+                                        <input class="form-check-input" type="radio" name="address" id="<%= item._id %>" value="address1">
+                                        <label class="form-check-label" for="address1">
+                                            <span class="mx-3"> <%= item.name %> </span>
+                                            <span> <%= item.phone %> </span> 
+                                            <p class="mt-2 mx-3">
+                                                <%= item.houseName %>, <%= item.streetName %>, <%= item.district %>, <%= item.state %>, <%= item.postOffice %>,  <%= item.pinCode %>
+                                            </p>
+                                        </label>
+                                    </div>
+                                <% }) %>
                             </div>
                         </div>
                     </div>
@@ -69,7 +60,17 @@
                     <div id="address-form-element" style="display: none;">
                         <form id="addressForm" action="/add-address" method="post">
                             <div class="form-item">
-                                <label class="form-label my-3">Address <sup>*</sup></label>
+                                <label class="form-label my-3">Name<sup>*</sup></label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Your Name">
+                                <p id="nameError" class="text-danger"></p>
+                            </div>
+                            <div class="form-item">
+                                <label class="form-label my-3">Phone<sup>*</sup></label>
+                                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+                                <p id="phoneError" class="text-danger"></p>
+                            </div>
+                            <div class="form-item">
+                                <label class="form-label my-3">House Name<sup>*</sup></label>
                                 <input type="text" class="form-control" id="address" name="houseName" placeholder="House Number or House Name">
                                 <p id="addressError" class="text-danger"></p>
                             </div>
@@ -257,6 +258,8 @@
     event.preventDefault();
     
     // Reset error messages
+    document.getElementById('nameError').textContent = '';
+    document.getElementById('phoneError').textContent = '';
     document.getElementById('addressError').textContent = '';
     document.getElementById('townCityError').textContent = '';
     document.getElementById('districtError').textContent = '';
@@ -265,6 +268,8 @@
     document.getElementById('pinCodeError').textContent = '';
     
     // Validate each field
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
     const address = document.getElementById('address').value.trim();
     const townCity = document.getElementById('townCity').value.trim();
     const district = document.getElementById('district').value.trim();
@@ -274,6 +279,20 @@
     
     let isValid = true;
     
+    if (name === '') {
+        document.getElementById('nameError').textContent = 'Name is required';
+        isValid = false;
+    } else if (!/^[a-zA-Z]{3,}$/.test(name)) {
+        document.getElementById('nameError').textContent = 'Name must be at least 3 letters and only include letters';
+        isValid = false;
+    }
+    if (phone === '') {
+        document.getElementById('phoneError').textContent = 'Phone number is required';
+        isValid = false;
+    } else if (!/^\d{10}$/.test(phone)) {
+        document.getElementById('phoneError').textContent = 'Phone number must be 10 digits';
+        isValid = false;
+    }
     if (address === '') {
         document.getElementById('addressError').textContent = 'House Number or House Name is required';
         isValid = false;

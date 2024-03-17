@@ -62,10 +62,12 @@ exports.checkout = async (req, res) => {
     const finalDiscount = decodedToken.finalDiscount;
     console.log('finalDiscount:', finalDiscount)
 
+    const user = await User.findById(userId)
     const cart = await Cart.findOne({ user: userId })
     res.render('user/body/checkout', {
         pageName: 'Checkout',
         Cart: cart,
+        User: user,
         finalDiscount: finalDiscount
      })
 };
@@ -315,7 +317,7 @@ exports.addNewAddress = async (req, res) => {
         // Save the updated user document
         await user.save();
 
-        res.status(200).json({ message: 'Address added successfully', user });
+        res.status(200).redirect('back');
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
