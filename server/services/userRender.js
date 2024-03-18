@@ -130,6 +130,7 @@ exports.addToCart = async (req, res) => {
                 cart.items.push({
                     itemId: product._id,
                     name: product.name,
+                    productImage: product.imageUrl,
                     price: product.sellingPrice,
                     quantity: 1
                 });
