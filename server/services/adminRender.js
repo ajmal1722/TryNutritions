@@ -85,6 +85,12 @@ exports.deleteProduct = async (req, res) => {
         const productId = req.query.id;
         console.log(productId);
 
+        // delete the productImage from cloudinary
+        const product = await Product.findById(productId);
+        if (product.imageId) {
+            await cloudinary.uploader.destroy(product.imageId);
+        }
+
         const deletedProduct = await Product.findByIdAndDelete(productId);
         
         res.status(200).redirect('admin/products')
@@ -123,19 +129,16 @@ exports.updateProduct = async (req, res) => {
 
         // Check if a new image file is uploaded
         if (req.file) {
-            // Read the image file 
-            const file = req.file;
-            const imgBuffer = fs.readFileSync(file.path);
-            console.log('Image: ', imgBuffer);
+            // Delete previous image from Cloudinary
+            if (product.imageId) {
+                await cloudinary.uploader.destroy(product.imageId);
+            }
 
-            // Convert the Buffer to a base64-encoded string
-            const imgBase64 = imgBuffer.toString('base64');
+            const result = await cloudinary.uploader.upload(req.file.path);
+            updatedProduct.imageUrl = result.url;
+            updatedProduct.imageId = result.public_id;
 
-            updatedProduct.productImage = {
-                filename: req.file.originalname,
-                contentType: req.file.mimetype,
-                imageBase64: imgBase64
-            };
+            console.log('url:', updatedProduct.imageUrl);
         }
 
         const data = await Product.findByIdAndUpdate(productId, updatedProduct, { new: true });
