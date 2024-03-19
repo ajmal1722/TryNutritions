@@ -328,29 +328,43 @@ exports.addNewAddress = async (req, res) => {
 
 exports.placeOrder = async (req, res) => {
     try {
-        const addressId = req.body.addressId;
-        const paymentMethod = req.body.paymentMethod;
+        const { addressId, paymentMethod } = req.body;
         const userId = req.user._id;
 
-        // Decode the JWT token
+        // Decode the JWT token to extract finalDiscount
         const token = req.cookies.jwt;
         const decodedToken = jwt.verify(token, process.env.AUTH_STR);
-        // Extract the totalValue from the decoded payload
         const couponDiscount = decodedToken.finalDiscount;
 
-        // Get the datas to add in order collection
-        let orderId = 100;
-        const cart = await Cart.findOne({ user: userId })
+        // Retrieve user's cart and address
+        const cart = await Cart.findOne({ user: userId });
         const user = await User.findById(userId);
         const address = user.addresses.find(item => item._id == addressId);
 
-        const newOreder = new Order({
-            
+        // Calculate total amount and final amount
+        const totalAmount = cart.bill >= 300 ? cart.bill : cart.bill + 30;
+        const finalAmount = totalAmount - couponDiscount;
+
+         // Construct the new order object
+         const newOrder = new Order({
+            userId,
+            items: cart.items.map(item => ({
+                product: item.itemId,
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price
+            })),
+            subTotal: cart.bill,
+            couponDiscount,
+            finalAmount,
+            shippingAddress: address,
+            paymentMethod
         })
         
-        console.log('cart:', address);
+        const saveOrder = await newOrder.save();
+        console.log('cart:', cart);
 
-        res.status(200).json(req.body);
+        res.status(200).json(saveOrder);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
