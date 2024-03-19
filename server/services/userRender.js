@@ -324,3 +324,15 @@ exports.addNewAddress = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+exports.placeOrder = async (req, res) => {
+    try {
+        const addressId = req.body.addressId;
+        console.log(addressId);
+
+        res.status(200).json(req.body);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}

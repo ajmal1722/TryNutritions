@@ -56,5 +56,6 @@ route.post('/applyCoupon', authentication.checkAuth, services.applyCoupon);
 
 route.post('/proceed-to-checkout', authentication.checkAuth, services.proceedToCheckout);
 route.post('/add-address', authentication.checkAuth, services.addNewAddress);
+route.post('/place-order', authentication.checkAuth, services.placeOrder);
 
 module.exports = route;
