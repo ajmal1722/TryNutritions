@@ -41,14 +41,14 @@
                             <!-- Address Selection -->
                             <div id="address-selection" class="border p-3">
                                 <!-- Sample Addresses -->
-                                <% User.addresses.forEach(item => { %>
+                                <% User.addresses.forEach((address, index) => { %>
                                     <div class="form-check my-3 border-bottom" style="padding-bottom: 20px;">
-                                        <input class="form-check-input bg-primary border-0" type="radio" name="address" id="<%= item._id %>" value="address1" onclick="showSubmitButton()">
-                                        <label class="form-check-label" for="<%= item._id %>">
-                                            <span class="mx-3"> <%= item.name %> </span>
-                                            <span> <%= item.phone %> </span> 
+                                        <input class="form-check-input bg-primary border-0" type="radio" name="address" id="<%= address._id %>" value="<%= address._id %>" onclick="showSubmitButton()" <%= index === 0 ? 'checked' : '' %>>
+                                        <label class="form-check-label" for="<%= address._id %>">
+                                            <span class="mx-3"> <%= address.name %> </span>
+                                            <span> <%= address.phone %> </span> 
                                             <p class="mt-2 mx-3">
-                                                <%= item.houseName %>, <%= item.streetName %>, <%= item.district %>, <%= item.state %>, <%= item.postOffice %>,  <%= item.pinCode %>
+                                                <%= address.houseName %>, <%= address.streetName %>, <%= address.district %>, <%= address.state %>, <%= address.postOffice %>,  <%= address.pinCode %>
                                             </p>
                                         </label>
                                     </div>
@@ -103,7 +103,7 @@
                                 <p id="pinCodeError" class="text-danger"></p>
                             </div>
                             <button class="button btn btn-primary text-light my-3 px-4" type="submit">
-                                Submit
+                                Add Address
                             </button>
                         </form>
                         
@@ -147,7 +147,7 @@
                                     <td class="py-3"></td>
                                     <td class="py-3">
                                             <p class="mb-0 text-dark mt-3">₹ <%= Cart.bill %></p>
-                                            <p class="mb-0 text-dark">₹ <%= Cart.bill >=300 ? 0 : 30 %></p>
+                                            <p class="mb-0 text-dark"><%= Cart.bill >=300 ? 'FREE' : '₹ 30' %></p>
                                             <p class="mb-0 text-dark">- ₹ <%= finalDiscount %></p>
                                     </td>
                                 </tr>
