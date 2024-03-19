@@ -6,6 +6,7 @@ const Category = require('../model/category');
 const Cart = require('../model/cart');
 const Coupon = require('../model/coupon');
 const { calculateDiscount, calculateTotalBill } = require('../middlewares/script');
+const Order = require('../model/order');
 
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
@@ -328,7 +329,26 @@ exports.addNewAddress = async (req, res) => {
 exports.placeOrder = async (req, res) => {
     try {
         const addressId = req.body.addressId;
-        console.log(addressId);
+        const paymentMethod = req.body.paymentMethod;
+        const userId = req.user._id;
+
+        // Decode the JWT token
+        const token = req.cookies.jwt;
+        const decodedToken = jwt.verify(token, process.env.AUTH_STR);
+        // Extract the totalValue from the decoded payload
+        const couponDiscount = decodedToken.finalDiscount;
+
+        // Get the datas to add in order collection
+        let orderId = 100;
+        const cart = await Cart.findOne({ user: userId })
+        const user = await User.findById(userId);
+        const address = user.addresses.find(item => item._id == addressId);
+
+        const newOreder = new Order({
+            
+        })
+        
+        console.log('cart:', address);
 
         res.status(200).json(req.body);
     } catch (error) {
