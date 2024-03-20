@@ -15,7 +15,22 @@
 
 
 <!-- Cart Page Start -->
-<% if (cart.items.length >= 1){ %>
+<% if (!cart || cart.items.length === 0){ %>
+    <!-- Cart is empty -->
+    <div class="container-fluid py-5">
+        <div class="container py-5 text-center">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <i class="fas fa-shopping-cart display-1 text-primary"></i>
+                    <h1 class="mb-4">Your Cart is Empty!</h1>
+                    <p class="mb-4">It's a nice day to buy the items you saved for later!</p>
+                    <a class="btn border-secondary rounded-pill py-2 px-4" href="/">Return To Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Cart is empty -->
+<% } else { %>
     <div class="container-fluid py-5">
         <div class="container py-5">
             <div class="table-responsive">
@@ -158,21 +173,7 @@
             </div>
         </div>
     </div>
-<% } else { %>
-    <!-- Cart is empty -->
-    <div class="container-fluid py-5">
-        <div class="container py-5 text-center">
-            <div class="row justify-content-center">
-                <div class="col-lg-6">
-                    <i class="fas fa-shopping-cart display-1 text-primary"></i>
-                    <h1 class="mb-4">Your Cart is Empty!</h1>
-                    <p class="mb-4">It's a nice day to buy the items you saved for later!</p>
-                    <a class="btn border-secondary rounded-pill py-2 px-4" href="/">Return To Shopping</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Cart is empty -->
+    
 <% } %>
 
 <!-- Cart Page End -->

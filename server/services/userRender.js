@@ -379,6 +379,9 @@ exports.placeOrder = async (req, res) => {
             await product.save()
         }
 
+        // Clear the user's cart after successful order creation
+        await Cart.findOneAndDelete({ user: userId });
+
         res.status(200).json(saveOrder);
     } catch (error) {
         console.error(error);
