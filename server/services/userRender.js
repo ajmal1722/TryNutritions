@@ -51,6 +51,10 @@ exports.shopDetails = async (req, res) => {
 
 exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Contact us' });
 
+exports.orderSuccess = (req, res) => {
+    res.render('user/body/orderCompletion', { pageName: '' });
+} 
+
 // checkout
 exports.checkout = async (req, res) => {
     const userId = req.user._id;

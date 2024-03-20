@@ -35,6 +35,9 @@ route.get('/checkout', authentication.checkAuth, services.checkout);
 // Error
 route.get('/error', services.errorMessage)
 
+// Order
+route.get('/order-completed', services.orderSuccess)
+
 // my account
 route.get('/myAccount', authentication.checkAuth, services.myAccount);
 
