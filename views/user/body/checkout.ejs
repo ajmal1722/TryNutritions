@@ -53,6 +53,7 @@
                                         </label>
                                     </div>
                                 <% }) %>
+                                <p class="text-danger" id="addressError" style="display: none;"></p>
                                 <div id="submitBtnContainer" style="display: none;">
                                     <button type="submit" class="btn btn-primary text-light px-4">Submit</button>
                                 </div>
@@ -234,15 +235,26 @@
 
 
     function placeOrder() {
+        
+        if (!document.querySelector('input[name="address"]:checked')) {
+            const errorContainer = document.getElementById('addressError');
+            errorContainer.textContent = 'Please Add an address.';
+            errorContainer.style.display = 'block';
+            alert('Add address')
+            return; // Exit the function early if address is not selected
+        }
+        
         // Find the selected address
         const selectedAddress = document.querySelector('input[name="address"]:checked').value;
         const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked').value;
         // Send the selected address to the server
+        let orderId = 5000;
         axios.post('place-order', {
                 addressId: selectedAddress,
                 paymentMethod: selectedPayment
             })
             .then(res => {
+                orderId++;
                 console.log('Order placed successfully:', res.data);
             })
             .catch(err => {
@@ -279,7 +291,7 @@
     if (name === '') {
         document.getElementById('nameError').textContent = 'Name is required';
         isValid = false;
-    } else if (!/^[a-zA-Z]{3,}$/.test(name)) {
+    } else if (!/^[a-zA-Z\s]{3,}$/.test(name)) {
         document.getElementById('nameError').textContent = 'Name must be at least 3 letters and only include letters';
         isValid = false;
     }

@@ -328,7 +328,7 @@ exports.addNewAddress = async (req, res) => {
 
 exports.placeOrder = async (req, res) => {
     try {
-        const { addressId, paymentMethod } = req.body;
+        const { addressId, paymentMethod, orderId } = req.body;
         const userId = req.user._id;
 
         // Decode the JWT token to extract finalDiscount
@@ -336,10 +336,15 @@ exports.placeOrder = async (req, res) => {
         const decodedToken = jwt.verify(token, process.env.AUTH_STR);
         const couponDiscount = decodedToken.finalDiscount;
 
+
         // Retrieve user's cart and address
         const cart = await Cart.findOne({ user: userId });
         const user = await User.findById(userId);
         const address = user.addresses.find(item => item._id == addressId);
+
+        if (!address){
+            return res.status(404).json({ error: error.message })
+        }
 
         // Calculate total amount and final amount
         const totalAmount = cart.bill >= 300 ? cart.bill : cart.bill + 30;
@@ -347,6 +352,7 @@ exports.placeOrder = async (req, res) => {
 
          // Construct the new order object
          const newOrder = new Order({
+            orderId,
             userId,
             items: cart.items.map(item => ({
                 product: item.itemId,
@@ -362,7 +368,12 @@ exports.placeOrder = async (req, res) => {
         })
         
         const saveOrder = await newOrder.save();
-        console.log('cart:', cart);
+
+        console.log('cart:', newOrder);
+
+        // Increment the sales count in Product
+        // const productId = 
+        // const product = await Products.findById()
 
         res.status(200).json(saveOrder);
     } catch (error) {
