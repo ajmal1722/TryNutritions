@@ -248,7 +248,6 @@
         const selectedAddress = document.querySelector('input[name="address"]:checked').value;
         const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked').value;
         // Send the selected address to the server
-        let orderId = 5000;
         axios.post('place-order', {
                 addressId: selectedAddress,
                 paymentMethod: selectedPayment

@@ -328,7 +328,7 @@ exports.addNewAddress = async (req, res) => {
 
 exports.placeOrder = async (req, res) => {
     try {
-        const { addressId, paymentMethod, orderId } = req.body;
+        const { addressId, paymentMethod } = req.body;
         const userId = req.user._id;
 
         // Decode the JWT token to extract finalDiscount
@@ -336,15 +336,14 @@ exports.placeOrder = async (req, res) => {
         const decodedToken = jwt.verify(token, process.env.AUTH_STR);
         const couponDiscount = decodedToken.finalDiscount;
 
+        // Find the maximum orderId currently in the Order collection and increment it
+        const maxOrderIdOrder = await Order.findOne().sort({ orderId: -1 });
+        const orderId = maxOrderIdOrder ? maxOrderIdOrder.orderId + 1 : 5000;
 
         // Retrieve user's cart and address
         const cart = await Cart.findOne({ user: userId });
         const user = await User.findById(userId);
         const address = user.addresses.find(item => item._id == addressId);
-
-        if (!address){
-            return res.status(404).json({ error: error.message })
-        }
 
         // Calculate total amount and final amount
         const totalAmount = cart.bill >= 300 ? cart.bill : cart.bill + 30;
@@ -354,6 +353,7 @@ exports.placeOrder = async (req, res) => {
          const newOrder = new Order({
             orderId,
             userId,
+            user: user.name,
             items: cart.items.map(item => ({
                 product: item.itemId,
                 name: item.name,
@@ -372,8 +372,11 @@ exports.placeOrder = async (req, res) => {
         console.log('cart:', newOrder);
 
         // Increment the sales count in Product
-        // const productId = 
-        // const product = await Products.findById()
+        for (const item of cart.items) {
+            const product = await Products.findById(item.itemId)
+            product.salesCount += item.quantity;
+            await product.save()
+        }
 
         res.status(200).json(saveOrder);
     } catch (error) {
