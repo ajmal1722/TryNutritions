@@ -371,10 +371,11 @@ exports.placeOrder = async (req, res) => {
 
         console.log('cart:', newOrder);
 
-        // Increment the sales count in Product
+        // Increment the sales count in Product and update the stocks
         for (const item of cart.items) {
             const product = await Products.findById(item.itemId)
             product.salesCount += item.quantity;
+            product.stock -= item.quantity;
             await product.save()
         }
 
