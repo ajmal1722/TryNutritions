@@ -21,7 +21,7 @@ exports.admindashboard = async (req, res) => {
                 totalFinalAmount: { $sum: "$finalAmount" }
             }
         }]);
-        
+
         console.log(totalOrder[0])
         // Extract the total final amount from the result
         const totalFinalAmount = totalOrder.length > 0 ? totalOrder[0].totalFinalAmount : 0;
@@ -42,7 +42,14 @@ exports.admindashboard = async (req, res) => {
 exports.adminLogin = (req, res) => res.render('admin/body/login');
 
 // orders
-exports.orders = (req, res) => res.render('admin/body/orders', { pageName: 'Orders' })
+exports.orders = async (req, res) => {
+    const order = await Orders.find({}).exec()
+
+    res.render('admin/body/orders', { 
+        pageName: 'Orders',
+        Orders: order
+     })
+} 
 
 // category
 exports.category = async (req, res) => {
@@ -51,7 +58,7 @@ exports.category = async (req, res) => {
         pageName: 'Category',
         Category: categories
     });
-} 
+}
 
 exports.products = async (req, res) => {
     try {
