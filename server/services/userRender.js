@@ -51,10 +51,6 @@ exports.shopDetails = async (req, res) => {
 
 exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Contact us' });
 
-exports.orderSuccess = (req, res) => {
-    res.render('user/body/orderCompletion', { pageName: '' });
-} 
-
 // checkout
 exports.checkout = async (req, res) => {
     const userId = req.user._id;
@@ -339,10 +335,11 @@ exports.placeOrder = async (req, res) => {
         const token = req.cookies.jwt;
         const decodedToken = jwt.verify(token, process.env.AUTH_STR);
         const couponDiscount = decodedToken.finalDiscount;
+        let orderId = decodedToken.orderId || 5000; // Default orderId if not present in the token
 
         // Find the maximum orderId currently in the Order collection and increment it
         const maxOrderIdOrder = await Order.findOne().sort({ orderId: -1 });
-        const orderId = maxOrderIdOrder ? maxOrderIdOrder.orderId + 1 : 5000;
+        orderId = maxOrderIdOrder ? maxOrderIdOrder.orderId + 1 : orderId;
 
         // Retrieve user's cart and address
         const cart = await Cart.findOne({ user: userId });
@@ -373,7 +370,13 @@ exports.placeOrder = async (req, res) => {
         
         const saveOrder = await newOrder.save();
 
-        console.log('cart:', newOrder);
+        // Update the orderId in the decoded token
+        decodedToken.orderId = orderId;
+
+        // Sign the updated token with the new orderId
+        const newToken = jwt.sign(decodedToken, process.env.AUTH_STR);
+
+        console.log('cart:', decodedToken);
 
         // Increment the sales count in Product and update the stocks
         for (const item of cart.items) {
@@ -392,3 +395,15 @@ exports.placeOrder = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+
+exports.orderSuccess = async (req, res) => {
+    // Decode the JWT token to extract finalDiscount
+    const token = req.cookies.jwt;
+    const decodedToken = jwt.verify(token, process.env.AUTH_STR);
+    const orderId = decodedToken.orderId;
+
+    console.log('orderId:token' , decodedToken)
+
+    res.render('user/body/orderCompletion', { pageName: '' });
+} 
