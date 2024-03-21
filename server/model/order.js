@@ -54,6 +54,10 @@ const orderSchema = new mongoose.Schema({
         enum: ['COD', 'Razorpay'],
         required: true
     },
+    status: {
+        type: String,
+        default: 'Pending'
+    },
     orderDate: {
         type: Date,
         default: Date.now

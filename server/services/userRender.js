@@ -368,6 +368,8 @@ exports.placeOrder = async (req, res) => {
             paymentMethod
         })
         
+        // before saving newOrder update the status to Placed.
+        newOrder.status = 'Placed'
         const saveOrder = await newOrder.save();
 
         // Update the orderId in the decoded token
