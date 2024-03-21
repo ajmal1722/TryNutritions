@@ -1,5 +1,6 @@
 const Product = require("../model/products");
 const Users = require('../model/userModel');
+const Orders = require('../model/order');
 const Category = require('../model/category');
 const Vendors = require('../model/vendorModel');
 const Coupon = require('../model/coupon');
@@ -10,7 +11,32 @@ const cloudinary = require('../middlewares/cloudinary');
 const { error } = require("console");
 
 // admin dashboard
-exports.admindashboard = (req, res) => res.render('admin/body/dashboard', { pageName: 'Home' });
+exports.admindashboard = async (req, res) => {
+    try {
+        const orders = await Orders.find({}).sort({ orderDate: -1 }).limit(9).exec();
+        const users = await Users.find({}).exec();
+        const totalOrder = await Orders.aggregate([{
+            $group: {
+                _id: null,
+                totalFinalAmount: { $sum: "$finalAmount" }
+            }
+        }]);
+        
+        console.log(totalOrder[0])
+        // Extract the total final amount from the result
+        const totalFinalAmount = totalOrder.length > 0 ? totalOrder[0].totalFinalAmount : 0;
+
+        res.render('admin/body/dashboard', { 
+            pageName: 'Home',
+            Orders: orders,
+            Users: users,
+            totalsales: totalFinalAmount
+         });  
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+} 
 
 // admin login
 exports.adminLogin = (req, res) => res.render('admin/body/login');
