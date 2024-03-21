@@ -57,7 +57,15 @@
                         <td><%= item.user %></td>
                         <td><%= item.orderDate.toISOString().substring(0, 10) %></td>
                         <td>₹ <%= item.finalAmount %></td>
-                        <td><span class="status completed"></span></td>
+                        <td>
+                            <span class="btn <%= (item.status === 'Pending') ? 'bg-warning' :
+                                                  (item.status === 'Cancelled') ? 'bg-danger' :
+                                                  (item.status === 'Placed') ? 'bg-primary' :
+                                                  (item.status === 'Completed') ? 'bg-success' : '' %>"
+                                                  style="font-size: 12px;">
+                                <%= item.status %>
+                            </span>
+                        </td>
                         <td><button type="button" class="btn btn-info px-3">View</button></td>
                     </tr>
                 <% }) %>

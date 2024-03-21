@@ -75,7 +75,14 @@
 										<%= item.orderDate.toISOString().substring(0, 10) %>
 									</td> <!-- Use a function to format the date -->
 									<td>₹ <%= item.finalAmount %></td>
-									<td><span class="status completed">Completed</span></td>
+									<td>
+										<span class="status <%= (item.status === 'Pending') ? 'bg-warning' :
+															  (item.status === 'Cancelled') ? 'bg-danger' :
+															  (item.status === 'Placed') ? 'bg-primary' :
+															  (item.status === 'Completed') ? 'bg-success' : '' %>">
+											<%= item.status %>
+										</span>
+									</td>
 								</tr>
 							<% }) %>
 						</tbody>
@@ -116,7 +123,7 @@
 	</section>
 	<!-- CONTENT -->
 	
-
+	
 	<script src="/admin/js/script.js"></script>
 </body>
 </html>
