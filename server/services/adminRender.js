@@ -14,6 +14,7 @@ const { error } = require("console");
 exports.admindashboard = async (req, res) => {
     try {
         const orders = await Orders.find({}).sort({ orderDate: -1 }).limit(9).exec();
+        const orderlength = await Orders.find({}).exec();
         const users = await Users.find({}).exec();
         const totalOrder = await Orders.aggregate([{
             $group: {
@@ -29,6 +30,7 @@ exports.admindashboard = async (req, res) => {
         res.render('admin/body/dashboard', { 
             pageName: 'Home',
             Orders: orders,
+            totalOrders: orderlength,
             Users: users,
             totalsales: totalFinalAmount
          });  
