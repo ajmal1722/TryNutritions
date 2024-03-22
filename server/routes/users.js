@@ -9,7 +9,7 @@ const services = require('../services/userRender');
 const controller = require('../controller/userController')
 
 // home route (home page)
-route.get('/', authentication.fetchCartItems, controller.homeRoutes);
+route.get('/', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, controller.homeRoutes);
 
 // login
 route.get('/login', controller.userLogin);
@@ -21,10 +21,10 @@ route.get('/logout', controller.logout);
 route.get('/signup', services.userSigup);
 
 // shop
-route.get('/shop' || '/shop/shop', authentication.fetchCartItems, services.shop);
+route.get('/shop' || '/shop/shop', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.shop);
 
 // shop-details
-route.get('/shop-details', authentication.fetchCartItems, services.shopDetails);
+route.get('/shop-details', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.shopDetails);
 
 // cart
 route.get('/cart', authentication.checkAuth, authentication.fetchCartItems, services.cart);
@@ -33,7 +33,7 @@ route.get('/cart', authentication.checkAuth, authentication.fetchCartItems, serv
 route.get('/checkout', authentication.checkAuth, authentication.fetchCartItems, services.checkout);
 
 // Error
-route.get('/error', authentication.fetchCartItems, services.errorMessage)
+route.get('/error', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.errorMessage)
 
 // Order
 route.get('/order-completed', authentication.fetchCartItems, services.orderSuccess)
@@ -42,7 +42,7 @@ route.get('/order-completed', authentication.fetchCartItems, services.orderSucce
 route.get('/myAccount', authentication.checkAuth, authentication.fetchCartItems, services.myAccount);
 
 // contact us
-route.get('/contact', authentication.fetchCartItems, services.contact)
+route.get('/contact', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.contact)
 
 
 

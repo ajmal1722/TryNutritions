@@ -56,10 +56,28 @@ exports.checkAuthenticated = (redirectTo) => (req, res, next) => {
     next();
 };
 
+exports.getCartInNotAuthorizedPage = async (req, res, next) => {
+    try {
+        // Get the token from cookies or headers
+        const token = req.cookies.jwt || req.headers.authorization;
+        
+        // Verify token
+        const decoded = await verifyToken(token, process.env.AUTH_STR);
+
+        // Check if the user exists in the database
+        const user = await User.findById(decoded.id);
+        req.user = user;
+        
+    } catch (error) {
+        console.error("Error fetching cart for unauthorized page:", error);
+    }
+    next();
+};
+
+ 
 exports.fetchCartItems = async (req, res, next) => {
     if (req.user) {
         try {
-            console.log('req.user:', req.user)
             const cart = await Cart.findOne({ user: req.user._id });
             if (cart) {
                 res.locals.cartItemCount = cart.items.length;
@@ -72,7 +90,6 @@ exports.fetchCartItems = async (req, res, next) => {
         }
     } else {
         // User is not authenticated
-        console.log('req.user:', req.user)
         res.locals.cartItemCount = 0;
     }
     next();
