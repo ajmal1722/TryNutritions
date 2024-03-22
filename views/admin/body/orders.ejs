@@ -39,40 +39,36 @@
     
     <!-- Orders Table -->
     <div class="table-responsive">
-        <table class="table table-bordered text-center">
+        <table class="table table-striped text-center">
             <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Customer Name</th>
-                <th>Total Amount</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
+                <tr>
+                    <th class="py-3">Order ID</th>
+                    <th class="py-3">Customer Name</th>
+                    <th class="py-3">Order Date</th>
+                    <th class="py-3">Total Amount</th>
+                    <th class="py-3">Status</th>
+                    <th class="py-3">Action</th>
+                </tr>
             </thead>
             <tbody>
-            <!-- Sample Order Rows -->
-            <tr>
-                <td>001</td>
-                <td>John Doe</td>
-                <td>$100.00</td>
-                <td>Processing</td>
-                <td>
-                    <!-- View and Delete buttons -->
-                    <button type="button" class="btn btn-info">View</button>
-                    <button type="button" class="btn btn-danger">Delete</button>
-                </td>
-            </tr>
-            <tr>
-                <td>002</td>
-                <td>Jane Smith</td>
-                <td>$75.50</td>
-                <td>Shipped</td>
-                <td>
-                    <!-- View and Delete buttons -->
-                    <button type="button" class="btn btn-info">View</button>
-                    <button type="button" class="btn btn-danger">Delete</button>
-                </td>
-            </tr>
+                <% Orders.forEach(item => { %>
+                    <tr>
+                        <td><%= item.orderId %></td>
+                        <td><%= item.user %></td>
+                        <td><%= item.orderDate.toISOString().substring(0, 10) %></td>
+                        <td>₹ <%= item.finalAmount %></td>
+                        <td>
+                            <span class="btn <%= (item.status === 'Pending') ? 'bg-warning' :
+                                                  (item.status === 'Cancelled') ? 'bg-danger' :
+                                                  (item.status === 'Placed') ? 'bg-primary' :
+                                                  (item.status === 'Completed') ? 'bg-success' : '' %>"
+                                                  style="font-size: 12px;">
+                                <%= item.status %>
+                            </span>
+                        </td>
+                        <td><button type="button" class="btn btn-info px-3">View</button></td>
+                    </tr>
+                <% }) %>
             </tbody>
         </table>
     </div>

@@ -66,5 +66,7 @@ route.get('/viewVendor', services.viewVendor);
 route.get('/toggleVendorAccess', services.toggleVendorAccess);
 
 route.post('/createCoupon', services.createCoupon);
+route.delete('/delete-coupon/:id', services.deleteCoupon);
+route.post('/updateCoupon', services.updateCoupon)
 
 module.exports = route;

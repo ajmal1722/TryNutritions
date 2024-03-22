@@ -52,6 +52,12 @@ const Schema = new mongoose.Schema({
     },
     discount: {
         type: Number
+    },
+    imageUrl: {
+        type: String
+    },
+    imageId: {
+        type: String
     }
 }, { timestamps: true });
 

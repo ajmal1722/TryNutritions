@@ -6,6 +6,7 @@ const Category = require('../model/category');
 const Cart = require('../model/cart');
 const Coupon = require('../model/coupon');
 const { calculateDiscount, calculateTotalBill } = require('../middlewares/script');
+const Order = require('../model/order');
 
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
@@ -51,7 +52,26 @@ exports.shopDetails = async (req, res) => {
 exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Contact us' });
 
 // checkout
-exports.checkout = (req, res) => res.render('user/body/checkout', { pageName: 'Checkout' });
+exports.checkout = async (req, res) => {
+    const userId = req.user._id;
+    const token = req.cookies.jwt;
+
+    // Decode the JWT token
+    const decodedToken = jwt.verify(token, process.env.AUTH_STR);
+    console.log('decodedToken:', decodedToken)
+    // Extract the totalValue from the decoded payload
+    const finalDiscount = decodedToken.finalDiscount;
+    console.log('finalDiscount:', finalDiscount)
+
+    const user = await User.findById(userId)
+    const cart = await Cart.findOne({ user: userId })
+    res.render('user/body/checkout', {
+        pageName: 'Checkout',
+        Cart: cart,
+        User: user,
+        finalDiscount: finalDiscount
+     })
+};
 
 // Error Messages
 exports.errorMessage = (req, res) => res.render('user/body/error');
@@ -111,6 +131,7 @@ exports.addToCart = async (req, res) => {
                 cart.items.push({
                     itemId: product._id,
                     name: product.name,
+                    productImage: product.imageUrl,
                     price: product.sellingPrice,
                     quantity: 1
                 });
@@ -192,7 +213,7 @@ exports.changeQuantity = async (req, res) => {
 // Apply coupon
 exports.applyCoupon = async (req, res) => {
     try {
-        const couponCode = req.body.couponCode;
+        const { couponCode, cartId } = req.body;
         console.log('couponCode:', req.body);
 
         // Find the coupon in the database by its code
@@ -202,9 +223,9 @@ exports.applyCoupon = async (req, res) => {
         }
 
         // Check if the coupon has reached its usage limit
-        if (coupon.usageLimit <= 0) {
-            return res.status(400).json({ error: 'Coupon has already been used' });
-        }
+        // if (coupon.usageLimit <= 0) {
+        //     return res.status(400).json({ error: 'Coupon has already been used' });
+        // }
 
         // Check if the current date is before the start date
         const currentDate = new Date();
@@ -218,33 +239,173 @@ exports.applyCoupon = async (req, res) => {
         }
 
         // Decrement the usage limit of the coupon
-        coupon.usageLimit -= 1;
-        await coupon.save();
+        // coupon.usageLimit -= 1;
+        // await coupon.save();
 
         const { discount, maxPriceOffer } = coupon; // Destructuring coupon object
 
-        const userID = req.user._id; // find the userId
-
-        // find the user's cart by userID
-        const cart = await Cart.findOne({ user: userID });
+        // // find the user's cart 
+        const cart = await Cart.findById(cartId);
 
         let { bill } = cart // (const bill = cart.bill) destructurnig
         
         const discountAmount = (bill * discount) / 100;
 
-        // check if the discount amount is greater than maxPriceOffer
+        // // check if the discount amount is greater than maxPriceOffer
         const finalDiscount = Math.min(discountAmount, maxPriceOffer);
 
-        // Apply the discount to the bill
-        bill -= finalDiscount;
+        res.status(200).json({ finalDiscount, bill });
+        // // Apply the discount to the bill
+        // bill -= finalDiscount;
 
-        // Update the user's cart with the new bill
-        await Cart.findByIdAndUpdate(cart._id, { bill });
+        // // Update the user's cart with the new bill
+        // await Cart.findByIdAndUpdate(cart._id, { bill });
 
-        console.log('userBill:', finalDiscount);
-        res.redirect('/cart');
+        // console.log('userBill:', finalDiscount);
+        // res.redirect('/cart');
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
     }
 }
+
+// Checkout
+exports.proceedToCheckout = async (req, res) => {
+    try {
+        // Check if the JWT token exists in the cookie
+        if (!req.cookies.jwt) {
+            return res.status(401).json({ error: 'Unauthorized: No JWT token provided' });
+        }
+
+        // Get the existing JWT token from the Authorization header.
+        const existingToken = req.cookies.jwt;
+
+        try {
+            // Decode the existing token.
+            const decodedToken = jwt.verify(existingToken, process.env.AUTH_STR);
+
+            // Add the new value to the decoded payload.
+            decodedToken.finalDiscount = req.body.finalDiscount;
+
+            // Create a new token with the updated payload.
+            const newToken = jwt.sign(decodedToken, process.env.AUTH_STR);
+
+            // Send the new token in the response
+            res.cookie('jwt', newToken, { httpOnly: true });
+            res.status(200).json({ newToken });
+        } catch (err) {
+            // Handle token verification errors
+            return res.status(401).json({ error: 'Unauthorized: Invalid JWT token' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+exports.addNewAddress = async (req, res) => {
+    try {
+        const data = req.body;
+        const userId = req.user._id;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Push the new address object into the addresses array of the user document
+        user.addresses.push(data);
+
+        // Save the updated user document
+        await user.save();
+
+        res.status(200).redirect('back');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+exports.placeOrder = async (req, res) => {
+    try {
+        const { addressId, paymentMethod } = req.body;
+        const userId = req.user._id;
+
+        // Decode the JWT token to extract finalDiscount
+        const token = req.cookies.jwt;
+        const decodedToken = jwt.verify(token, process.env.AUTH_STR);
+        const couponDiscount = decodedToken.finalDiscount;
+        let orderId = decodedToken.orderId || 5000; // Default orderId if not present in the token
+
+        // Find the maximum orderId currently in the Order collection and increment it
+        const maxOrderIdOrder = await Order.findOne().sort({ orderId: -1 });
+        orderId = maxOrderIdOrder ? maxOrderIdOrder.orderId + 1 : orderId;
+
+        // Retrieve user's cart and address
+        const cart = await Cart.findOne({ user: userId });
+        const user = await User.findById(userId);
+        const address = user.addresses.find(item => item._id == addressId);
+
+        // Calculate total amount and final amount
+        const totalAmount = cart.bill >= 300 ? cart.bill : cart.bill + 30;
+        const finalAmount = totalAmount - couponDiscount;
+
+         // Construct the new order object
+         const newOrder = new Order({
+            orderId,
+            userId,
+            user: user.name,
+            items: cart.items.map(item => ({
+                product: item.itemId,
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price
+            })),
+            subTotal: cart.bill,
+            couponDiscount,
+            finalAmount,
+            shippingAddress: address,
+            paymentMethod
+        })
+        
+        // before saving newOrder update the status to Placed.
+        newOrder.status = 'Placed'
+        const saveOrder = await newOrder.save();
+
+        // Update the orderId in the decoded token
+        decodedToken.orderId = orderId;
+
+        // Sign the updated token with the new orderId
+        const newToken = jwt.sign(decodedToken, process.env.AUTH_STR);
+
+        console.log('cart:', decodedToken);
+
+        // Increment the sales count in Product and update the stocks
+        for (const item of cart.items) {
+            const product = await Products.findById(item.itemId)
+            product.salesCount += item.quantity;
+            product.stock -= item.quantity;
+            await product.save()
+        }
+
+        // Clear the user's cart after successful order creation
+        await Cart.findOneAndDelete({ user: userId });
+
+        res.status(200).json(saveOrder);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+
+exports.orderSuccess = async (req, res) => {
+    // Decode the JWT token to extract finalDiscount
+    const token = req.cookies.jwt;
+    const decodedToken = jwt.verify(token, process.env.AUTH_STR);
+    const orderId = decodedToken.orderId;
+
+    console.log('orderId:token' , decodedToken)
+
+    res.render('user/body/orderCompletion', { pageName: '' });
+} 

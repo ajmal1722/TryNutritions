@@ -155,7 +155,7 @@
                                                         <a href="/shop-details?id=<%= product._id %>" class="text-decoration-none">
                                                             <div class="rounded position-relative fruite-item border border-secondary rounded-bottom">
                                                                 <div class="fruite-img" style="height: 240px;">
-                                                                    <img src="data:<%= product.productImage.contentType %>;base64,<%= product.productImage.imageBase64 %>" class="img-fluid w-100 rounded-top" alt="">
+                                                                    <img src="<%= product.imageUrl %>" class="img-fluid w-100 rounded-top" alt="">
                                                                 </div>
                                                                 <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;"><%= product.category %></div>
                                                                 <div class="p-4">
@@ -259,7 +259,7 @@
                         <a href="/shop-details?id=<%= product._id %>" class="text-decoration-none">
                             <div class="border border-primary rounded position-relative vesitable-item">
                                 <div class="vesitable-img" style="height: 240px;">
-                                    <img src="data:<%= product.productImage.contentType %>;base64,<%= product.productImage.imageBase64 %>" class="img-fluid w-100 rounded-top" alt="">
+                                    <img src="<%= product.imageUrl %>" class="img-fluid w-100 rounded-top" alt="">
                                 </div>
                                 <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
                                 <div class="p-4 rounded-bottom">
@@ -360,7 +360,7 @@
                             <div class="p-4 rounded bg-light">
                                 <div class="row align-items-center">
                                     <div class="col-6">
-                                        <img src="data:<%= product.productImage.contentType %>;base64,<%= product.productImage.imageBase64 %>" class="img-fluid rounded-circle w-100" alt="" style="height: 160px; width: 160px;">
+                                        <img src="<%= product.imageUrl %>" class="img-fluid rounded-circle w-100" alt="" style="height: 160px; width: 160px;">
                                     </div>
                                     <div class="col-6">
                                         <a href="/shop-details?id=<%= product._id %>" class="h5"><%= product.name %></a>

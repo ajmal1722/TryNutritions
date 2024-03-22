@@ -2,6 +2,8 @@ const admin = require('../model/adminModel');
 const products = require('../model/products');
 const Category = require('../model/category');
 const jsScript = require('../middlewares/script');
+const uploads = require('../middlewares/multer');
+const cloudinary = require('../middlewares/cloudinary');
 const fs = require('fs');
 
 require('dotenv').config();
@@ -103,27 +105,21 @@ exports.addProduct = async (req, res) => {
         //     mrp: req.body.mrp,
         //     sellingPrice: req.body.sellingPrice
         // }
-        const files = req.file;
+        const file = req.file;
         const data = req.body;
 
         const categories = await Category.find({}).exec();
 
+        // Upload image to Cloudinary
+        const result = await cloudinary.uploader.upload(file.path);
+
         const productDiscount = await jsScript.calculateDiscount(req.body.mrp, req.body.sellingPrice);
-
-        // Read the image file as a Buffer
-        const imgBuffer = fs.readFileSync(files.path);
-
-        // Convert the Buffer to a base64-encoded string
-        const imgBase64 = imgBuffer.toString('base64');
         
         // console.log(data)
         const newProduct = new products({
             ...data,
-            productImage: {
-              filename: files.originalname,
-              contentType: files.mimetype,
-              imageBase64: imgBase64
-            },
+            imageUrl: result.secure_url, // Cloudinary image URL
+            imageId: result.public_id,    // Cloudinary image ID,
             discount: productDiscount
         });
 

@@ -12,6 +12,7 @@ const Schema = new mongoose.Schema({
             ref: 'Products'
       },
       name: String,
+      productImage: String,
       quantity: {
             type: Number,
             min: 1,

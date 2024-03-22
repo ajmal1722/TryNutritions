@@ -18,65 +18,96 @@
 
 
 <!-- Checkout Page Start -->
+
+
 <div class="container-fluid py-5">
     <div class="container py-5">
         <h1 class="mb-4">Billing details</h1>
-        <form action="#">
+        <!-- <form action="#"> -->
             <div class="row g-5">
                 <div class="col-md-12 col-lg-6 col-xl-7">
                     <div class="row">
-                        <div class="col-md-12 col-lg-6">
-                            <div class="form-item w-100">
-                                <label class="form-label my-3">First Name<sup>*</sup></label>
-                                <input type="text" class="form-control">
+                        <div class="address-selection-container border p-3">
+                            <!-- Create New Address Button -->
+                            <div class="d-flex justify-content-end">
+                                <button id="create-address-button" class="btn btn-primary mb-4 text-light" onclick="showNewAddressForm()">
+                                    <i class="bi bi-plus" style="font-size: 20px;"></i> Add New Address
+                                </button>
+                            </div>
+                            <!-- New Address Form (Initially Hidden) -->
+                            <div id="new-address-form" style="display: none;">
+                                <!-- Include your form fields for adding a new address here -->
+                            </div>
+                            <!-- Address Selection -->
+                            <div id="address-selection" class="border p-3">
+                                <!-- Sample Addresses -->
+                                <% User.addresses.forEach((address, index) => { %>
+                                    <div class="form-check my-3 border-bottom" style="padding-bottom: 20px;">
+                                        <input class="form-check-input bg-primary border-0" type="radio" name="address" id="<%= address._id %>" value="<%= address._id %>" onclick="showSubmitButton()" <%= index === 0 ? 'checked' : '' %>>
+                                        <label class="form-check-label" for="<%= address._id %>">
+                                            <span class="mx-3"> <%= address.name %> </span>
+                                            <span> <%= address.phone %> </span> 
+                                            <p class="mt-2 mx-3">
+                                                <%= address.houseName %>, <%= address.streetName %>, <%= address.district %>, <%= address.state %>, <%= address.postOffice %>,  <%= address.pinCode %>
+                                            </p>
+                                        </label>
+                                    </div>
+                                <% }) %>
+                                <p class="text-danger" id="addressError" style="display: none;"></p>
+                                <div id="submitBtnContainer" style="display: none;">
+                                    <button type="submit" class="btn btn-primary text-light px-4">Submit</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-12 col-lg-6">
-                            <div class="form-item w-100">
-                                <label class="form-label my-3">Last Name<sup>*</sup></label>
-                                <input type="text" class="form-control">
+                    </div>
+                    <!-- Form to add new address -->
+                    <div id="address-form-element" style="display: none;">
+                        <form id="addressForm" action="/add-address" method="post">
+                            <div class="form-item">
+                                <label class="form-label my-3">Name<sup>*</sup></label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Your Name">
+                                <p id="nameError" class="text-danger"></p>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <label class="form-label my-3">Company Name<sup>*</sup></label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="form-item">
-                        <label class="form-label my-3">Address <sup>*</sup></label>
-                        <input type="text" class="form-control" placeholder="House Number Street Name">
-                    </div>
-                    <div class="form-item">
-                        <label class="form-label my-3">Town/City<sup>*</sup></label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="form-item">
-                        <label class="form-label my-3">Country<sup>*</sup></label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="form-item">
-                        <label class="form-label my-3">Postcode/Zip<sup>*</sup></label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="form-item">
-                        <label class="form-label my-3">Mobile<sup>*</sup></label>
-                        <input type="tel" class="form-control">
-                    </div>
-                    <div class="form-item">
-                        <label class="form-label my-3">Email Address<sup>*</sup></label>
-                        <input type="email" class="form-control">
-                    </div>
-                    <div class="form-check my-3">
-                        <input type="checkbox" class="form-check-input" id="Account-1" name="Accounts" value="Accounts">
-                        <label class="form-check-label" for="Account-1">Create an account?</label>
-                    </div>
-                    <hr>
-                    <div class="form-check my-3">
-                        <input class="form-check-input" type="checkbox" id="Address-1" name="Address" value="Address">
-                        <label class="form-check-label" for="Address-1">Ship to a different address?</label>
-                    </div>
-                    <div class="form-item">
-                        <textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
+                            <div class="form-item">
+                                <label class="form-label my-3">Phone<sup>*</sup></label>
+                                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+                                <p id="phoneError" class="text-danger"></p>
+                            </div>
+                            <div class="form-item">
+                                <label class="form-label my-3">House Name<sup>*</sup></label>
+                                <input type="text" class="form-control" id="address" name="houseName" placeholder="House Number or House Name">
+                                <p id="addressError" class="text-danger"></p>
+                            </div>
+                            <div class="form-item">
+                                <label class="form-label my-3">Street Name<sup>*</sup></label>
+                                <input type="text" class="form-control" id="townCity" name="streetName">
+                                <p id="townCityError" class="text-danger"></p>
+                            </div>
+                            <div class="form-item">
+                                <label class="form-label my-3">District<sup>*</sup></label>
+                                <input type="text" class="form-control" id="district" name="district">
+                                <p id="districtError" class="text-danger"></p>
+                            </div>
+                            <div class="form-item">
+                                <label class="form-label my-3">Post Office<sup>*</sup></label>
+                                <input type="text" class="form-control" name="postOffice" id="postOffice">
+                                <p id="postOfficeError" class="text-danger"></p>
+                            </div>
+                            <div class="form-item">
+                                <label class="form-label my-3">State<sup>*</sup></label>
+                                <input type="text" class="form-control" id="state" name="state">
+                                <p id="stateError" class="text-danger"></p>
+                            </div>
+                            <div class="form-item">
+                                <label class="form-label my-3">Pin Code<sup>*</sup></label>
+                                <input type="text" class="form-control" id="pinCode" name="pinCode">
+                                <p id="pinCodeError" class="text-danger"></p>
+                            </div>
+                            <button class="button btn btn-primary text-light my-3 px-4" type="submit">
+                                Add Address
+                            </button>
+                        </form>
+                        
                     </div>
                 </div>
                 <div class="col-md-12 col-lg-6 col-xl-5">
@@ -92,54 +123,36 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">
-                                        <div class="d-flex align-items-center mt-2">
-                                            <img src="img/vegetable-item-2.jpg" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
-                                        </div>
-                                    </th>
-                                    <td class="py-5">Awesome Brocoli</td>
-                                    <td class="py-5">$69.00</td>
-                                    <td class="py-5">2</td>
-                                    <td class="py-5">$138.00</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        <div class="d-flex align-items-center mt-2">
-                                            <img src="img/vegetable-item-5.jpg" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
-                                        </div>
-                                    </th>
-                                    <td class="py-5">Potatoes</td>
-                                    <td class="py-5">$69.00</td>
-                                    <td class="py-5">2</td>
-                                    <td class="py-5">$138.00</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        <div class="d-flex align-items-center mt-2">
-                                            <img src="img/vegetable-item-3.png" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
-                                        </div>
-                                    </th>
-                                    <td class="py-5">Big Banana</td>
-                                    <td class="py-5">$69.00</td>
-                                    <td class="py-5">2</td>
-                                    <td class="py-5">$138.00</td>
-                                </tr>
+                                <% Cart.items.forEach(item => { %>
+                                    <tr>
+                                        <th scope="row">
+                                            <div class="d-flex align-items-center mt-2">
+                                                <img src="<%= item.productImage %>" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
+                                            </div>
+                                        </th>
+                                        <td class="py-5"><%= item.name %></td>
+                                        <td class="py-5">₹ <%= item.price %></td>
+                                        <td class="py-5 text-center"><%= item.quantity %></td>
+                                        <td class="py-5"><%= item.price * item.quantity %></td>
+                                    </tr>
+                                <% }) %>
                                 <tr>
                                     <th scope="row">
                                     </th>
-                                    <td class="py-5"></td>
-                                    <td class="py-5"></td>
-                                    <td class="py-5">
-                                        <p class="mb-0 text-dark py-3">Subtotal</p>
+                                    <td class="py-3"></td>
+                                    <td class="py-3">
+                                        <p class="mb-0 text-dark mt-3">Subtotal</p>
+                                        <p class="mb-0 text-dark">Delivery Charge</p>
+                                        <p class="mb-0 text-dark">Coupon Discount</p>
                                     </td>
-                                    <td class="py-5">
-                                        <div class="py-3 border-bottom border-top">
-                                            <p class="mb-0 text-dark">$414.00</p>
-                                        </div>
+                                    <td class="py-3"></td>
+                                    <td class="py-3">
+                                            <p class="mb-0 text-dark mt-3">₹ <%= Cart.bill %></p>
+                                            <p class="mb-0 text-dark"><%= Cart.bill >=300 ? 'FREE' : '₹ 30' %></p>
+                                            <p class="mb-0 text-dark">- ₹ <%= finalDiscount %></p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <!-- <tr>
                                     <th scope="row">
                                     </th>
                                     <td class="py-5">
@@ -159,18 +172,18 @@
                                             <label class="form-check-label" for="Shipping-3">Local Pickup: $8.00</label>
                                         </div>
                                     </td>
-                                </tr>
+                                </tr> -->
                                 <tr>
                                     <th scope="row">
                                     </th>
                                     <td class="py-5">
-                                        <p class="mb-0 text-dark text-uppercase py-3">TOTAL</p>
+                                        <p class="mb-0 text-primary fw-bolder text-uppercase py-3">TOTAL</p>
                                     </td>
                                     <td class="py-5"></td>
                                     <td class="py-5"></td>
                                     <td class="py-5">
                                         <div class="py-3 border-bottom border-top">
-                                            <p class="mb-0 text-dark">$135.00</p>
+                                            <p class="mb-0 text-primary fw-bolder">₹ <%= Cart.bill >= 300 ? Cart.bill - finalDiscount : Cart.bill - finalDiscount + 30 %></p>
                                         </div>
                                     </td>
                                 </tr>
@@ -180,53 +193,150 @@
                     <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
                         <div class="col-12">
                             <div class="form-check text-start my-3">
-                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Transfer-1" name="Transfer" value="Transfer">
-                                <label class="form-check-label" for="Transfer-1">Direct Bank Transfer</label>
-                            </div>
-                            <p class="text-start text-dark">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
-                        </div>
-                    </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                        <div class="col-12">
-                            <div class="form-check text-start my-3">
-                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Payments-1" name="Payments" value="Payments">
-                                <label class="form-check-label" for="Payments-1">Check Payments</label>
+                                <input type="radio" class="form-check-input bg-primary border-0" id="Delivery-1" name="paymentMethod" value="COD">
+                                <label class="form-check-label px-2" for="Delivery-1">Cash On Delivery</label>
                             </div>
                         </div>
                     </div>
                     <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
                         <div class="col-12">
                             <div class="form-check text-start my-3">
-                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Delivery-1" name="Delivery" value="Delivery">
-                                <label class="form-check-label" for="Delivery-1">Cash On Delivery</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                        <div class="col-12">
-                            <div class="form-check text-start my-3">
-                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Paypal-1" name="Paypal" value="Paypal">
-                                <label class="form-check-label" for="Paypal-1">Razorpay</label>
+                                <input type="radio" class="form-check-input bg-primary border-0" id="Paypal-1" name="paymentMethod" value="Razorpay" checked>
+                                <label class="form-check-label px-2" for="Paypal-1">Razorpay</label>
                             </div>
                         </div>
                     </div>
                     <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                        <button type="button" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Place Order</button>
+                        <button type="button" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary" onclick="placeOrder()">
+                            Place Order
+                        </button>
                     </div>
                 </div>
             </div>
-        </form>
+        <!-- </form> -->
     </div>
 </div>
 <!-- Checkout Page End -->
 
 
                 
-        <!-- Include Footer -->
-        <%- include('../partials/_footer')%>
-        <!-- /Include Footer -->
+<!-- Include Footer -->
+<%- include('../partials/_footer')%>
+<!-- /Include Footer -->
+
+<script>
+    function showNewAddressForm () {
+        document.getElementById('address-form-element').style.display = 'block'
+    }
+    
+    function showSubmitButton() {
+        document.getElementById('submitBtnContainer').style.display = 'block';
+    }
 
 
-        <!-- Include layoutFoot -->
-        <%- include('../partials/_layoutFoot')%>
-        <!-- /Include layoutFoot -->
+    function placeOrder() {
+        
+        if (!document.querySelector('input[name="address"]:checked')) {
+            const errorContainer = document.getElementById('addressError');
+            errorContainer.textContent = 'Please Add an address.';
+            errorContainer.style.display = 'block';
+            alert('Add address')
+            return; // Exit the function early if address is not selected
+        }
+        
+        // Find the selected address
+        const selectedAddress = document.querySelector('input[name="address"]:checked').value;
+        const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked').value;
+        // Send the selected address to the server
+        axios.post('place-order', {
+                addressId: selectedAddress,
+                paymentMethod: selectedPayment
+            })
+            .then(res => {
+                console.log('Order placed successfully:', res.data);
+                window.location.href = '/order-completed';
+            })
+            .catch(err => {
+                console.error('Error placing order:', err);
+            });
+    }
+
+    // Form Validation
+    document.getElementById('addressForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    // Reset error messages
+    document.getElementById('nameError').textContent = '';
+    document.getElementById('phoneError').textContent = '';
+    document.getElementById('addressError').textContent = '';
+    document.getElementById('townCityError').textContent = '';
+    document.getElementById('districtError').textContent = '';
+    document.getElementById('postOfficeError').textContent = '';
+    document.getElementById('stateError').textContent = '';
+    document.getElementById('pinCodeError').textContent = '';
+    
+    // Validate each field
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const townCity = document.getElementById('townCity').value.trim();
+    const district = document.getElementById('district').value.trim();
+    const postOffice = document.getElementById('postOffice').value.trim();
+    const state = document.getElementById('state').value.trim();
+    const pinCode = document.getElementById('pinCode').value.trim();
+    
+    let isValid = true;
+    
+    if (name === '') {
+        document.getElementById('nameError').textContent = 'Name is required';
+        isValid = false;
+    } else if (!/^[a-zA-Z\s]{3,}$/.test(name)) {
+        document.getElementById('nameError').textContent = 'Name must be at least 3 letters and only include letters';
+        isValid = false;
+    }
+    if (phone === '') {
+        document.getElementById('phoneError').textContent = 'Phone number is required';
+        isValid = false;
+    } else if (!/^\d{10}$/.test(phone)) {
+        document.getElementById('phoneError').textContent = 'Phone number must be 10 digits';
+        isValid = false;
+    }
+    if (address === '') {
+        document.getElementById('addressError').textContent = 'House Number or House Name is required';
+        isValid = false;
+    }
+    if (townCity === '') {
+        document.getElementById('townCityError').textContent = 'Street Name is required';
+        isValid = false;
+    }
+    if (district === '') {
+        document.getElementById('districtError').textContent = 'District is required';
+        isValid = false;
+    }
+    if (postOffice === '') {
+        document.getElementById('postOfficeError').textContent = 'Post Office is required';
+        isValid = false;
+    }
+    if (state === '') {
+        document.getElementById('stateError').textContent = 'State is required';
+        isValid = false;
+    }
+    if (pinCode === '') {
+        document.getElementById('pinCodeError').textContent = 'Pin Code is required';
+        isValid = false;
+    } else if (!/^\d{6}$/.test(pinCode)) {
+        document.getElementById('pinCodeError').textContent = 'Pin Code must be 6 digits';
+        isValid = false;
+    }
+    
+    if (isValid) {
+        // Form is valid, submit it
+        this.submit();
+    }
+});
+
+</script> 
+
+<!-- Include layoutFoot -->
+<%- include('../partials/_layoutFoot')%>
+<!-- /Include layoutFoot -->

@@ -20,25 +20,19 @@
 <!-- Shop category Start-->
 <div class="container-fluid fruite py-5">
     <div class="container py-5">
-        <h1 class="mb-4">Fresh fruits shop</h1>
         <div class="row g-4">
             <div class="col-lg-12">
                 <div class="row g-4">
                     <div class="col-xl-3">
-                        <div class="input-group w-100 mx-auto d-flex">
-                            <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
-                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
-                        </div>
                     </div>
                     <div class="col-6"></div>
                     <div class="col-xl-3">
                         <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
-                            <label for="fruits">Default Sorting:</label>
+                            <label for="fruits">Sort By Price:</label>
                             <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3" form="fruitform">
                                 <option value="volvo">Nothing</option>
-                                <option value="saab">Popularity</option>
-                                <option value="opel">Organic</option>
-                                <option value="audi">Fantastic</option>
+                                <option value="saab">High to Low</option>
+                                <option value="opel">Low to High</option>
                             </select>
                         </div>
                     </div>
@@ -78,31 +72,6 @@
                                 </div>
                             </div>
                             <div class="col-lg-12">
-                                <div class="mb-3">
-                                    <h4>Additional</h4>
-                                        <div class="mb-2">
-                                            <input type="radio" class="me-2" id="Categories-1" name="Categories-1" value="Beverages">
-                                            <label for="Categories-1"> Organic</label>
-                                        </div>
-                                    <div class="mb-2">
-                                        <input type="radio" class="me-2" id="Categories-2" name="Categories-1" value="Beverages">
-                                        <label for="Categories-2"> Fresh</label>
-                                    </div>
-                                    <div class="mb-2">
-                                        <input type="radio" class="me-2" id="Categories-3" name="Categories-1" value="Beverages">
-                                        <label for="Categories-3"> Sales</label>
-                                    </div>
-                                    <div class="mb-2">
-                                        <input type="radio" class="me-2" id="Categories-4" name="Categories-1" value="Beverages">
-                                        <label for="Categories-4"> Discount</label>
-                                    </div>
-                                    <div class="mb-2">
-                                        <input type="radio" class="me-2" id="Categories-5" name="Categories-1" value="Beverages">
-                                        <label for="Categories-5"> Expired</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
                                 <h4 class="mb-3">Featured products</h4>
                                 <div class="d-flex align-items-center justify-content-start">
                                     <div class="rounded me-4" style="width: 100px; height: 100px;">
@@ -127,7 +96,7 @@
                                     <a href="/shop-details?id=<%= item._id %>" class="text-decoration-none">
                                         <div class="d-flex align-items-center justify-content-start">
                                             <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                                <img src="data:<%= item.productImage.contentType %>;base64,<%= item.productImage.imageBase64 %>" class="img-fluid rounded" alt="" style="width: 80px; height: 80px;">
+                                                <img src="<%= item.imageUrl %>" class="img-fluid rounded" alt="" style="width: 80px; height: 80px;">
                                             </div>
                                             <div>
                                                 <h6 class="mb-2"><%= item.name %></h6>
@@ -183,7 +152,7 @@
                                     <a href="/shop-details?id=<%= item._id %>" class="text-decoration-none">
                                         <div class="rounded position-relative fruite-item border border-secondary rounded-bottom">
                                             <div class="fruite-img" style="height: 220px;">
-                                                <img src="data:<%= item.productImage.contentType %>;base64,<%= item.productImage.imageBase64 %>" class="img-fluid w-100 rounded-top" alt="">
+                                                <img src="<%= item.imageUrl %>" class="img-fluid w-100 rounded-top" alt="">
                                             </div>
                                             <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;"><%= item.category %></div>
                                             <div class="p-4">

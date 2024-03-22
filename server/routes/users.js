@@ -9,7 +9,7 @@ const services = require('../services/userRender');
 const controller = require('../controller/userController')
 
 // home route (home page)
-route.get('/', controller.homeRoutes);
+route.get('/', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, controller.homeRoutes);
 
 // login
 route.get('/login', controller.userLogin);
@@ -21,25 +21,28 @@ route.get('/logout', controller.logout);
 route.get('/signup', services.userSigup);
 
 // shop
-route.get('/shop' || '/shop/shop', services.shop);
+route.get('/shop' || '/shop/shop', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.shop);
 
 // shop-details
-route.get('/shop-details', services.shopDetails);
+route.get('/shop-details', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.shopDetails);
 
 // cart
-route.get('/cart', authentication.checkAuth, services.cart);
+route.get('/cart', authentication.checkAuth, authentication.fetchCartItems, services.cart);
 
 // checkout
-route.get('/checkout', services.checkout);
+route.get('/checkout', authentication.checkAuth, authentication.fetchCartItems, services.checkout);
 
 // Error
-route.get('/error', services.errorMessage)
+route.get('/error', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.errorMessage)
+
+// Order
+route.get('/order-completed', authentication.fetchCartItems, services.orderSuccess)
 
 // my account
-route.get('/myAccount', authentication.checkAuth, services.myAccount);
+route.get('/myAccount', authentication.checkAuth, authentication.fetchCartItems, services.myAccount);
 
 // contact us
-route.get('/contact', services.contact)
+route.get('/contact', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.contact)
 
 
 
@@ -53,5 +56,9 @@ route.post('/delete-cart', authentication.checkAuth, services.deleteCart);
 route.post('/update-cart-quantity', authentication.checkAuth, services.changeQuantity);
 
 route.post('/applyCoupon', authentication.checkAuth, services.applyCoupon);
+
+route.post('/proceed-to-checkout', authentication.checkAuth, services.proceedToCheckout);
+route.post('/add-address', authentication.checkAuth, services.addNewAddress);
+route.post('/place-order', authentication.checkAuth, services.placeOrder);
 
 module.exports = route;

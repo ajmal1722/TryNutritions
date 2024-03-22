@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../model/userModel');
 const { promisify } = require('util');
 require('dotenv').config();
+const Cart = require('../model/cart')
 
 // Creating a Promisified Version of jwt.verify
 const verifyToken = promisify(jwt.verify);
@@ -52,5 +53,44 @@ exports.checkAuthenticated = (redirectTo) => (req, res, next) => {
     }
 
     // If not authenticated, proceed to the next middleware or route handler
+    next();
+};
+
+exports.getCartInNotAuthorizedPage = async (req, res, next) => {
+    try {
+        // Get the token from cookies or headers
+        const token = req.cookies.jwt || req.headers.authorization;
+        
+        // Verify token
+        const decoded = await verifyToken(token, process.env.AUTH_STR);
+
+        // Check if the user exists in the database
+        const user = await User.findById(decoded.id);
+        req.user = user;
+        
+    } catch (error) {
+        console.error("Error fetching cart for unauthorized page:", error);
+    }
+    next();
+};
+
+ 
+exports.fetchCartItems = async (req, res, next) => {
+    if (req.user) {
+        try {
+            const cart = await Cart.findOne({ user: req.user._id });
+            if (cart) {
+                res.locals.cartItemCount = cart.items.length;
+            } else {
+                res.locals.cartItemCount = 0;
+            }
+        } catch (error) {
+            console.error("Error fetching cart items:", error);
+            res.locals.cartItemCount = 0;
+        }
+    } else {
+        // User is not authenticated
+        res.locals.cartItemCount = 0;
+    }
     next();
 };
