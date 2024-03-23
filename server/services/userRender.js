@@ -13,9 +13,30 @@ exports.userSigup = (req, res) => res.render('user/body/signup');
 
 // shop
 exports.shop = async (req, res) => {
-    let query = {};
+    try {
+        const products = await Products.find().exec();
+        const categories = await Category.find().exec();
+        const featuredProducts = await Products.find({})
+            .sort({ discount: -1 })
+            .limit(3)
+            .exec();
 
-    // Declare an array to store selected categories
+        res.render('user/body/shop', {
+            pageName: 'Shop',
+            Products: products,
+            Categories: categories,
+            feauturedProducts: featuredProducts,
+            selectedCategories: [], // Initialize selected categories as empty
+            req: req // Pass the request object for further processing if needed
+        });
+    } catch (error) {
+        console.error('Error rendering shop page:', error);
+        res.status(500).send({ error: error.message });
+    }
+};
+
+exports.filterCategory = async (req, res) => {
+    let query = {};
     let selectedCategories = [];
 
     // Check if the request query contains categories
@@ -25,38 +46,19 @@ exports.shop = async (req, res) => {
 
         // Construct MongoDB query to find products where the category field matches any of the selected categories
         query.category = { $in: selectedCategories };
+        console.log('selected Categories:', selectedCategories)
     }
-    console.log('querycategory:', query.category)
-    console.log('selected categories:' , selectedCategories)
+
     try {
         // Fetch products based on the constructed query
         const products = await Products.find(query).exec();
-        console.log('Prodcuts:', products)
-        // Fetch all categories from the database
-        const categories = await Category.find().exec();
-        
-        // Fetch featured products
-        const featuredProducts = await Products.find({})
-            .sort({ discount: -1 })
-            .limit(3)
-            .exec();
-
-        // Render the shop page view with the fetched data
-        res.render('user/body/shop', {
-            pageName: 'Shop',
-            Products: products,
-            Categories: categories,
-            feauturedProducts: featuredProducts,
-            selectedCategories: selectedCategories || [], // Selected categories from the request query
-            req: req // Pass the request object for further processing if needed
-        });
+        console.log('Filtered Products:',products)
+        res.json(products);
     } catch (error) {
-        // Handle any errors that occur during the database operation
-        console.error('Error fetching products:', error);
-        res.status(500).send({ error: error.message });
+        console.error('Error filtering categories:', error);
+        res.status(500).json({ error: error.message });
     }
 };
-
 
 
 
