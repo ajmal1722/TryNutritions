@@ -9,7 +9,7 @@ const verifyToken = promisify(jwt.verify);
 exports.checkAuth = async (req, res, next) => {
     try {
         // Get the token from cookies or headers
-        const token = req.cookies.jwt || req.headers.authorization;
+        const token = req.cookies.adminToken || req.headers.authorization;
 
         // If token is not present redirect to login page
         if (!token) {
