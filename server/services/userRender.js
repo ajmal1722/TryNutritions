@@ -14,7 +14,7 @@ exports.userSigup = (req, res) => res.render('user/body/signup');
 // shop
 exports.shop = async (req, res) => {
     try {
-        const products = await Products.find().exec();
+        const products = await Products.find(req.query).exec();
         const categories = await Category.find().exec();
         const featuredProducts = await Products.find({})
             .sort({ discount: -1 })
@@ -52,7 +52,7 @@ exports.filterCategory = async (req, res) => {
     try {
         // Fetch products based on the constructed query
         const products = await Products.find(query).exec();
-        console.log('Filtered Products:',products)
+        console.log('Filtered Products:', products.length, products)
         res.json(products);
     } catch (error) {
         console.error('Error filtering categories:', error);
