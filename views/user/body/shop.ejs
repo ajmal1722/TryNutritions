@@ -50,12 +50,10 @@
                                             </div>
                                         </li>
                                         <% Categories.forEach(item => { %>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <label class="text-primary">
-                                                        <input type="checkbox" class="category-checkbox" name="categories" value="<%= item.category %>" <%= req.query.categories && req.query.categories.includes(item.category) ? 'checked' : '' %>>
-                                                        <i class="me-2 text-primary"></i><%= item.category %>
-                                                    </label>
+                                            <li class="my-3">
+                                                <div class="form-check text-start">
+                                                    <input type="checkbox" class="form-check-input bg-primary border-0 category-checkbox" id="<%= item.category %>" name="categories" value="<%= item.category %>" <%= req.query.categories && req.query.categories.includes(item.category) ? 'checked' : '' %>>
+                                                    <label class="form-check-label text-primary" for="<%= item.category %>"><i class="me-2 text-primary"></i><%= item.category %></label>
                                                 </div>
                                             </li>
                                         <% }) %>
