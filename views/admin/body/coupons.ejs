@@ -144,16 +144,29 @@
                                     <input type="date" class="form-control" id="endDate" name="endDate">
                                 </div>
                                 <div class="mb-3">
+                                    <label for="minCartValue" class="form-label">Minimum Cart Value:</label>
+                                    <input type="text" class="form-control" id="minCartValue" name="minCartValue">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="couponType" class="form-label">Coupon Type:</label>
+                                    <select class="form-select" id="couponType" name="couponType" onchange="toggleCouponFields()">
+                                        <option value="Fixed">Fixed</option>
+                                        <option value="Percentage">Percentage</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3" id="discountPriceField" style="display: none;">
+                                    <label for="discountPrice" class="form-label">Discount Price:</label>
+                                    <input type="text" class="form-control" id="discountPrice" name="discountPrice">
+                                </div>
+                                <div class="mb-3" id="discountField">
                                     <label for="discount" class="form-label">Discount:</label>
                                     <input type="text" class="form-control" id="discount" name="discount">
                                 </div>
-                                <div class="mb-3">
+                                <div class="mb-3" id="maxPriceOfferField" style="display: none;">
                                     <label for="maxPriceOffer" class="form-label">Max Price Offer:</label>
                                     <input type="text" class="form-control" id="maxPriceOffer" name="maxPriceOffer">
                                 </div>
-                                <button type="submit" class="btn btn-primary">
-                                    Add Coupon
-                                </button>
+                                <button type="submit" class="btn btn-primary">Add Coupon</button>
                             </form>
                         </div>
                     </div>
@@ -175,6 +188,24 @@
                 })
                 .catch(err => console.log(err))
         }
+
+
+        function toggleCouponFields() {
+        var couponType = document.getElementById("couponType").value;
+        var discountPriceField = document.getElementById("discountPriceField");
+        var discountField = document.getElementById("discountField");
+        var maxPriceOfferField = document.getElementById("maxPriceOfferField");
+
+        if (couponType === "Fixed") {
+            discountPriceField.style.display = "block";
+            discountField.style.display = "none";
+            maxPriceOfferField.style.display = "none";
+        } else if (couponType === "Percentage") {
+            discountPriceField.style.display = "none";
+            discountField.style.display = "block";
+            maxPriceOfferField.style.display = "block";
+        }
+    }
     </script>
     
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>

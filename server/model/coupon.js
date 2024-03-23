@@ -10,6 +10,10 @@ const couponSchema = new mongoose.Schema({
         required: true,
         unique: true,
       },
+      couponType: {
+        type: String,
+        required: true
+      },
       discount: {
         type: Number,
         min: [0, 'Discount must be at least 0'],
@@ -29,7 +33,9 @@ const couponSchema = new mongoose.Schema({
       usageLimit: {
         type: Number,
         default: 1
-      }
+      },minCartValue: {
+        type: Number
+      },
 })
 
 module.exports = mongoose.model('Coupon', couponSchema);
