@@ -52,7 +52,10 @@
                                         <% Categories.forEach(item => { %>
                                             <li>
                                                 <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="/shop/?category=<%= item.category %>"><i class="fas fa-apple-alt me-2"></i><%= item.category %></a>
+                                                    <label class="text-primary">
+                                                        <input type="checkbox" class="category-checkbox" name="categories" value="<%= item.category %>" <%= req.query.categories && req.query.categories.includes(item.category) ? 'checked' : '' %>>
+                                                        <i class="me-2 text-primary"></i><%= item.category %>
+                                                    </label>
                                                 </div>
                                             </li>
                                         <% }) %>
@@ -197,6 +200,42 @@
 <!-- Include Footer -->
 <%- include('../partials/_footer')%>
 <!-- /Include Footer -->
+
+
+<script>
+    // Get all category checkboxes
+    const checkboxes = document.querySelectorAll('.category-checkbox');
+
+    // Add event listener to each checkbox
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            // Create an array to store selected categories
+            const selectedCategories = [];
+
+            // Iterate through checkboxes to find checked ones
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedCategories.push(checkbox.value);
+                }
+            });
+
+            // Make AJAX request using Axios
+            axios.get('/shop', {
+                params: {
+                    categories: selectedCategories.join(',')
+                }
+            })
+            .then(response => {
+                // Handle response if needed
+                console.log(response.data);
+            })
+            .catch(error => {
+                // Handle error if needed
+                console.error(error);
+            });
+        });
+    });
+</script>
 
 
  <!-- Include layoutFoot -->

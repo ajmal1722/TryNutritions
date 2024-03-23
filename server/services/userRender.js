@@ -13,21 +13,52 @@ exports.userSigup = (req, res) => res.render('user/body/signup');
 
 // shop
 exports.shop = async (req, res) => {
-    const product = await Products.find(req.query).exec();
-    const category = await Category.find().exec();
-    
-    const feauturedProduct = await Products.find({})
-                                            .sort({ discount: -1 })
-                                            .limit(3)
-                                            .exec()
+    let query = {};
 
-    res.render('user/body/shop', {
-        pageName: 'Shop',
-        Products: product,
-        Categories: category,
-        feauturedProducts: feauturedProduct
-    });
-} 
+    // Declare an array to store selected categories
+    let selectedCategories = [];
+
+    // Check if the request query contains categories
+    if (req.query.categories) {
+        // Split the categories string into an array
+        selectedCategories = req.query.categories.split(',');
+
+        // Construct MongoDB query to find products where the category field matches any of the selected categories
+        query.category = { $in: selectedCategories };
+    }
+    console.log('querycategory:', query.category)
+    console.log('selected categories:' , selectedCategories)
+    try {
+        // Fetch products based on the constructed query
+        const products = await Products.find(query).exec();
+        console.log('Prodcuts:', products)
+        // Fetch all categories from the database
+        const categories = await Category.find().exec();
+        
+        // Fetch featured products
+        const featuredProducts = await Products.find({})
+            .sort({ discount: -1 })
+            .limit(3)
+            .exec();
+
+        // Render the shop page view with the fetched data
+        res.render('user/body/shop', {
+            pageName: 'Shop',
+            Products: products,
+            Categories: categories,
+            feauturedProducts: featuredProducts,
+            selectedCategories: selectedCategories || [], // Selected categories from the request query
+            req: req // Pass the request object for further processing if needed
+        });
+    } catch (error) {
+        // Handle any errors that occur during the database operation
+        console.error('Error fetching products:', error);
+        res.status(500).send({ error: error.message });
+    }
+};
+
+
+
 
 // shop-details
 exports.shopDetails = async (req, res) => {
