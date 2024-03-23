@@ -4,38 +4,45 @@ const couponSchema = new mongoose.Schema({
     couponName: {
         type: String,
         required: true
-      },
-      couponCode: {
+    },
+    couponCode: {
         type: String,
         required: true,
         unique: true,
-      },
-      couponType: {
+    },
+    startDate: {
+        type: Date,
+        required: true,
+    },
+    endDate: {
+        type: Date,
+        required: true,
+    },
+    minCartValue: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    couponType: {
         type: String,
+        enum: ['Fixed', 'Percentage'],
         required: true
-      },
-      discount: {
+    },
+    discount: {
         type: Number,
         min: [0, 'Discount must be at least 0'],
         max: [100, 'Discount cannot exceed 100']
-      },
-      maxPriceOffer: {
+    },
+    discountPrice: {
+      type: Number
+    },
+    maxPriceOffer: {
         type: Number
-      },
-      startDate: {
-        type: Date,
-        required: true,
-      },
-      endDate: {
-        type: Date,
-        required: true,
-      },
-      usageLimit: {
+    },
+    usageLimit: {
         type: Number,
         default: 1
-      },minCartValue: {
-        type: Number
-      },
-})
+    }
+});
 
 module.exports = mongoose.model('Coupon', couponSchema);

@@ -42,19 +42,47 @@
                                 <div class="card-body text-center">
                                     <h5 class="card-title text-success mb-3"><%= item.couponName %></h5>
                                     <p class="card-text">
-                                        <span class="text-bold text-dark font-monospace">Coupon Code :</span> <span class="text-secondary"><%= item.couponCode %></span>
+                                        <span class="text-bold text-dark font-monospace">Coupon Code :</span>
+                                        <span class="text-secondary"><%= item.couponCode %></span>
                                     </p>
                                     <p class="card-text">
-                                        <span class="text-bold text-dark font-monospace">Discount :</span> <span class="text-secondary"><%= item.discount %>%</span>
+                                        <span class="text-bold text-dark font-monospace">Minimum Cart Value :</span>
+                                        <span class="text-secondary">₹<%= item.minCartValue %></span>
                                     </p>
                                     <p class="card-text">
-                                        <span class="text-bold text-dark font-monospace">Max Price Offer :</span> <span class="text-secondary">₹<%= item.maxPriceOffer %></span>
+                                        <span class="text-bold text-dark font-monospace">Coupon Type :</span>
+                                        <span class="text-secondary"><%= item.couponType %></span>
+                                    </p>
+                                    <% if (item.couponType === 'Fixed') { %>
+                                        <p class="card-text" style="display: none;">
+                                            <span class="text-bold text-dark font-monospace">Discount :</span>
+                                            <span class="text-secondary"><%= item.discount %>%</span>
+                                        </p>
+                                        <p class="card-text">
+                                            <span class="text-bold text-dark font-monospace">Discount Price :</span>
+                                            <span class="text-secondary">₹<%= item.discountPrice %></span>
+                                        </p>
+                                        <p class="card-text" style="display: none;">
+                                            <span class="text-bold text-dark font-monospace">Max Price Offer :</span>
+                                            <span class="text-secondary">₹<%= item.maxPriceOffer %></span>
+                                        </p>
+                                    <% } else { %>
+                                        <p class="card-text">
+                                            <span class="text-bold text-dark font-monospace">Discount :</span>
+                                            <span class="text-secondary"><%= item.discount %>%</span>
+                                        </p>
+                                        <p class="card-text">
+                                            <span class="text-bold text-dark font-monospace">Max Price Offer :</span>
+                                            <span class="text-secondary">₹<%= item.maxPriceOffer %></span>
+                                        </p>
+                                    <% } %>
+                                    <p class="card-text">
+                                        <span class="text-bold text-dark font-monospace">Start Date :</span>
+                                        <span class="text-secondary"><%= item.startDate.toString().substring(0, 25) %></span>
                                     </p>
                                     <p class="card-text">
-                                        <span class="text-bold text-dark font-monospace">Start Date :</span> <span class="text-secondary"><%= item.startDate.toString().substring(0, 25) %></span>
-                                    </p>
-                                    <p class="card-text">
-                                        <span class="text-bold text-dark font-monospace">End Date :</span> <span class="text-secondary"><%= item.endDate.toString().substring(0, 25) %> %></span>
+                                        <span class="text-bold text-dark font-monospace">End Date :</span>
+                                        <span class="text-secondary"><%= item.endDate.toString().substring(0, 25) %></span>
                                     </p>
                                     <div class="d-flex justify-content-center">
                                         <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#editCouponModal_<%= item._id %>" style="width: 100px;">
@@ -66,7 +94,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
+                        
 
                         <!-- Edit modal -->
                         <div class="modal fade" id="editCouponModal_<%= item._id %>" tabindex="-1" aria-labelledby="editCouponModalLabel" aria-hidden="true">
@@ -150,15 +179,15 @@
                                 <div class="mb-3">
                                     <label for="couponType" class="form-label">Coupon Type:</label>
                                     <select class="form-select" id="couponType" name="couponType" onchange="toggleCouponFields()">
-                                        <option value="Fixed">Fixed</option>
+                                        <option value="Fixed" selected>Fixed</option>
                                         <option value="Percentage">Percentage</option>
                                     </select>
                                 </div>
-                                <div class="mb-3" id="discountPriceField" style="display: none;">
+                                <div class="mb-3" id="discountPriceField">
                                     <label for="discountPrice" class="form-label">Discount Price:</label>
                                     <input type="text" class="form-control" id="discountPrice" name="discountPrice">
                                 </div>
-                                <div class="mb-3" id="discountField">
+                                <div class="mb-3" id="discountField" style="display: none;">
                                     <label for="discount" class="form-label">Discount:</label>
                                     <input type="text" class="form-control" id="discount" name="discount">
                                 </div>
@@ -173,8 +202,6 @@
                 </div>
             </div>
         </main>
-        
-        
 
         <!-- /MAIN -->
           
@@ -190,7 +217,7 @@
         }
 
 
-        function toggleCouponFields() {
+    function toggleCouponFields() {
         var couponType = document.getElementById("couponType").value;
         var discountPriceField = document.getElementById("discountPriceField");
         var discountField = document.getElementById("discountField");
