@@ -136,15 +136,15 @@
                                                     <option value="Percentage" <%= item.couponType === 'Percentage' ? 'selected' : '' %>>Percentage</option>
                                                 </select>
                                             </div>
-                                            <div class="mb-3 discountPriceFieldEdit" id="discountPriceFieldEdit">
+                                            <div class="mb-3 discountPriceFieldEdit" id="discountPriceFieldEdit" style="<%= item.couponType !== 'Fixed' ? 'display: none;' : '' %>">
                                                 <label for="discountPrice" class="form-label">Discount Price:</label>
                                                 <input type="text" class="form-control" id="discountPriceEdit" name="discountPrice" value="<%= item.discountPrice %>">
                                             </div>
-                                            <div class="mb-3 discountFieldEdit" id="discountFieldEdit">
+                                            <div class="mb-3 discountFieldEdit" id="discountFieldEdit" style="<%= item.couponType !== 'Percentage' ? 'display: none;' : '' %>">
                                                 <label for="discount" class="form-label">Discount Percentage:</label>
                                                 <input type="text" class="form-control" id="discountEdit" name="discount" value="<%= item.discount %>">
                                             </div>
-                                            <div class="mb-3 maxPriceOfferFieldEdit" id="maxPriceOfferFieldEdit">
+                                            <div class="mb-3 maxPriceOfferFieldEdit" id="maxPriceOfferFieldEdit" style="<%= item.couponType !== 'Percentage' ? 'display: none;' : '' %>">
                                                 <label for="maxPriceOffer" class="form-label">Max Price Offer:</label>
                                                 <input type="text" class="form-control" id="maxPriceOfferEdit" name="maxPriceOffer" value="<%= item.maxPriceOffer %>">
                                             </div>
@@ -248,21 +248,21 @@
     }
 
     function toggleEditCouponModal(itemId) {
-    var couponType = document.querySelector(`#editCouponModal_${itemId} .editCouponType`).value;
-    var discountPriceField = document.querySelector(`#editCouponModal_${itemId} .discountPriceFieldEdit`);
-    var discountField = document.querySelector(`#editCouponModal_${itemId} .discountFieldEdit`);
-    var maxPriceOfferField = document.querySelector(`#editCouponModal_${itemId} .maxPriceOfferFieldEdit`);
+        var couponType = document.querySelector(`#editCouponModal_${itemId} .editCouponType`).value;
+        var discountPriceField = document.querySelector(`#editCouponModal_${itemId} .discountPriceFieldEdit`);
+        var discountField = document.querySelector(`#editCouponModal_${itemId} .discountFieldEdit`);
+        var maxPriceOfferField = document.querySelector(`#editCouponModal_${itemId} .maxPriceOfferFieldEdit`);
 
-    if (couponType === "Fixed") {
-        discountPriceField.style.display = "block";
-        discountField.style.display = "none";
-        maxPriceOfferField.style.display = "none";
-    } else if (couponType === "Percentage") {
-        discountPriceField.style.display = "none";
-        discountField.style.display = "block";
-        maxPriceOfferField.style.display = "block";
+        if (couponType === "Fixed") {
+            discountPriceField.style.display = "block";
+            discountField.style.display = "none";
+            maxPriceOfferField.style.display = "none";
+        } else if (couponType === "Percentage") {
+            discountPriceField.style.display = "none";
+            discountField.style.display = "block";
+            maxPriceOfferField.style.display = "block";
+        }
     }
-}
 
     </script>
     
