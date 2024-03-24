@@ -102,11 +102,11 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="editCouponModalLabel">Add Category</h5>
+                                        <h5 class="modal-title" id="editCouponModalLabel">Edit Coupon</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <!-- Form for adding a category -->
+                                        <!-- Form for editing a coupon -->
                                         <form action="/admin/updateCoupon" method="post">
                                             <div class="mb-3">
                                                 <input type="hidden" id="hiddenField" name="_id" value="<%= item._id %>">
@@ -118,24 +118,37 @@
                                                 <input type="text" class="form-control" id="couponCode" name="couponCode" value="<%= item.couponCode %>">
                                             </div>
                                             <div class="mb-3">
+                                                <label for="minCartValue" class="form-label">Minimum Cart Value:</label>
+                                                <input type="text" class="form-control" id="minCartValueEdit" name="minCartValue" value="<%= item.minCartValue %>">
+                                            </div>
+                                            <div class="mb-3">
                                                 <label for="startDate" class="form-label">Start Date:</label>
                                                 <input type="date" class="form-control" id="startDate" name="startDate" value="<%= item.startDate.toISOString().substring(0, 10) %>">
-                                            </div>                                            
+                                            </div>    
                                             <div class="mb-3">
                                                 <label for="endDate" class="form-label">End Date:</label>
                                                 <input type="date" class="form-control" id="endDate" name="endDate" value="<%= item.endDate.toISOString().substring(0, 10) %>">
-                                            </div>
+                                            </div>                                    
                                             <div class="mb-3">
-                                                <label for="discount" class="form-label">Discount:</label>
-                                                <input type="text" class="form-control" id="discount" name="discount" value="<%= item.discount %>">
+                                                <label for="couponType" class="form-label">Coupon Type:</label>
+                                                <select class="form-select editCouponType" id="couponTypeEdit" name="couponType" onchange="toggleEditCouponModal('<%= item._id %>')">
+                                                    <option value="Fixed" <%= item.couponType === 'Fixed' ? 'selected' : '' %>>Fixed</option>
+                                                    <option value="Percentage" <%= item.couponType === 'Percentage' ? 'selected' : '' %>>Percentage</option>
+                                                </select>
                                             </div>
-                                            <div class="mb-3">
+                                            <div class="mb-3 discountPriceFieldEdit" id="discountPriceFieldEdit">
+                                                <label for="discountPrice" class="form-label">Discount Price:</label>
+                                                <input type="text" class="form-control" id="discountPriceEdit" name="discountPrice" value="<%= item.discountPrice %>">
+                                            </div>
+                                            <div class="mb-3 discountFieldEdit" id="discountFieldEdit">
+                                                <label for="discount" class="form-label">Discount Percentage:</label>
+                                                <input type="text" class="form-control" id="discountEdit" name="discount" value="<%= item.discount %>">
+                                            </div>
+                                            <div class="mb-3 maxPriceOfferFieldEdit" id="maxPriceOfferFieldEdit">
                                                 <label for="maxPriceOffer" class="form-label">Max Price Offer:</label>
-                                                <input type="text" class="form-control" id="maxPriceOffer" name="maxPriceOffer" value="<%= item.maxPriceOffer %>">
+                                                <input type="text" class="form-control" id="maxPriceOfferEdit" name="maxPriceOffer" value="<%= item.maxPriceOffer %>">
                                             </div>
-                                            <button type="submit" class="btn btn-primary">
-                                                Update Coupon
-                                            </button>
+                                            <button type="submit" class="btn btn-primary">Update Coupon</button>
                                         </form>
                                     </div>
                                 </div>
@@ -188,7 +201,7 @@
                                     <input type="text" class="form-control" id="discountPrice" name="discountPrice">
                                 </div>
                                 <div class="mb-3" id="discountField" style="display: none;">
-                                    <label for="discount" class="form-label">Discount:</label>
+                                    <label for="discount" class="form-label">Discount Percentage:</label>
                                     <input type="text" class="form-control" id="discount" name="discount">
                                 </div>
                                 <div class="mb-3" id="maxPriceOfferField" style="display: none;">
@@ -233,6 +246,24 @@
             maxPriceOfferField.style.display = "block";
         }
     }
+
+    function toggleEditCouponModal(itemId) {
+    var couponType = document.querySelector(`#editCouponModal_${itemId} .editCouponType`).value;
+    var discountPriceField = document.querySelector(`#editCouponModal_${itemId} .discountPriceFieldEdit`);
+    var discountField = document.querySelector(`#editCouponModal_${itemId} .discountFieldEdit`);
+    var maxPriceOfferField = document.querySelector(`#editCouponModal_${itemId} .maxPriceOfferFieldEdit`);
+
+    if (couponType === "Fixed") {
+        discountPriceField.style.display = "block";
+        discountField.style.display = "none";
+        maxPriceOfferField.style.display = "none";
+    } else if (couponType === "Percentage") {
+        discountPriceField.style.display = "none";
+        discountField.style.display = "block";
+        maxPriceOfferField.style.display = "block";
+    }
+}
+
     </script>
     
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
