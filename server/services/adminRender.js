@@ -53,6 +53,15 @@ exports.orders = async (req, res) => {
      })
 } 
 
+exports.orderDetails = async (req, res) => {
+    const order = await Orders.find({}).exec()
+
+    res.render('admin/body/orderDetails', { 
+        pageName: 'Order Details',
+        Orders: order
+     })
+}
+
 // category
 exports.category = async (req, res) => {
     const categories = await Category.find({}).exec();

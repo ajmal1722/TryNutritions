@@ -19,9 +19,6 @@ route.get('/login', adminAuth.checkAuthenticated, services.adminLogin);
 // category
 route.get('/category', adminAuth.checkAuth, services.category)
 
-// orders
-route.get('/orders', adminAuth.checkAuth, services.orders);
-
 route.get('/products', adminAuth.checkAuth, services.products);
 
 route.get('/coupons', adminAuth.checkAuth, services.coupons);
@@ -67,6 +64,10 @@ route.get('/toggleVendorAccess', services.toggleVendorAccess);
 
 route.post('/createCoupon', services.createCoupon);
 route.delete('/delete-coupon/:id', services.deleteCoupon);
-route.post('/updateCoupon', services.updateCoupon)
+route.post('/updateCoupon', services.updateCoupon);
+
+// orders
+route.get('/orders', adminAuth.checkAuth, services.orders);
+route.get('/order-details', adminAuth.checkAuth, services.orderDetails);
 
 module.exports = route;
