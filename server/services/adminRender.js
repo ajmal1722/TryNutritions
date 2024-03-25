@@ -54,12 +54,25 @@ exports.orders = async (req, res) => {
 } 
 
 exports.orderDetails = async (req, res) => {
-    const order = await Orders.find({}).exec()
+    try {
+        const orderId = req.query.id;
+        console.log('orderId:', orderId)
 
-    res.render('admin/body/orderDetails', { 
-        pageName: 'Order Details',
-        Orders: order
-     })
+        // Fetch the order and populate the product field to access the imageUrl
+        const order = await Orders.findById(orderId).populate('items.product');
+        const userId = order.userId;
+
+        const user = await Users.findById(userId);
+
+        res.render('admin/body/orderDetails', { 
+            pageName: 'Order Details',
+            Order: order,
+            User: user
+        });
+    } catch (error) {
+        console.error('Error fetching order details:', error);
+        res.status(500).json({ error: error.message });
+    }
 }
 
 // category

@@ -67,9 +67,10 @@
                             </span>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-info px-3" onclick="viewOrder()">
-                                View
-                            </button>
+                            <form action="/admin/order-details" method="GET">
+                                <input type="hidden" name="id" value="<%= item._id %>">
+                                <button type="submit" class="btn btn-info px-3">View</button>
+                            </form>
                         </td>
                     </tr>
                 <% }) %>
@@ -84,13 +85,6 @@
 	<!-- CONTENT -->
 	
 
-    <script>
-        function viewOrder() {
-            axios.get('/order-details')
-                .then(res => console.log(res))
-                .catch(err => console.log(err))
-        }
-    </script>
 
 	<script src="/admin/js/script.js"></script>    
     <!-- Axios -->

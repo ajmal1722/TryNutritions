@@ -53,27 +53,23 @@
                                 <h5 class="card-title">Order Information</h5>
                                 <p class="card-text">
                                     <span class="text-bold text-dark font-monospace">Order ID :</span>
-                                    <span class="text-secondary">2934</span>
+                                    <span class="text-secondary"><%= Order.orderId %></span>
                                 </p>
                                 <p class="card-text">
                                     <span class="text-bold text-dark font-monospace">Customer Name:</span>
-                                    <span class="text-secondary">John Doe</span>
+                                    <span class="text-secondary"><%= Order.user %></span>
                                 </p>
                                 <p class="card-text">
                                     <span class="text-bold text-dark font-monospace">Email:</span>
-                                    <span class="text-secondary">johndoe@example.com</span>
+                                    <span class="text-secondary"><%= User.email %></span>
                                 </p>
                                 <p class="card-text">
                                     <span class="text-bold text-dark font-monospace">Phone Number:</span>
-                                    <span class="text-secondary">123-456-7890</span>
+                                    <span class="text-secondary"><%= User.phone %></span>
                                 </p>
                                 <p class="card-text">
                                     <span class="text-bold text-dark font-monospace">Address:</span>
                                     <span class="text-secondary">123 Main St</span>
-                                </p>
-                                <p class="card-text">
-                                    <span class="text-bold text-dark font-monospace">Address 2:</span>
-                                    <span class="text-secondary">Apt 101</span>
                                 </p>
                                 <p class="card-text">
                                     <span class="text-bold text-dark font-monospace">State:</span>
@@ -103,17 +99,17 @@
                             <div class="card-body">
                                 <h5 class="card-title">Items</h5>
                                 <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <div class="card">
-                                            <img src="sample-product-image.jpg" class="card-img-top" alt="Product Image"> <!-- Static sample data -->
-                                            <div class="card-body">
-                                                <h6 class="card-title">Product Name: Sample Product</h6> <!-- Static sample data -->
-                                                <p class="card-text">Quantity: 2</p> <!-- Static sample data -->
-                                                <p class="card-text">Size: Large</p> <!-- Static sample data -->
+                                    <% Order.items.forEach(item => { %>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card">
+                                                <img src="<%= item.product.imageUrl %>" class="card-img-top" alt="Product Image">
+                                                <div class="card-body">
+                                                    <h6 class="card-title">Product Name: <%= item.name %></h6>
+                                                    <p class="card-text">Quantity: <%= item.quantity %> kg</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- Additional item cards can be added here -->
+                                    <% }) %>
                                 </div>
                             </div>
                         </div>
