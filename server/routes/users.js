@@ -60,7 +60,7 @@ route.post('/update-cart-quantity', authentication.checkAuth, services.changeQua
 route.post('/applyCoupon', authentication.checkAuth, services.applyCoupon);
 route.post('/removeCoupon', authentication.checkAuth, services.removeCoupon);
 
-route.post('/proceed-to-checkout', authentication.checkAuth, services.proceedToCheckout);
+// route.post('/proceed-to-checkout', authentication.checkAuth, services.proceedToCheckout);
 route.post('/add-address', authentication.checkAuth, services.addNewAddress);
 route.post('/place-order', authentication.checkAuth, services.placeOrder);
 

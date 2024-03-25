@@ -149,7 +149,7 @@
                                     <td class="py-3">
                                             <p class="mb-0 text-dark mt-3">₹ <%= Cart.bill %></p>
                                             <p class="mb-0 text-dark"><%= Cart.bill >=300 ? 'FREE' : '₹ 30' %></p>
-                                            <p class="mb-0 text-dark">- ₹ <%= finalDiscount %></p>
+                                            <p class="mb-0 text-dark">- ₹ <%= Cart.couponDiscount %></p>
                                     </td>
                                 </tr>
                                 <!-- <tr>
@@ -183,7 +183,7 @@
                                     <td class="py-5"></td>
                                     <td class="py-5">
                                         <div class="py-3 border-bottom border-top">
-                                            <p class="mb-0 text-primary fw-bolder">₹ <%= Cart.bill >= 300 ? Cart.bill - finalDiscount : Cart.bill - finalDiscount + 30 %></p>
+                                            <p class="mb-0 text-primary fw-bolder">₹ <%= Cart.bill >= 300 ? Cart.bill - Cart.couponDiscount : Cart.bill - Cart.couponDiscount + 30 %></p>
                                         </div>
                                     </td>
                                 </tr>

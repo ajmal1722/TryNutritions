@@ -244,30 +244,34 @@
     }
 
     function removeCoupon () {
-        axios.post('/removeCoupon?id=<%= cart._id %>')
+        const cartId = document.getElementById('cartId').value;
+        axios.post('/removeCoupon', { cartId: cartId })
             .then(res => {
                 console.log(res.data);
                 console.log(cartId, ':cartId');
                 window.location.reload();
             })
             .catch(err => {
+                console.log('cartIderr:', cartId)
                 console.log(err.response.data.error)
             })
     }
 
     function proceedToCheckout () {
-        const couponCode = document.getElementById('couponCode').value;
-        if (couponCode === ''){
-            const checkoutButton = document.getElementById('checkout-button');
-            const finalDiscount = 0;
-                checkoutButton.onclick = () => {
-                    axios.post('/proceed-to-checkout', { cartId, finalDiscount })
-                        .then(res => {
-                            window.location.href = '/checkout'
-                        })
-                        .catch(err => console.log(err))
-                }
-        }
+        axios.get('/checkout')
+            .then(res => {
+                window.location.href = '/checkout'
+            })
+            .catch(err => console.log(err));
+
+        // const couponCode = document.getElementById('couponCode').value;
+        // if (couponCode === ''){
+        //     const checkoutButton = document.getElementById('checkout-button');
+        //     const finalDiscount = 0;
+        //         checkoutButton.onclick = () => {
+                    
+        //         }
+        // }
     }
 
 </script>

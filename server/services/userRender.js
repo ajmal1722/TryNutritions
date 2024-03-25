@@ -319,7 +319,7 @@ exports.applyCoupon = async (req, res) => {
 
 exports.removeCoupon = async (req, res) => {
     try {
-        const cartId = req.query.id;
+        const cartId = req.body.cartId;
         console.log('cart id:', cartId);
 
         // Find the cart by its ID
@@ -405,12 +405,13 @@ exports.placeOrder = async (req, res) => {
         const userId = req.user._id;
 
         // Decode the JWT token to extract finalDiscount
-        const token = req.cookies.jwt;
-        const decodedToken = jwt.verify(token, process.env.AUTH_STR);
-        const couponDiscount = decodedToken.finalDiscount;
-        let orderId = decodedToken.orderId || 5000; // Default orderId if not present in the token
+        // const token = req.cookies.jwt;
+        // const decodedToken = jwt.verify(token, process.env.AUTH_STR);
+        // const couponDiscount = decodedToken.finalDiscount;
+        // let orderId = decodedToken.orderId || 5000; // Default orderId if not present in the token
 
         // Find the maximum orderId currently in the Order collection and increment it
+        let orderId = 5000;
         const maxOrderIdOrder = await Order.findOne().sort({ orderId: -1 });
         orderId = maxOrderIdOrder ? maxOrderIdOrder.orderId + 1 : orderId;
 
@@ -418,6 +419,7 @@ exports.placeOrder = async (req, res) => {
         const cart = await Cart.findOne({ user: userId });
         const user = await User.findById(userId);
         const address = user.addresses.find(item => item._id == addressId);
+        const couponDiscount = cart.couponDiscount;
 
         // Calculate total amount and final amount
         const totalAmount = cart.bill >= 300 ? cart.bill : cart.bill + 30;
@@ -446,12 +448,12 @@ exports.placeOrder = async (req, res) => {
         const saveOrder = await newOrder.save();
 
         // Update the orderId in the decoded token
-        decodedToken.orderId = orderId;
+        // decodedToken.orderId = orderId;
 
         // Sign the updated token with the new orderId
-        const newToken = jwt.sign(decodedToken, process.env.AUTH_STR);
+        // const newToken = jwt.sign(decodedToken, process.env.AUTH_STR);
 
-        console.log('cart:', decodedToken);
+        console.log('cart:');
 
         // Increment the sales count in Product and update the stocks
         for (const item of cart.items) {
