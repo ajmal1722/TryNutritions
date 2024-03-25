@@ -28,12 +28,12 @@ const couponSchema = new mongoose.Schema({
         enum: ['Fixed', 'Percentage'],
         required: true
     },
-    discount: {
+    discount: { // discount in prtcentage
         type: Number,
         min: [0, 'Discount must be at least 0'],
         max: [100, 'Discount cannot exceed 100']
     },
-    discountPrice: {
+    discountPrice: { //discount in price
       type: Number
     },
     maxPriceOffer: {

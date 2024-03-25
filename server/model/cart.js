@@ -22,6 +22,13 @@ const Schema = new mongoose.Schema({
     bill: {
         type: Number,
         default: 0
+    },
+    coupon: {
+        type: String
+    },
+    couponDiscount: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true })
 

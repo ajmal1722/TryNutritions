@@ -271,23 +271,38 @@ exports.applyCoupon = async (req, res) => {
             return res.status(400).json({ error: 'Coupon has expired' });
         }
 
+        console.log('coupon:', coupon.minCartValue)
         // Decrement the usage limit of the coupon
         // coupon.usageLimit -= 1;
         // await coupon.save();
 
-        const { discount, maxPriceOffer } = coupon; // Destructuring coupon object
-
         // // find the user's cart 
         const cart = await Cart.findById(cartId);
 
-        let { bill } = cart // (const bill = cart.bill) destructurnig
-        
-        const discountAmount = (bill * discount) / 100;
+        let { bill, couponDiscount } = cart // (const bill = cart.bill) destructurnig
 
-        // // check if the discount amount is greater than maxPriceOffer
-        const finalDiscount = Math.min(discountAmount, maxPriceOffer);
+        // Check if the cart bill is greater than the minimum cart value
+        if (bill <= coupon.minCartValue) {
+            return res.status(400).json({ error: `Minimum cart value of ${coupon.minCartValue} not met for this coupon` });
+        }
 
-        res.status(200).json({ finalDiscount, bill });
+        // Calculate the discount based on the coupon type
+        let finalDiscount = 0;
+        if (coupon.couponType === 'Fixed') {
+            finalDiscount = Math.min(coupon.discountPrice, bill);
+        } else if (coupon.couponType === 'Percentage') {
+            const discountAmount = (bill * coupon.discount) / 100;
+            finalDiscount = Math.min(discountAmount, coupon.maxPriceOffer);
+        }
+
+        if (cart.couponDiscount === 0){
+            cart.coupon = couponCode;
+            cart.couponDiscount = finalDiscount;
+            await cart.save();
+        }
+
+        console.log('couponDiscount:', cart.couponDiscount)
+        res.status(200).json({ couponDiscount, bill });
         // // Apply the discount to the bill
         // bill -= finalDiscount;
 
@@ -296,6 +311,31 @@ exports.applyCoupon = async (req, res) => {
 
         // console.log('userBill:', finalDiscount);
         // res.redirect('/cart');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+exports.removeCoupon = async (req, res) => {
+    try {
+        const cartId = req.query.id;
+        console.log('cart id:', cartId);
+
+        // Find the cart by its ID
+        const cart = await Cart.findById(cartId);
+        if (!cart) {
+            return res.status(404).json({ error: 'Cart not found' });
+        }
+
+        // Remove the coupon and set couponDiscount to 0
+        cart.coupon = undefined;
+        cart.couponDiscount = 0;
+
+        // Save the updated cart
+        await cart.save();
+
+        res.status(200).json({ message: 'Coupon removed successfully', cart });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });

@@ -58,6 +58,7 @@ route.post('/delete-cart', authentication.checkAuth, services.deleteCart);
 route.post('/update-cart-quantity', authentication.checkAuth, services.changeQuantity);
 
 route.post('/applyCoupon', authentication.checkAuth, services.applyCoupon);
+route.post('/removeCoupon', authentication.checkAuth, services.removeCoupon);
 
 route.post('/proceed-to-checkout', authentication.checkAuth, services.proceedToCheckout);
 route.post('/add-address', authentication.checkAuth, services.addNewAddress);
