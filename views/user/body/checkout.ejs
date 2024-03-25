@@ -253,8 +253,8 @@
                 paymentMethod: selectedPayment
             })
             .then(res => {
-                console.log('Order placed successfully:', res.data);
-                window.location.href = '/order-completed';
+                const orderId = res.data.saveOrder.orderId;
+                window.location.href = `/order-completed?id=${orderId}`;
             })
             .catch(err => {
                 console.error('Error placing order:', err);

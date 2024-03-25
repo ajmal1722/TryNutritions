@@ -87,14 +87,6 @@ exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Con
 // checkout
 exports.checkout = async (req, res) => {
     const userId = req.user._id;
-    const token = req.cookies.jwt;
-
-    // Decode the JWT token
-    const decodedToken = jwt.verify(token, process.env.AUTH_STR);
-    console.log('decodedToken:', decodedToken)
-    // Extract the totalValue from the decoded payload
-    const finalDiscount = decodedToken.finalDiscount;
-    console.log('finalDiscount:', finalDiscount)
 
     const user = await User.findById(userId)
     const cart = await Cart.findOne({ user: userId })
@@ -102,7 +94,6 @@ exports.checkout = async (req, res) => {
         pageName: 'Checkout',
         Cart: cart,
         User: user,
-        finalDiscount: finalDiscount
      })
 };
 
@@ -447,6 +438,7 @@ exports.placeOrder = async (req, res) => {
         newOrder.status = 'Placed'
         const saveOrder = await newOrder.save();
 
+        console.log(saveOrder)
         // Update the orderId in the decoded token
         // decodedToken.orderId = orderId;
 
@@ -466,7 +458,7 @@ exports.placeOrder = async (req, res) => {
         // Clear the user's cart after successful order creation
         await Cart.findOneAndDelete({ user: userId });
 
-        res.status(200).json(saveOrder);
+        res.status(200).json({ saveOrder });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
@@ -475,12 +467,15 @@ exports.placeOrder = async (req, res) => {
 
 
 exports.orderSuccess = async (req, res) => {
-    // Decode the JWT token to extract finalDiscount
-    const token = req.cookies.jwt;
-    const decodedToken = jwt.verify(token, process.env.AUTH_STR);
-    const orderId = decodedToken.orderId;
+    const orderId = req.query.id;
 
-    console.log('orderId:token' , decodedToken)
+    console.log('orderId:token', orderId)
 
-    res.render('user/body/orderCompletion', { pageName: '' });
+    const order = await Order.findOne({ orderId })
+    console.log(order)
+
+    res.render('user/body/orderCompletion', {
+        pageName: '',
+        Order: order
+    });
 } 
