@@ -131,7 +131,7 @@
                         </div>
                     </div>
                     <div class="col-lg-9">
-                        <div class="row g-4 justify-content-center">
+                        <div id="products-container" class="row g-4 justify-content-center">
                             <!-- <div class="col-md-6 col-lg-6 col-xl-4">
                                 <div class="rounded position-relative fruite-item">
                                     <div class="fruite-img">
@@ -203,7 +203,8 @@
 <script>
     // Get all category checkboxes
     const checkboxes = document.querySelectorAll('.category-checkbox');
-
+    const productsContainer = document.getElementById('products-container');
+    
     // Add event listener to each checkbox
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
@@ -225,7 +226,41 @@
             })
             .then(response => {
                 // Handle response if needed
-                console.log(response.data);
+                console.log(response.data.products);
+
+                const products = response.data.products;
+                // Clear previous products in the container
+                productsContainer.innerHTML = '';
+
+                // Iterate through the products and create HTML elements for each product
+                products.forEach(item => {
+                    const productElement = `
+                        <div class="col-md-6 col-lg-6 col-xl-4">
+                            <a href="/shop-details?id=${item._id}" class="text-decoration-none">
+                                <div class="rounded position-relative fruite-item border border-secondary rounded-bottom">
+                                    <div class="fruite-img" style="height: 220px;">
+                                        <img src="${item.imageUrl}" class="img-fluid w-100 rounded-top" alt="">
+                                    </div>
+                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">${item.category}</div>
+                                    <div class="p-4">
+                                        <h4>${item.name}</h4>
+                                        <p>${item.description}</p>
+                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                            <p class="text-dark fs-5 fw-bold mb-0">₹${item.sellingPrice} / kg</p>
+                                            <form onclick="addToCartAlert('${item._id}')">
+                                                <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                    // Append the product element to the container
+                    productsContainer.innerHTML += productElement;
+                });
             })
             .catch(error => {
                 // Handle error if needed

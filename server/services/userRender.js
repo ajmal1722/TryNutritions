@@ -53,7 +53,7 @@ exports.filterCategory = async (req, res) => {
         // Fetch products based on the constructed query
         const products = await Products.find(query).exec();
         console.log('Filtered Products:', products.length, products)
-        res.json(products);
+        res.json({products});
     } catch (error) {
         console.error('Error filtering categories:', error);
         res.status(500).json({ error: error.message });
