@@ -81,15 +81,27 @@
                                 </p>
                                 <p class="card-text">
                                     <span class="text-bold text-dark font-monospace">Order Date:</span>
-                                    <span class="text-secondary">January 1, 2024</span>
+                                    <span class="text-secondary"><%= Order.orderDate.toString().substring(4, 15) %></span>
+                                </p>
+                                <p class="card-text">
+                                    <span class="text-bold text-dark font-monospace">Sub Total:</span>
+                                    <span class="text-secondary">₹ <%= Order.subTotal %></span>
+                                </p>
+                                <p class="card-text">
+                                    <span class="text-bold text-dark font-monospace">Shipping Charge:</span>
+                                    <span class="text-secondary">₹ <%= Order.subTotal >= 300 ? 0 : 30 %></span>
+                                </p>
+                                <p class="card-text">
+                                    <span class="text-bold text-dark font-monospace">Coupon Discount:</span>
+                                    <span class="text-secondary">₹ <%= Order.couponDiscount %></span>
                                 </p>
                                 <p class="card-text">
                                     <span class="text-bold text-dark font-monospace">Total Amount:</span>
-                                    <span class="text-secondary">$100.00</span>
+                                    <span class="text-secondary">₹ <%= Order.finalAmount %></span>
                                 </p>
                                 <p class="card-text">
                                     <span class="text-bold text-dark font-monospace">Payment Method:</span>
-                                    <span class="text-secondary">Credit Card</span>
+                                    <span class="text-secondary"><%= Order.paymentMethod %></span>
                                 </p>
                             </div>                            
                         </div>
@@ -106,6 +118,7 @@
                                                 <div class="card-body">
                                                     <h6 class="card-title">Product Name: <%= item.name %></h6>
                                                     <p class="card-text">Quantity: <%= item.quantity %> kg</p>
+                                                    <p class="card-text">Price: ₹ <%= item.price %> / kg</p>
                                                 </div>
                                             </div>
                                         </div>
