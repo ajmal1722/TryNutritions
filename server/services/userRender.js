@@ -7,6 +7,7 @@ const Cart = require('../model/cart');
 const Coupon = require('../model/coupon');
 const { calculateDiscount, calculateTotalBill } = require('../middlewares/script');
 const Order = require('../model/order');
+const nodemailer = require('nodemailer');
 
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
