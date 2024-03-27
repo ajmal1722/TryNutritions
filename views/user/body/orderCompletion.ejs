@@ -41,19 +41,20 @@
         <div class="order-details col-md-12 col-lg-6 col-xl-5">
             <div class="mb-3">
                 <h2 class="my-3">Order Details</h2>
-                <p><strong>Order ID:</strong> <span id="orderId" class="mx-2">5001</span></p>
-                <p><strong>Username:</strong> <span id="username" class="mx-2">Muhammed Ajmal</span></p>
+                <p><strong>Order ID:</strong> <span id="orderId" class="mx-2"><%= Order.orderId %></span></p>
+                <p><strong>Username:</strong> <span id="username" class="mx-2"><%= Order.user %></span></p>
             </div>
             <div class="mb-3">
-                <p><strong>Payment Method:</strong> <span id="paymentMethod" class="mx-2">Cash On Delivery</span></p>
-                <p><strong>Order Date:</strong> <span id="orderDate" class="mx-2">17/02/2001</span></p>
+                <p><strong>Payment Method:</strong> <span id="paymentMethod" class="mx-2"><%= Order.paymentMethod %></span></p>
+                <p><strong>Order Date:</strong> <span id="orderDate" class="mx-2"><%= Order.orderDate.toString().substr(4, 12) %></span></p>
             </div>
             <div class="my-4">
                 <h3 class="my-5">Shipping Address</h3>
                 <div class="border py-5">
-                    <p><span id="shippingAddress"></span></p>
+                    <p id="shippingAddress">
+                        <%= Order.shippingAddress %>
+                    </p>
                 </div>
-                
             </div>
         </div>
         

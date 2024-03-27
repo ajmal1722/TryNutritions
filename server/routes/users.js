@@ -22,6 +22,7 @@ route.get('/signup', services.userSigup);
 
 // shop
 route.get('/shop' || '/shop/shop', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.shop);
+route.post('/update-featured-products-limit', services.viewMore)
 
 // shop-details
 route.get('/shop-details', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.shopDetails);
@@ -44,6 +45,8 @@ route.get('/myAccount', authentication.checkAuth, authentication.fetchCartItems,
 // contact us
 route.get('/contact', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.contact)
 
+// Category filtering in shop page
+route.get('/filter-category', services.filterCategory)
 
 
 route.post('/api/users', controller.create);
@@ -56,8 +59,9 @@ route.post('/delete-cart', authentication.checkAuth, services.deleteCart);
 route.post('/update-cart-quantity', authentication.checkAuth, services.changeQuantity);
 
 route.post('/applyCoupon', authentication.checkAuth, services.applyCoupon);
+route.post('/removeCoupon', authentication.checkAuth, services.removeCoupon);
 
-route.post('/proceed-to-checkout', authentication.checkAuth, services.proceedToCheckout);
+// route.post('/proceed-to-checkout', authentication.checkAuth, services.proceedToCheckout);
 route.post('/add-address', authentication.checkAuth, services.addNewAddress);
 route.post('/place-order', authentication.checkAuth, services.placeOrder);
 

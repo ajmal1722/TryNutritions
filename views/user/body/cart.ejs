@@ -127,11 +127,19 @@
             </div>
             <div class="mt-5">
                 <input id="cartId" type="hidden" value="<%= cart._id %>"> 
-                <input id="couponCode" type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
-                <button id="apply-coupon" class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button" onclick="return applyCoupon()">
+                <input id="couponCode" type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code" value="<%= cart.coupon %>">
+                <button id="apply-coupon" 
+                        class="btn border-secondary rounded-pill px-4 py-3 text-primary" 
+                        type="button" 
+                        onclick="return applyCoupon()"
+                        style="display: <%= cart.couponDiscount > 0 ? 'none' : 'inline-block' %>">
                     Apply Coupon
                 </button>
-                <button id="remove-coupon" class="btn border-secondary rounded-pill px-4 py-3 text-primary bg-danger text-light" type="button" onclick="removeCoupon()" style="display: none;">
+                <button id="remove-coupon" 
+                        class="btn border-secondary rounded-pill px-4 py-3 text-primary bg-danger text-light" 
+                        type="button" 
+                        onclick="removeCoupon()" 
+                        style="display: <%= cart.couponDiscount !== 0 ? 'inline-block' : 'none' %>">
                     Remove Coupon
                 </button>
                 <p id="couponErrorMessage" class="text-danger" style="margin-top: -20px;"></p>
@@ -157,13 +165,13 @@
                             <div class="d-flex justify-content-between">
                                 <h5 class="mb-0 me-4">Coupon Discount:</h5>
                                 <div class="">
-                                    <p class="mb-0" id="coupon-discount">₹ 0</p>                                  
+                                    <p class="mb-0" id="coupon-discount">₹ <%= cart.couponDiscount %></p>                                  
                                 </div>
                             </div>
                         </div>
                         <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                             <h5 class="mb-0 ps-4 me-4">Total Price:</h5>
-                            <p id="total" class="mb-0 pe-4">₹ <%= cart.bill >= 300 ? cart.bill : cart.bill + 30 %></p>
+                            <p id="total" class="mb-0 pe-4">₹ <%= cart.bill >= 300 ? cart.bill - cart.couponDiscount : cart.bill + 30 - cart.couponDiscount %></p>
                         </div>
                             <button id="checkout-button" class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit" onclick="proceedToCheckout()">
                                 Proceed Checkout
@@ -206,24 +214,28 @@
                 console.log(res.data)
                 // Clear any previous error message
                 document.getElementById('couponErrorMessage').textContent = '';
-                document.getElementById('apply-coupon').style.display = 'none';
-                document.getElementById('remove-coupon').style.display = 'inline-block';
-                const { finalDiscount, bill } = res.data;
-                document.getElementById('coupon-discount').textContent = '- ₹ ' + finalDiscount;
-                document.getElementById('total').textContent = bill - finalDiscount;
-                const totalValue = bill - finalDiscount;
+                window.location.reload();
                 
-                const checkoutButton = document.getElementById('checkout-button');
-                checkoutButton.onclick = () => {
-                    axios.post('/proceed-to-checkout', { cartId, finalDiscount })
-                        .then(res => {
-                            window.location.href = '/checkout'
-                            console.log(res);
-                            const { cartId, totalValue } = res.data;
-                            console.log(cartId, ':cartId')
-                        })
-                        .catch(err => console.log(err))
-                }
+                // const { couponDiscount, bill } = res.data;
+                // if (couponDiscount > 0) { // check if the coupon is applied or not
+                //     document.getElementById('apply-coupon').style.display = 'none';
+                //     document.getElementById('remove-coupon').style.display = 'inline-block';  
+                // }
+                // document.getElementById('coupon-discount').textContent = '- ₹ ' + finalDiscount;
+                // document.getElementById('total').textContent = bill - finalDiscount;
+                // const totalValue = bill - finalDiscount;
+                
+                // const checkoutButton = document.getElementById('checkout-button');
+                // checkoutButton.onclick = () => {
+                //     axios.post('/proceed-to-checkout', { cartId, finalDiscount })
+                //         .then(res => {
+                //             window.location.href = '/checkout'
+                //             console.log(res);
+                //             const { cartId, totalValue } = res.data;
+                //             console.log(cartId, ':cartId')
+                //         })
+                //         .catch(err => console.log(err))
+                // }
             })
             .catch(err => {
                 document.getElementById('couponErrorMessage').textContent = err.response.data.error;
@@ -232,22 +244,34 @@
     }
 
     function removeCoupon () {
-        window.location.reload()
+        const cartId = document.getElementById('cartId').value;
+        axios.post('/removeCoupon', { cartId: cartId })
+            .then(res => {
+                console.log(res.data);
+                console.log(cartId, ':cartId');
+                window.location.reload();
+            })
+            .catch(err => {
+                console.log('cartIderr:', cartId)
+                console.log(err.response.data.error)
+            })
     }
 
     function proceedToCheckout () {
-        const couponCode = document.getElementById('couponCode').value;
-        if (couponCode === ''){
-            const checkoutButton = document.getElementById('checkout-button');
-            const finalDiscount = 0;
-                checkoutButton.onclick = () => {
-                    axios.post('/proceed-to-checkout', { cartId, finalDiscount })
-                        .then(res => {
-                            window.location.href = '/checkout'
-                        })
-                        .catch(err => console.log(err))
-                }
-        }
+        axios.get('/checkout')
+            .then(res => {
+                window.location.href = '/checkout'
+            })
+            .catch(err => console.log(err));
+
+        // const couponCode = document.getElementById('couponCode').value;
+        // if (couponCode === ''){
+        //     const checkoutButton = document.getElementById('checkout-button');
+        //     const finalDiscount = 0;
+        //         checkoutButton.onclick = () => {
+                    
+        //         }
+        // }
     }
 
 </script>

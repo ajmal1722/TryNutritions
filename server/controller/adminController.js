@@ -75,7 +75,7 @@ exports.login = async (req, res) => {
                 httpOnly: true
             };
 
-            res.cookie('jwt', token, options)
+            res.cookie('adminToken', token, options)
             res.status(201).redirect('/admin');
         } else {
             res.status(401).json({ success: false, message: 'Invalid email or password' });

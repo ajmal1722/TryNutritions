@@ -38,23 +38,51 @@
                     <!-- Coupon Cards -->
                     <% Coupon.forEach(item => { %>
                         <div class="col">
-                            <div class="card">
+                            <div class="card" style="min-height: 394px;">
                                 <div class="card-body text-center">
                                     <h5 class="card-title text-success mb-3"><%= item.couponName %></h5>
                                     <p class="card-text">
-                                        <span class="text-bold text-dark font-monospace">Coupon Code :</span> <span class="text-secondary"><%= item.couponCode %></span>
+                                        <span class="text-bold text-dark font-monospace">Coupon Code :</span>
+                                        <span class="text-secondary"><%= item.couponCode %></span>
                                     </p>
                                     <p class="card-text">
-                                        <span class="text-bold text-dark font-monospace">Discount :</span> <span class="text-secondary"><%= item.discount %>%</span>
+                                        <span class="text-bold text-dark font-monospace">Minimum Cart Value :</span>
+                                        <span class="text-secondary">₹<%= item.minCartValue %></span>
                                     </p>
                                     <p class="card-text">
-                                        <span class="text-bold text-dark font-monospace">Max Price Offer :</span> <span class="text-secondary">₹<%= item.maxPriceOffer %></span>
+                                        <span class="text-bold text-dark font-monospace">Coupon Type :</span>
+                                        <span class="text-secondary"><%= item.couponType %></span>
+                                    </p>
+                                    <% if (item.couponType === 'Fixed') { %>
+                                        <p class="card-text" style="display: none;">
+                                            <span class="text-bold text-dark font-monospace">Discount :</span>
+                                            <span class="text-secondary"><%= item.discount %>%</span>
+                                        </p>
+                                        <p class="card-text">
+                                            <span class="text-bold text-dark font-monospace">Discount Price :</span>
+                                            <span class="text-secondary">₹<%= item.discountPrice %></span>
+                                        </p>
+                                        <p class="card-text" style="display: none;">
+                                            <span class="text-bold text-dark font-monospace">Max Price Offer :</span>
+                                            <span class="text-secondary">₹<%= item.maxPriceOffer %></span>
+                                        </p>
+                                    <% } else { %>
+                                        <p class="card-text">
+                                            <span class="text-bold text-dark font-monospace">Discount :</span>
+                                            <span class="text-secondary"><%= item.discount %>%</span>
+                                        </p>
+                                        <p class="card-text">
+                                            <span class="text-bold text-dark font-monospace">Max Price Offer :</span>
+                                            <span class="text-secondary">₹<%= item.maxPriceOffer %></span>
+                                        </p>
+                                    <% } %>
+                                    <p class="card-text">
+                                        <span class="text-bold text-dark font-monospace">Start Date :</span>
+                                        <span class="text-secondary"><%= item.startDate.toString().substring(0, 25) %></span>
                                     </p>
                                     <p class="card-text">
-                                        <span class="text-bold text-dark font-monospace">Start Date :</span> <span class="text-secondary"><%= item.startDate.toString().substring(0, 25) %></span>
-                                    </p>
-                                    <p class="card-text">
-                                        <span class="text-bold text-dark font-monospace">End Date :</span> <span class="text-secondary"><%= item.endDate.toString().substring(0, 25) %> %></span>
+                                        <span class="text-bold text-dark font-monospace">End Date :</span>
+                                        <span class="text-secondary"><%= item.endDate.toString().substring(0, 25) %></span>
                                     </p>
                                     <div class="d-flex justify-content-center">
                                         <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#editCouponModal_<%= item._id %>" style="width: 100px;">
@@ -66,18 +94,19 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
+                        
 
                         <!-- Edit modal -->
                         <div class="modal fade" id="editCouponModal_<%= item._id %>" tabindex="-1" aria-labelledby="editCouponModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="editCouponModalLabel">Add Category</h5>
+                                        <h5 class="modal-title" id="editCouponModalLabel">Edit Coupon</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <!-- Form for adding a category -->
+                                        <!-- Form for editing a coupon -->
                                         <form action="/admin/updateCoupon" method="post">
                                             <div class="mb-3">
                                                 <input type="hidden" id="hiddenField" name="_id" value="<%= item._id %>">
@@ -89,24 +118,37 @@
                                                 <input type="text" class="form-control" id="couponCode" name="couponCode" value="<%= item.couponCode %>">
                                             </div>
                                             <div class="mb-3">
+                                                <label for="minCartValue" class="form-label">Minimum Cart Value:</label>
+                                                <input type="text" class="form-control" id="minCartValueEdit" name="minCartValue" value="<%= item.minCartValue %>">
+                                            </div>
+                                            <div class="mb-3">
                                                 <label for="startDate" class="form-label">Start Date:</label>
                                                 <input type="date" class="form-control" id="startDate" name="startDate" value="<%= item.startDate.toISOString().substring(0, 10) %>">
-                                            </div>                                            
+                                            </div>    
                                             <div class="mb-3">
                                                 <label for="endDate" class="form-label">End Date:</label>
                                                 <input type="date" class="form-control" id="endDate" name="endDate" value="<%= item.endDate.toISOString().substring(0, 10) %>">
-                                            </div>
+                                            </div>                                    
                                             <div class="mb-3">
-                                                <label for="discount" class="form-label">Discount:</label>
-                                                <input type="text" class="form-control" id="discount" name="discount" value="<%= item.discount %>">
+                                                <label for="couponType" class="form-label">Coupon Type:</label>
+                                                <select class="form-select editCouponType" id="couponTypeEdit" name="couponType" onchange="toggleEditCouponModal('<%= item._id %>')">
+                                                    <option value="Fixed" <%= item.couponType === 'Fixed' ? 'selected' : '' %>>Fixed</option>
+                                                    <option value="Percentage" <%= item.couponType === 'Percentage' ? 'selected' : '' %>>Percentage</option>
+                                                </select>
                                             </div>
-                                            <div class="mb-3">
+                                            <div class="mb-3 discountPriceFieldEdit" id="discountPriceFieldEdit" style="<%= item.couponType !== 'Fixed' ? 'display: none;' : '' %>">
+                                                <label for="discountPrice" class="form-label">Discount Price:</label>
+                                                <input type="text" class="form-control" id="discountPriceEdit" name="discountPrice" value="<%= item.discountPrice %>">
+                                            </div>
+                                            <div class="mb-3 discountFieldEdit" id="discountFieldEdit" style="<%= item.couponType !== 'Percentage' ? 'display: none;' : '' %>">
+                                                <label for="discount" class="form-label">Discount Percentage:</label>
+                                                <input type="text" class="form-control" id="discountEdit" name="discount" value="<%= item.discount %>">
+                                            </div>
+                                            <div class="mb-3 maxPriceOfferFieldEdit" id="maxPriceOfferFieldEdit" style="<%= item.couponType !== 'Percentage' ? 'display: none;' : '' %>">
                                                 <label for="maxPriceOffer" class="form-label">Max Price Offer:</label>
-                                                <input type="text" class="form-control" id="maxPriceOffer" name="maxPriceOffer" value="<%= item.maxPriceOffer %>">
+                                                <input type="text" class="form-control" id="maxPriceOfferEdit" name="maxPriceOffer" value="<%= item.maxPriceOffer %>">
                                             </div>
-                                            <button type="submit" class="btn btn-primary">
-                                                Update Coupon
-                                            </button>
+                                            <button type="submit" class="btn btn-primary">Update Coupon</button>
                                         </form>
                                     </div>
                                 </div>
@@ -144,24 +186,35 @@
                                     <input type="date" class="form-control" id="endDate" name="endDate">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="discount" class="form-label">Discount:</label>
-                                    <input type="text" class="form-control" id="discount" name="discount">
+                                    <label for="minCartValue" class="form-label">Minimum Cart Value:</label>
+                                    <input type="text" class="form-control" id="minCartValue" name="minCartValue">
                                 </div>
                                 <div class="mb-3">
+                                    <label for="couponType" class="form-label">Coupon Type:</label>
+                                    <select class="form-select" id="couponType" name="couponType" onchange="toggleCouponFields()">
+                                        <option value="Fixed" selected>Fixed</option>
+                                        <option value="Percentage">Percentage</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3" id="discountPriceField">
+                                    <label for="discountPrice" class="form-label">Discount Price:</label>
+                                    <input type="text" class="form-control" id="discountPrice" name="discountPrice">
+                                </div>
+                                <div class="mb-3" id="discountField" style="display: none;">
+                                    <label for="discount" class="form-label">Discount Percentage:</label>
+                                    <input type="text" class="form-control" id="discount" name="discount">
+                                </div>
+                                <div class="mb-3" id="maxPriceOfferField" style="display: none;">
                                     <label for="maxPriceOffer" class="form-label">Max Price Offer:</label>
                                     <input type="text" class="form-control" id="maxPriceOffer" name="maxPriceOffer">
                                 </div>
-                                <button type="submit" class="btn btn-primary">
-                                    Add Coupon
-                                </button>
+                                <button type="submit" class="btn btn-primary">Add Coupon</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
-        
-        
 
         <!-- /MAIN -->
           
@@ -175,6 +228,42 @@
                 })
                 .catch(err => console.log(err))
         }
+
+
+    function toggleCouponFields() {
+        var couponType = document.getElementById("couponType").value;
+        var discountPriceField = document.getElementById("discountPriceField");
+        var discountField = document.getElementById("discountField");
+        var maxPriceOfferField = document.getElementById("maxPriceOfferField");
+
+        if (couponType === "Fixed") {
+            discountPriceField.style.display = "block";
+            discountField.style.display = "none";
+            maxPriceOfferField.style.display = "none";
+        } else if (couponType === "Percentage") {
+            discountPriceField.style.display = "none";
+            discountField.style.display = "block";
+            maxPriceOfferField.style.display = "block";
+        }
+    }
+
+    function toggleEditCouponModal(itemId) {
+        var couponType = document.querySelector(`#editCouponModal_${itemId} .editCouponType`).value;
+        var discountPriceField = document.querySelector(`#editCouponModal_${itemId} .discountPriceFieldEdit`);
+        var discountField = document.querySelector(`#editCouponModal_${itemId} .discountFieldEdit`);
+        var maxPriceOfferField = document.querySelector(`#editCouponModal_${itemId} .maxPriceOfferFieldEdit`);
+
+        if (couponType === "Fixed") {
+            discountPriceField.style.display = "block";
+            discountField.style.display = "none";
+            maxPriceOfferField.style.display = "none";
+        } else if (couponType === "Percentage") {
+            discountPriceField.style.display = "none";
+            discountField.style.display = "block";
+            maxPriceOfferField.style.display = "block";
+        }
+    }
+
     </script>
     
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>

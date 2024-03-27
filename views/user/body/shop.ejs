@@ -50,9 +50,10 @@
                                             </div>
                                         </li>
                                         <% Categories.forEach(item => { %>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="/shop/?category=<%= item.category %>"><i class="fas fa-apple-alt me-2"></i><%= item.category %></a>
+                                            <li class="my-3">
+                                                <div class="form-check text-start">
+                                                    <input type="checkbox" class="form-check-input bg-primary border-0 category-checkbox" id="<%= item.category %>" name="categories" value="<%= item.category %>" <%= req.query.categories && req.query.categories.includes(item.category) ? 'checked' : '' %>>
+                                                    <label class="form-check-label text-primary" for="<%= item.category %>"><i class="me-2 text-primary"></i><%= item.category %></label>
                                                 </div>
                                             </li>
                                         <% }) %>
@@ -73,50 +74,40 @@
                             </div>
                             <div class="col-lg-12">
                                 <h4 class="mb-3">Featured products</h4>
-                                <div class="d-flex align-items-center justify-content-start">
-                                    <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                        <img src="users/img/featur-1.jpg" class="img-fluid rounded" alt="">
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-2">Big Banana</h6>
-                                        <div class="d-flex mb-2">
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                        <div class="d-flex mb-2">
-                                            <h5 class="fw-bold me-2">2.99 $</h5>
-                                            <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                        </div>
-                                    </div>
+                                <div id="featuredProductsContainer">
+                                    <% feauturedProducts.forEach(item => { %>
+                                        <a href="/shop-details?id=<%= item._id %>" class="text-decoration-none">
+                                            <div id="featuredProductsContainer" class="d-flex align-items-center justify-content-start">
+                                                <div class="rounded me-4" style="width: 100px; height: 100px;">
+                                                    <img src="<%= item.imageUrl %>" class="img-fluid rounded" alt="" style="width: 80px; height: 80px;">
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-2"><%= item.name %></h6>
+                                                    <div class="d-flex mb-2">
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star"></i>
+                                                    </div>
+                                                    <div class="d-flex mb-2">
+                                                        <h5 class="fw-bold me-2">₹ <%= item.sellingPrice %></h5>
+                                                        <h5 class="text-danger text-decoration-line-through">₹ <%= item.mrp %></h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    <% }) %>
                                 </div>
-                                <% feauturedProducts.forEach(item => { %>
-                                    <a href="/shop-details?id=<%= item._id %>" class="text-decoration-none">
-                                        <div class="d-flex align-items-center justify-content-start">
-                                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                                <img src="<%= item.imageUrl %>" class="img-fluid rounded" alt="" style="width: 80px; height: 80px;">
-                                            </div>
-                                            <div>
-                                                <h6 class="mb-2"><%= item.name %></h6>
-                                                <div class="d-flex mb-2">
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star"></i>
-                                                </div>
-                                                <div class="d-flex mb-2">
-                                                    <h5 class="fw-bold me-2">₹ <%= item.sellingPrice %></h5>
-                                                    <h5 class="text-danger text-decoration-line-through">₹ <%= item.mrp %></h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                <% }) %>
                                 <div class="d-flex justify-content-center my-4">
-                                    <a href="#" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">Vew More</a>
+                                    <button id="btn-view-more" type="submit" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100" onclick="viewMore()">
+                                        View More
+                                    </button>
+                                </div>
+                                <div class="d-flex justify-content-center my-4">
+                                    <button id="btn-view-less" type="submit" class="btn border border-secondary bg-secondary px-4 py-3 rounded-pill text-primary w-100" onclick="viewLess()" style="display: none;">
+                                        View Less
+                                    </button>
                                 </div>
                             </div>
                             <div class="col-lg-12">
@@ -130,7 +121,7 @@
                         </div>
                     </div>
                     <div class="col-lg-9">
-                        <div class="row g-4 justify-content-center">
+                        <div id="products-container" class="row g-4 justify-content-center">
                             <!-- <div class="col-md-6 col-lg-6 col-xl-4">
                                 <div class="rounded position-relative fruite-item">
                                     <div class="fruite-img">
@@ -171,7 +162,6 @@
                                     </a>
                                 </div>
                             <% }) %>
-                            
                             <div class="col-12">
                                 <div class="pagination d-flex justify-content-center mt-5">
                                     <a href="#" class="rounded">&laquo;</a>
@@ -197,6 +187,131 @@
 <!-- Include Footer -->
 <%- include('../partials/_footer')%>
 <!-- /Include Footer -->
+
+
+<script>
+    // Get all category checkboxes
+    const checkboxes = document.querySelectorAll('.category-checkbox');
+    const productsContainer = document.getElementById('products-container');
+    
+    // Add event listener to each checkbox
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            // Create an array to store selected categories
+            const selectedCategories = [];
+
+            // Iterate through checkboxes to find checked ones
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedCategories.push(checkbox.value);
+                }
+            });
+
+            // Make AJAX request using Axios
+            axios.get('/filter-category', {
+                params: {
+                    categories: selectedCategories.join(',')
+                }
+            })
+            .then(response => {
+                // Handle response if needed
+                console.log(response.data.products);
+
+                const products = response.data.products;
+                // Clear previous products in the container
+                productsContainer.innerHTML = '';
+
+                // Iterate through the products and create HTML elements for each product
+                products.forEach(item => {
+                    const productElement = `
+                        <div class="col-md-6 col-lg-6 col-xl-4">
+                            <a href="/shop-details?id=${item._id}" class="text-decoration-none">
+                                <div class="rounded position-relative fruite-item border border-secondary rounded-bottom">
+                                    <div class="fruite-img" style="height: 220px;">
+                                        <img src="${item.imageUrl}" class="img-fluid w-100 rounded-top" alt="">
+                                    </div>
+                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">${item.category}</div>
+                                    <div class="p-4">
+                                        <h4>${item.name}</h4>
+                                        <p>${item.description}</p>
+                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                            <p class="text-dark fs-5 fw-bold mb-0">₹${item.sellingPrice} / kg</p>
+                                            <form onclick="addToCartAlert('${item._id}')">
+                                                <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                    // Append the product element to the container
+                    productsContainer.innerHTML += productElement;
+                });
+            })
+            .catch(error => {
+                // Handle error if needed
+                console.error(error);
+            });
+        });
+    });
+
+function viewMore() {
+    // Update the featuredProducts limit to 6
+    const newLimit = 6;
+
+    // Make an AJAX request to update the limit on the server
+    axios.post('/update-featured-products-limit', { limit: newLimit })
+        .then(response => {
+            const newProducts = response.data.products;
+
+            // Iterate over the new products and append them to the existing list
+            newProducts.forEach(item => {
+                const productHtml = `
+                    <a href="/shop-details?id=${item._id}" class="text-decoration-none">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <div class="rounded me-4" style="width: 100px; height: 100px;">
+                                <img src="${item.imageUrl}" class="img-fluid rounded" alt="" style="width: 80px; height: 80px;">
+                            </div>
+                            <div>
+                                <h6 class="mb-2">${item.name}</h6>
+                                <div class="d-flex mb-2">
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <h5 class="fw-bold me-2">₹ ${item.sellingPrice}</h5>
+                                    <h5 class="text-danger text-decoration-line-through">₹ ${item.mrp}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                `;
+                // Append the HTML of the new product to a container element
+                document.getElementById('featuredProductsContainer').innerHTML += productHtml;
+
+                // hide the view more buttton and display view less button
+                const btnViewMore = document.getElementById('btn-view-more');
+                const btnViewLess = document.getElementById('btn-view-less');
+                btnViewMore.style.display = 'none';
+                btnViewLess.style.display = 'block';
+            });
+        })
+        .catch(error => {
+            // Handle error if needed
+            console.error("Error updating featured products limit:", error);
+        });
+}
+
+function viewLess () {
+    window.location.reload();
+}
+</script>
 
 
  <!-- Include layoutFoot -->

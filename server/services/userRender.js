@@ -7,27 +7,71 @@ const Cart = require('../model/cart');
 const Coupon = require('../model/coupon');
 const { calculateDiscount, calculateTotalBill } = require('../middlewares/script');
 const Order = require('../model/order');
+const nodemailer = require('nodemailer');
 
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
 
 // shop
 exports.shop = async (req, res) => {
-    const product = await Products.find(req.query).exec();
-    const category = await Category.find().exec();
-    
-    const feauturedProduct = await Products.find({})
-                                            .sort({ discount: -1 })
-                                            .limit(3)
-                                            .exec()
+    try {
+        const products = await Products.find(req.query).exec();
+        const categories = await Category.find().exec();
+        const featuredProducts = await Products.find({})
+            .sort({ discount: -1 })
+            .limit(3)
+            .exec();
 
-    res.render('user/body/shop', {
-        pageName: 'Shop',
-        Products: product,
-        Categories: category,
-        feauturedProducts: feauturedProduct
-    });
-} 
+        res.render('user/body/shop', {
+            pageName: 'Shop',
+            Products: products,
+            Categories: categories,
+            feauturedProducts: featuredProducts,
+            selectedCategories: [], // Initialize selected categories as empty
+            req: req // Pass the request object for further processing if needed
+        });
+    } catch (error) {
+        console.error('Error rendering shop page:', error);
+        res.status(500).send({ error: error.message });
+    }
+};
+
+exports.viewMore = async (req, res) => {
+    const featuredProducts = await Products.find({})
+        .sort({ discount: -1 })
+        .skip(3)
+        .limit(6)
+        .exec();
+
+    res.json({ products: featuredProducts })
+}
+
+exports.filterCategory = async (req, res) => {
+    let query = {};
+    let selectedCategories = [];
+
+    // Check if the request query contains categories
+    if (req.query.categories) {
+        // Split the categories string into an array
+        selectedCategories = req.query.categories.split(',');
+
+        // Construct MongoDB query to find products where the category field matches any of the selected categories
+        query.category = { $in: selectedCategories };
+        console.log('selected Categories:', selectedCategories)
+    }
+
+    try {
+        // Fetch products based on the constructed query
+        const products = await Products.find(query).exec();
+        console.log('Filtered Products:', products.length, products)
+        res.json({products});
+    } catch (error) {
+        console.error('Error filtering categories:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
 
 // shop-details
 exports.shopDetails = async (req, res) => {
@@ -54,14 +98,6 @@ exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Con
 // checkout
 exports.checkout = async (req, res) => {
     const userId = req.user._id;
-    const token = req.cookies.jwt;
-
-    // Decode the JWT token
-    const decodedToken = jwt.verify(token, process.env.AUTH_STR);
-    console.log('decodedToken:', decodedToken)
-    // Extract the totalValue from the decoded payload
-    const finalDiscount = decodedToken.finalDiscount;
-    console.log('finalDiscount:', finalDiscount)
 
     const user = await User.findById(userId)
     const cart = await Cart.findOne({ user: userId })
@@ -69,7 +105,6 @@ exports.checkout = async (req, res) => {
         pageName: 'Checkout',
         Cart: cart,
         User: user,
-        finalDiscount: finalDiscount
      })
 };
 
@@ -238,23 +273,38 @@ exports.applyCoupon = async (req, res) => {
             return res.status(400).json({ error: 'Coupon has expired' });
         }
 
+        console.log('coupon:', coupon.minCartValue)
         // Decrement the usage limit of the coupon
         // coupon.usageLimit -= 1;
         // await coupon.save();
 
-        const { discount, maxPriceOffer } = coupon; // Destructuring coupon object
-
         // // find the user's cart 
         const cart = await Cart.findById(cartId);
 
-        let { bill } = cart // (const bill = cart.bill) destructurnig
-        
-        const discountAmount = (bill * discount) / 100;
+        let { bill, couponDiscount } = cart // (const bill = cart.bill) destructurnig
 
-        // // check if the discount amount is greater than maxPriceOffer
-        const finalDiscount = Math.min(discountAmount, maxPriceOffer);
+        // Check if the cart bill is greater than the minimum cart value
+        if (bill <= coupon.minCartValue) {
+            return res.status(400).json({ error: `Minimum cart value of ${coupon.minCartValue} not met for this coupon` });
+        }
 
-        res.status(200).json({ finalDiscount, bill });
+        // Calculate the discount based on the coupon type
+        let finalDiscount = 0;
+        if (coupon.couponType === 'Fixed') {
+            finalDiscount = Math.min(coupon.discountPrice, bill);
+        } else if (coupon.couponType === 'Percentage') {
+            const discountAmount = (bill * coupon.discount) / 100;
+            finalDiscount = Math.min(discountAmount, coupon.maxPriceOffer);
+        }
+
+        if (cart.couponDiscount === 0){
+            cart.coupon = couponCode;
+            cart.couponDiscount = finalDiscount;
+            await cart.save();
+        }
+
+        console.log('couponDiscount:', cart.couponDiscount)
+        res.status(200).json({ couponDiscount, bill });
         // // Apply the discount to the bill
         // bill -= finalDiscount;
 
@@ -263,6 +313,31 @@ exports.applyCoupon = async (req, res) => {
 
         // console.log('userBill:', finalDiscount);
         // res.redirect('/cart');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+exports.removeCoupon = async (req, res) => {
+    try {
+        const cartId = req.body.cartId;
+        console.log('cart id:', cartId);
+
+        // Find the cart by its ID
+        const cart = await Cart.findById(cartId);
+        if (!cart) {
+            return res.status(404).json({ error: 'Cart not found' });
+        }
+
+        // Remove the coupon and set couponDiscount to 0
+        cart.coupon = undefined;
+        cart.couponDiscount = 0;
+
+        // Save the updated cart
+        await cart.save();
+
+        res.status(200).json({ message: 'Coupon removed successfully', cart });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
@@ -332,12 +407,13 @@ exports.placeOrder = async (req, res) => {
         const userId = req.user._id;
 
         // Decode the JWT token to extract finalDiscount
-        const token = req.cookies.jwt;
-        const decodedToken = jwt.verify(token, process.env.AUTH_STR);
-        const couponDiscount = decodedToken.finalDiscount;
-        let orderId = decodedToken.orderId || 5000; // Default orderId if not present in the token
+        // const token = req.cookies.jwt;
+        // const decodedToken = jwt.verify(token, process.env.AUTH_STR);
+        // const couponDiscount = decodedToken.finalDiscount;
+        // let orderId = decodedToken.orderId || 5000; // Default orderId if not present in the token
 
         // Find the maximum orderId currently in the Order collection and increment it
+        let orderId = 5000;
         const maxOrderIdOrder = await Order.findOne().sort({ orderId: -1 });
         orderId = maxOrderIdOrder ? maxOrderIdOrder.orderId + 1 : orderId;
 
@@ -345,6 +421,7 @@ exports.placeOrder = async (req, res) => {
         const cart = await Cart.findOne({ user: userId });
         const user = await User.findById(userId);
         const address = user.addresses.find(item => item._id == addressId);
+        const couponDiscount = cart.couponDiscount;
 
         // Calculate total amount and final amount
         const totalAmount = cart.bill >= 300 ? cart.bill : cart.bill + 30;
@@ -372,13 +449,14 @@ exports.placeOrder = async (req, res) => {
         newOrder.status = 'Placed'
         const saveOrder = await newOrder.save();
 
+        console.log(saveOrder)
         // Update the orderId in the decoded token
-        decodedToken.orderId = orderId;
+        // decodedToken.orderId = orderId;
 
         // Sign the updated token with the new orderId
-        const newToken = jwt.sign(decodedToken, process.env.AUTH_STR);
+        // const newToken = jwt.sign(decodedToken, process.env.AUTH_STR);
 
-        console.log('cart:', decodedToken);
+        console.log('cart:');
 
         // Increment the sales count in Product and update the stocks
         for (const item of cart.items) {
@@ -391,7 +469,7 @@ exports.placeOrder = async (req, res) => {
         // Clear the user's cart after successful order creation
         await Cart.findOneAndDelete({ user: userId });
 
-        res.status(200).json(saveOrder);
+        res.status(200).json({ saveOrder });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
@@ -400,12 +478,15 @@ exports.placeOrder = async (req, res) => {
 
 
 exports.orderSuccess = async (req, res) => {
-    // Decode the JWT token to extract finalDiscount
-    const token = req.cookies.jwt;
-    const decodedToken = jwt.verify(token, process.env.AUTH_STR);
-    const orderId = decodedToken.orderId;
+    const orderId = req.query.id;
 
-    console.log('orderId:token' , decodedToken)
+    console.log('orderId:token', orderId)
 
-    res.render('user/body/orderCompletion', { pageName: '' });
+    const order = await Order.findOne({ orderId })
+    console.log(order)
+
+    res.render('user/body/orderCompletion', {
+        pageName: '',
+        Order: order
+    });
 } 
