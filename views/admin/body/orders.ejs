@@ -60,8 +60,10 @@
                         <td>
                             <span class="btn text-light <%= (item.status === 'Pending') ? 'bg-warning' :
                                                   (item.status === 'Cancelled') ? 'bg-danger' :
-                                                  (item.status === 'Placed') ? 'bg-primary' :
-                                                  (item.status === 'Completed') ? 'bg-success' : '' %>"
+                                                  (item.status === 'Placed') ? 'bg-secondary' :
+                                                  (item.status === 'Shipped') ? 'bg-primary bg-gradient' :
+                                                  (item.status === 'Out For Delivery') ? 'bg-primary' :
+                                                  (item.status === 'Delivered') ? 'bg-success' : '' %>"
                                                   style="font-size: 12px;">
                                 <%= item.status %>
                             </span>
@@ -69,7 +71,7 @@
                         <td>
                             <form action="/admin/order-details" method="GET">
                                 <input type="hidden" name="id" value="<%= item._id %>">
-                                <button type="submit" class="btn btn-info px-3">View</button>
+                                <button type="submit" class="btn btn-info px-3"><i class="bi bi-eye text-light"></i></button>
                             </form>
                         </td>
                     </tr>
