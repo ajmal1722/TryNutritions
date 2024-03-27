@@ -22,6 +22,7 @@ route.get('/signup', services.userSigup);
 
 // shop
 route.get('/shop' || '/shop/shop', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.shop);
+route.post('/update-featured-products-limit', services.viewMore)
 
 // shop-details
 route.get('/shop-details', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.shopDetails);

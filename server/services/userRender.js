@@ -35,6 +35,16 @@ exports.shop = async (req, res) => {
     }
 };
 
+exports.viewMore = async (req, res) => {
+    const featuredProducts = await Products.find({})
+        .sort({ discount: -1 })
+        .skip(3)
+        .limit(6)
+        .exec();
+
+    res.json({ products: featuredProducts })
+}
+
 exports.filterCategory = async (req, res) => {
     let query = {};
     let selectedCategories = [];

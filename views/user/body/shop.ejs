@@ -93,31 +93,35 @@
                                         </div>
                                     </div>
                                 </div>
-                                <% feauturedProducts.forEach(item => { %>
-                                    <a href="/shop-details?id=<%= item._id %>" class="text-decoration-none">
-                                        <div class="d-flex align-items-center justify-content-start">
-                                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                                <img src="<%= item.imageUrl %>" class="img-fluid rounded" alt="" style="width: 80px; height: 80px;">
-                                            </div>
-                                            <div>
-                                                <h6 class="mb-2"><%= item.name %></h6>
-                                                <div class="d-flex mb-2">
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star"></i>
+                                <div id="featuredProductsContainer">
+                                    <% feauturedProducts.forEach(item => { %>
+                                        <a href="/shop-details?id=<%= item._id %>" class="text-decoration-none">
+                                            <div id="featuredProductsContainer" class="d-flex align-items-center justify-content-start">
+                                                <div class="rounded me-4" style="width: 100px; height: 100px;">
+                                                    <img src="<%= item.imageUrl %>" class="img-fluid rounded" alt="" style="width: 80px; height: 80px;">
                                                 </div>
-                                                <div class="d-flex mb-2">
-                                                    <h5 class="fw-bold me-2">₹ <%= item.sellingPrice %></h5>
-                                                    <h5 class="text-danger text-decoration-line-through">₹ <%= item.mrp %></h5>
+                                                <div>
+                                                    <h6 class="mb-2"><%= item.name %></h6>
+                                                    <div class="d-flex mb-2">
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star"></i>
+                                                    </div>
+                                                    <div class="d-flex mb-2">
+                                                        <h5 class="fw-bold me-2">₹ <%= item.sellingPrice %></h5>
+                                                        <h5 class="text-danger text-decoration-line-through">₹ <%= item.mrp %></h5>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                <% }) %>
+                                        </a>
+                                    <% }) %>
+                                </div>
                                 <div class="d-flex justify-content-center my-4">
-                                    <a href="#" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">Vew More</a>
+                                    <button type="submit" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100" onclick="viewMore()">
+                                        View More
+                                    </button>
                                 </div>
                             </div>
                             <div class="col-lg-12">
@@ -172,7 +176,6 @@
                                     </a>
                                 </div>
                             <% }) %>
-                            
                             <div class="col-12">
                                 <div class="pagination d-flex justify-content-center mt-5">
                                     <a href="#" class="rounded">&laquo;</a>
@@ -268,6 +271,52 @@
             });
         });
     });
+
+function viewMore() {
+    // Update the featuredProducts limit to 6
+    const newLimit = 6;
+
+    // Make an AJAX request to update the limit on the server
+    axios.post('/update-featured-products-limit', { limit: newLimit })
+        .then(response => {
+            const newProducts = response.data.products;
+
+            // Iterate over the new products and append them to the existing list
+            newProducts.forEach(item => {
+                const productHtml = `
+                    <a href="/shop-details?id=${item._id}" class="text-decoration-none">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <div class="rounded me-4" style="width: 100px; height: 100px;">
+                                <img src="${item.imageUrl}" class="img-fluid rounded" alt="" style="width: 80px; height: 80px;">
+                            </div>
+                            <div>
+                                <h6 class="mb-2">${item.name}</h6>
+                                <div class="d-flex mb-2">
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <h5 class="fw-bold me-2">₹ ${item.sellingPrice}</h5>
+                                    <h5 class="text-danger text-decoration-line-through">₹ ${item.mrp}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                `;
+                // Append the HTML of the new product to a container element
+                document.getElementById('featuredProductsContainer').innerHTML += productHtml;
+            });
+        })
+        .catch(error => {
+            // Handle error if needed
+            console.error("Error updating featured products limit:", error);
+        });
+}
+
+
 </script>
 
 
