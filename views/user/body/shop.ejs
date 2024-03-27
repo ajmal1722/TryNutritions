@@ -119,8 +119,13 @@
                                     <% }) %>
                                 </div>
                                 <div class="d-flex justify-content-center my-4">
-                                    <button type="submit" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100" onclick="viewMore()">
+                                    <button id="btn-view-more" type="submit" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100" onclick="viewMore()">
                                         View More
+                                    </button>
+                                </div>
+                                <div class="d-flex justify-content-center my-4">
+                                    <button id="btn-view-less" type="submit" class="btn border border-secondary bg-secondary px-4 py-3 rounded-pill text-primary w-100" onclick="viewLess()" style="display: none;">
+                                        View Less
                                     </button>
                                 </div>
                             </div>
@@ -308,6 +313,12 @@ function viewMore() {
                 `;
                 // Append the HTML of the new product to a container element
                 document.getElementById('featuredProductsContainer').innerHTML += productHtml;
+
+                // hide the view more buttton and display view less button
+                const btnViewMore = document.getElementById('btn-view-more');
+                const btnViewLess = document.getElementById('btn-view-less');
+                btnViewMore.style.display = 'none';
+                btnViewLess.style.display = 'block';
             });
         })
         .catch(error => {
@@ -316,7 +327,9 @@ function viewMore() {
         });
 }
 
-
+function viewLess () {
+    window.location.reload();  
+}
 </script>
 
 
