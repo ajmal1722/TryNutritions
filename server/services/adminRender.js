@@ -412,3 +412,21 @@ exports.updateCoupon = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+exports.updateOrderStatus = async (req, res) => {
+    try {
+        const { orderId, status } = req.body;
+
+        const order = await Orders.findById(orderId);
+        // Update the order status
+        order.status = status;
+
+        await order.save();
+
+        res.status(200).json({ message: 'Order status updated successfully', order });
+    } catch (error) {
+        // Handle errors
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}

@@ -500,7 +500,7 @@ exports.placeOrder = async (req, res) => {
               user: process.env.APP_EMAIL,
               pass: process.env.APP_PASSWORD,
             },
-          });
+        });
           
           // async..await is not allowed in global scope, must use a wrapper
           
