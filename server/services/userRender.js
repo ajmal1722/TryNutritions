@@ -469,6 +469,64 @@ exports.placeOrder = async (req, res) => {
         // Clear the user's cart after successful order creation
         await Cart.findOneAndDelete({ user: userId });
 
+        const emailContent = `
+            <p>Dear ${user.name},</p>
+
+            <p>Thank you for choosing TryNutritions! We are pleased to inform you that your order has been successfully placed and is now being processed. Below are the details of your order:</p>
+            
+            <ul>
+                <li><strong>Order ID:</strong> ${saveOrder.orderId}</li>
+                <li><strong>Order Date:</strong> ${saveOrder.createdAt}</li>
+            </ul>
+            
+            <h3>Order Summary:</h3>
+            
+            <p><strong>Total Amount:</strong> ${finalAmount}</p>
+            <p><strong>Payment Method:</strong> ${paymentMethod}</p>
+            
+            <p>Thank you for shopping with us. We appreciate your business and hope you enjoy your purchase!</p>
+            
+            <p>Best regards,<br>
+            Admin<br>
+            TryNutritions</p>
+        `;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // Use `true` for port 465, `false` for all other ports
+            auth: {
+              user: process.env.APP_EMAIL,
+              pass: process.env.APP_PASSWORD,
+            },
+          });
+          
+          // async..await is not allowed in global scope, must use a wrapper
+          
+            // send mail with defined transport object
+            const mailOptions = {
+              from: process.env.APP_EMAIL, // sender address
+              to: user.email, // list of receivers
+              subject: "Order Placed", // Subject line
+              text: "Your order is placed!", // plain text body
+              html: emailContent, // html body
+            };
+          
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    return console.log('err:', err)
+                }
+                
+                console.log("Message sent: %s", info.messageId);
+                console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+            })
+            
+            // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
+          
+
+          
+
         res.status(200).json({ saveOrder });
     } catch (error) {
         console.error(error);
