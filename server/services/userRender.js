@@ -540,7 +540,7 @@ exports.orderSuccess = async (req, res) => {
 
     console.log('orderId:token', orderId)
 
-    const order = await Order.findOne({ orderId })
+    const order = await Order.findOne({ orderId }).populate('items.product')
     console.log(order)
 
     res.render('user/body/orderCompletion', {
