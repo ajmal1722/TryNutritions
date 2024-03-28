@@ -50,9 +50,17 @@
             </div>
             <div class="my-4">
                 <h3 class="my-5">Shipping Address</h3>
-                <div class="border py-5">
+                <div class="border py-5 px-4">
                     <p id="shippingAddress">
-                        <%= Order.shippingAddress %>
+                        <h6>
+                            <%= Order.shippingAddress.name %> <span class="mx-3"><%= Order.shippingAddress.phone %></span>
+                        </h6>
+                        
+                        <p>
+                            <%= Order.shippingAddress.houseName %>, <%= Order.shippingAddress.streetName %>,
+                            <%= Order.shippingAddress.postOffice %>, <%= Order.shippingAddress.district %> ,
+                            <%= Order.shippingAddress.state %>, <%= Order.shippingAddress.pinCode %>
+                        </p>
                     </p>
                 </div>
             </div>
