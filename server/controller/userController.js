@@ -7,6 +7,7 @@ const Products = require('../model/products');
 
 // home route (home page)
 exports.homeRoutes = async (req, res) => {
+    const searchQuery = req.query.search || '';
     const category = await Category.find({}).exec();
     const product = await Products.find({}).exec();
     const latestProduct = await Products.find({})
@@ -25,6 +26,7 @@ exports.homeRoutes = async (req, res) => {
             Categories: category,
             Products: product,
             latestProducts: latestProduct,
+            searchQuery: searchQuery,
             bestSellerProducts: bestSellerProduct
         })
     } catch (error) {
@@ -34,6 +36,7 @@ exports.homeRoutes = async (req, res) => {
                 Categories: category,
                 Products: product,
                 latestProducts: latestProduct,
+                searchQuery: searchQuery,
                 bestSellerProducts: bestSellerProduct
             });
         } else {

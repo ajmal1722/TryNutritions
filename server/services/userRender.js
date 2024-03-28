@@ -500,7 +500,7 @@ exports.placeOrder = async (req, res) => {
             <h3>Order Summary:</h3>
             
             <p><strong>Total Amount:</strong> ${finalAmount}</p>
-            <p><strong>Payment Method:</strong> ${paymentMethod}</p>
+            <p><strong>Payment Method:</strong> ${saveOrder.paymentMethod}</p>
             
             <p>Thank you for shopping with us. We appreciate your business and hope you enjoy your purchase!</p>
             
