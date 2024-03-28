@@ -17,14 +17,20 @@ exports.shop = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1; // Default to page 1 if not specified
         const productPerPage = 2;
+        const searchQuery = req.query.search || ''; // Retrieve search query from request
 
-        const totalProducts = await Products.countDocuments();
+        const totalProducts = await Products.countDocuments({
+            name: { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search by name
+        });
         const totalPages = Math.ceil(totalProducts / productPerPage);
 
-        const products = await Products.find()
-            .skip((page - 1) * productPerPage)
-            .limit(productPerPage)
-            .exec();
+        const products = await Products.find({
+            name: { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search by name
+        })
+        .skip((page - 1) * productPerPage)
+        .limit(productPerPage)
+        .exec();
+        
         const categories = await Category.find().exec();
         const featuredProducts = await Products.find({})
             .sort({ discount: -1 })
@@ -39,6 +45,7 @@ exports.shop = async (req, res) => {
             selectedCategories: [], // Initialize selected categories as empty
             currentPage: page, // Pass the current page number
             totalPages: totalPages,
+            searchQuery: searchQuery,
             req: req // Pass the request object for further processing if needed
         });
     } catch (error) {
