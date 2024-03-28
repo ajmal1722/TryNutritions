@@ -105,7 +105,7 @@
                             <td class="py-3"></td>
                             <td class="py-3">
                                     <p class="mb-0 text-dark mt-3">₹ <%= Order.subTotal %></p>
-                                    <p class="mb-0 text-dark"><%= Order.bill >=300 ? 'FREE' : '₹ 30' %></p>
+                                    <p class="mb-0 text-dark"><%= Order.subTotal >=300 ? 'FREE' : '₹ 30' %></p>
                                     <p class="mb-0 text-dark">- ₹ <%= Order.couponDiscount %></p>
                             </td>
                         </tr>
