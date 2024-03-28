@@ -15,7 +15,16 @@ exports.userSigup = (req, res) => res.render('user/body/signup');
 // shop
 exports.shop = async (req, res) => {
     try {
-        const products = await Products.find(req.query).exec();
+        const page = parseInt(req.query.page) || 1; // Default to page 1 if not specified
+        const productPerPage = 2;
+
+        const totalProducts = await Products.countDocuments();
+        const totalPages = Math.ceil(totalProducts / productPerPage);
+
+        const products = await Products.find()
+            .skip((page - 1) * productPerPage)
+            .limit(productPerPage)
+            .exec();
         const categories = await Category.find().exec();
         const featuredProducts = await Products.find({})
             .sort({ discount: -1 })
@@ -28,6 +37,8 @@ exports.shop = async (req, res) => {
             Categories: categories,
             feauturedProducts: featuredProducts,
             selectedCategories: [], // Initialize selected categories as empty
+            currentPage: page, // Pass the current page number
+            totalPages: totalPages,
             req: req // Pass the request object for further processing if needed
         });
     } catch (error) {
