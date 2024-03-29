@@ -93,6 +93,7 @@ exports.filterCategory = async (req, res) => {
 
 // shop-details
 exports.shopDetails = async (req, res) => {
+    const searchQuery = req.query.search || '';
     const productId = req.query.id;
     const product = await Products.findById(productId);
     const category = await Category.find({}).exec();
@@ -107,6 +108,7 @@ exports.shopDetails = async (req, res) => {
         Product: product,
         Categories: category,
         relatedProducts: relatedProduct,
+        searchQuery: searchQuery,
         feauturedProducts: feauturedProduct
     });
 } 
