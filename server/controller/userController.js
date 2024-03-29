@@ -7,6 +7,7 @@ const Products = require('../model/products');
 
 // home route (home page)
 exports.homeRoutes = async (req, res) => {
+    const limit = 8;
     const searchQuery = req.query.search || '';
     const category = await Category.find({}).exec();
     const product = await Products.find({}).exec();
@@ -27,7 +28,8 @@ exports.homeRoutes = async (req, res) => {
             Products: product,
             latestProducts: latestProduct,
             searchQuery: searchQuery,
-            bestSellerProducts: bestSellerProduct
+            bestSellerProducts: bestSellerProduct,
+            limit: limit
         })
     } catch (error) {
         if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
@@ -37,7 +39,8 @@ exports.homeRoutes = async (req, res) => {
                 Products: product,
                 latestProducts: latestProduct,
                 searchQuery: searchQuery,
-                bestSellerProducts: bestSellerProduct
+                bestSellerProducts: bestSellerProduct,
+                limit: limit
             });
         } else {
             res.status(500).send(error);

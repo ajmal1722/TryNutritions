@@ -86,7 +86,7 @@
                             </div>
                             <div class="featurs-content text-center">
                                 <h5>Free Shipping</h5>
-                                <p class="mb-0">Free on order over $300</p>
+                                <p class="mb-0">Free on order over ₹ 300</p>
                             </div>
                         </div>
                     </div>
@@ -150,13 +150,14 @@
                         </div>
                     </div>
                     <div class="tab-content">
-                        <% Categories.forEach(category => { %>
-                            <div id="<%= category.category.replace(/\s+/g, '') %>" class="tab-pane fade show p-0">
+                        <% Categories.forEach((category, index) => { %>
+                            <div id="<%= category.category.replace(/\s+/g, '') %>" class="tab-pane fade show p-0<%= index === 0 ? ' active' : '' %>">
                                 <div class="row g-4">
                                     <div class="col-lg-12">
                                         <div class="row g-4">
+                                            <% let productCounter = 0; %>
                                             <% Products.forEach(product => { %>
-                                                <% if (category.category === product.category){ %>
+                                                <% if (category.category === product.category && productCounter < limit){ %>
                                                     <div class="col-md-6 col-lg-4 col-xl-3">
                                                         <a href="/shop-details?id=<%= product._id %>" class="text-decoration-none">
                                                             <div class="rounded position-relative fruite-item border border-secondary rounded-bottom">
@@ -179,6 +180,7 @@
                                                             </div>
                                                         </a>
                                                     </div>
+                                                    <% productCounter++; %>
                                                 <% } %>
                                             <% }) %>
                                         </div>
