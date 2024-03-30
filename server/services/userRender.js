@@ -21,6 +21,8 @@ const razorpayInstance = new Razorpay({
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
 
+exports.otpPage = (req, res) => res.render('user/body/otpVerificationPage')
+
 // shop
 exports.shop = async (req, res) => {
     try {

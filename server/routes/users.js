@@ -20,6 +20,9 @@ route.get('/logout', controller.logout);
 // signup
 route.get('/signup', services.userSigup);
 
+// otp verification page
+route.get('/otp-page', services.otpPage);
+
 // shop
 route.get('/shop' || '/shop/shop', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.shop);
 route.post('/update-featured-products-limit', services.viewMore)

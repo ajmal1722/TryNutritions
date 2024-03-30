@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTP Verification</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .otp-box {
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      padding: 30px;
+      max-width: 400px;
+      text-align: center;
+    }
+    .otp-input {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      text-align: center;
+      margin: 0 5px;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+    }
+    .otp-input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+    .otp-verify-btn {
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+    .otp-verify-btn.show {
+      opacity: 1;
+    }
+    .timer {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="otp-box card shadow">
+      <h3 class="my-4">OTP Verification</h3>
+      <div class="form-group d-flex justify-content-center">
+        <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric" required>
+        <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric" required>
+        <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric" required>
+        <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric" required>
+        <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric" required>
+        <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric" required>
+      </div>
+      <button type="button" class="btn btn-primary btn-block otp-verify-btn mt-3" disabled>Verify OTP</button>
+      <div class="timer">OTP will expire in <span id="countdown">02:00</span></div>
+      <a href="#" id="resendLink" class="mt-2 d-block text-muted">Resend OTP</a>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Custom JS -->
+  <script>
+    const otpInputs = document.querySelectorAll('.otp-input');
+    const verifyBtn = document.querySelector('.otp-verify-btn');
+    const resendLink = document.getElementById('resendLink');
+
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', function(event) {
+        const value = event.target.value;
+        if (value.length === 1) {
+          const nextInput = input.nextElementSibling;
+          if (nextInput) {
+            nextInput.focus();
+          } else {
+            verifyBtn.classList.add('show');
+          }
+        } else {
+          verifyBtn.classList.remove('show');
+        }
+      });
+
+      input.addEventListener('keypress', function(event) {
+        const keyCode = event.keyCode || event.which;
+        const keyValue = String.fromCharCode(keyCode);
+        if (!/\d/.test(keyValue)) {
+          event.preventDefault();
+        }
+      });
+
+      input.addEventListener('keydown', function(event) {
+        if (event.key === 'Backspace' && input.value.length === 0) {
+          const prevInput = otpInputs[index - 1];
+          if (prevInput) {
+            prevInput.focus();
+          }
+        }
+      });
+    });
+
+    // Countdown Timer
+    const countdownElement = document.getElementById('countdown');
+    let timeLeft = 120;
+
+    function updateCountdown() {
+      const minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      seconds = seconds < 10 ? '0' + seconds : seconds;
+      countdownElement.textContent = `${minutes}:${seconds}`;
+      if (timeLeft === 0) {
+        clearInterval(timer);
+        verifyBtn.disabled = true;
+        resendLink.style.opacity = '1';
+      }
+      timeLeft--;
+    }
+
+    const timer = setInterval(updateCountdown, 1000);
+
+    // Resend OTP functionality
+    resendLink.addEventListener('click', function(event) {
+      event.preventDefault();
+      // Implement your resend OTP logic here
+      console.log('Resending OTP...');
+      // Reset timer
+      timeLeft = 120;
+      clearInterval(timer);
+      timer = setInterval(updateCountdown, 1000);
+      // Reset button and link
+      verifyBtn.classList.remove('show');
+      verifyBtn.disabled = true;
+      resendLink.style.opacity = '0.5';
+    });
+  </script>
+</body>
+</html>

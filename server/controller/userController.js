@@ -173,7 +173,7 @@ exports.create = async (req, res) => {
         userData.token = token
         userData.password = undefined
         
-        res.status(201).redirect('/');
+        res.status(201).redirect('/otp-page');
 
     } catch (error) {
         console.error('Error message:', error.message);
