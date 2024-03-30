@@ -22,6 +22,7 @@ route.get('/signup', services.userSigup);
 
 // otp verification page
 route.get('/otp-page', services.otpPage);
+route.post('/verify-otp', services.verifyOtp);
 
 // shop
 route.get('/shop' || '/shop/shop', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.shop);

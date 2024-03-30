@@ -1,87 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OTP Verification</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Custom CSS -->
-  <style>
-    body {
-      background-color: #f8f9fa;
-    }
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .otp-box {
-      border: 1px solid #ced4da;
-      border-radius: 5px;
-      padding: 30px;
-      max-width: 400px;
-      text-align: center;
-    }
-    .otp-input {
-      width: 50px;
-      height: 50px;
-      font-size: 24px;
-      text-align: center;
-      margin: 0 5px;
-      border: 1px solid #ced4da;
-      border-radius: 5px;
-    }
-    .otp-input:focus {
-      outline: none;
-      border-color: #007bff;
-    }
-    .otp-verify-btn {
-      opacity: 0.5;
-      transition: opacity 0.3s ease;
-    }
-    .otp-verify-btn.show {
-      opacity: 1;
-    }
-    .timer {
-      font-size: 18px;
-      margin-top: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .otp-box {
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 30px;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            text-align: center;
+            margin: 0 5px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .otp-verify-btn {
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .otp-verify-btn.show {
+            opacity: 1;
+        }
+
+        .timer {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
+
 <body>
-  <div class="container">
-    <div class="otp-box card shadow">
-      <h3 class="my-4">OTP Verification</h3>
-      <div class="form-group d-flex justify-content-center">
-        <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric" required>
-        <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric" required>
-        <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric" required>
-        <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric" required>
-        <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric" required>
-        <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric" required>
-      </div>
-      <button type="button" class="btn btn-primary btn-block otp-verify-btn mt-3" disabled>Verify OTP</button>
-      <div class="timer">OTP will expire in <span id="countdown">02:00</span></div>
-      <a href="#" id="resendLink" class="mt-2 d-block text-muted">Resend OTP</a>
+    <div class="container">
+        <div class="otp-box card shadow">
+            <h3 class="my-4">OTP Verification</h3>
+            <div class="form-group d-flex justify-content-center">
+                <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
+                    required>
+                <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
+                    required>
+                <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
+                    required>
+                <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
+                    required>
+                <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
+                    required>
+                <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
+                    required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block otp-verify-btn mt-3" disabled>Verify OTP</button>
+            <div class="timer">OTP will expire in <span id="countdown">02:00</span></div>
+            <a href="#" id="resendLink" class="mt-2 d-block text-muted">Resend OTP</a>
+        </div>
     </div>
-  </div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-  <!-- Axios CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
 
+    <!-- Custom JS -->
+    <script src="/users/js/otp.js"></script>
 
-  <!-- Custom JS -->
-  <script src="/users/js/otp.js"></script>
+    <script>
 
-  <script>
-    
-  </script>
+        // Verify OTP functionality
+        // const verifyBtn = document.querySelector('.otp-verify-btn');
+        verifyBtn.addEventListener('click', function () {
+            const otpValue = Array.from(otpInputs).map(input => input.value).join('');
+            console.log('Verifying OTP:', otpValue);
+
+            axios.post('/verify-otp', { otp: otpValue })
+                .then(response => {
+                    console.log('Server response:', response.data);
+                    console.log('button is working')
+                })
+                .catch(error => {
+                    console.error('Error verifying OTP:', error);
+                });
+        });
+
+    </script>
 </body>
+
 </html>

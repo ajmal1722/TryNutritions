@@ -21,7 +21,17 @@ const razorpayInstance = new Razorpay({
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
 
-exports.otpPage = (req, res) => res.render('user/body/otpVerificationPage')
+exports.otpPage = (req, res) => res.render('user/body/otpVerificationPage');
+
+exports.verifyOtp = async (req, res) => {
+    try {
+        console.log('verified');
+        console.log(req)
+    } catch (error) {
+        console.error('Error verifying OTP:', error);
+        res.status(500).send({ error: error.message });
+    }
+}
 
 // shop
 exports.shop = async (req, res) => {
