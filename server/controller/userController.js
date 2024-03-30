@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const Category = require('../model/category');
 const Products = require('../model/products');
+const nodemailer = require('nodemailer');
 
 // home route (home page)
 exports.homeRoutes = async (req, res) => {
@@ -90,14 +91,75 @@ exports.create = async (req, res) => {
             return res.status(400).send('Email already exists');
         }
 
+        // Generate a random OTP
+        const otp = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
+        // Save the OTP and its expiry time in the user document
+        const expiryTime = Date.now() + 2 * 60 * 1000; // 2 minutes expiry time
+
         // encrypt the password
         const encPassword = await bcrypt.hash(data.password, 10) // here 10 is optional
 
         // Insert new user data
         const userData = await Userdb.create({
             ...data,
-            password: encPassword
+            password: encPassword,
+            emailOtp: {
+                otp: otp,
+                expiry: new Date(expiryTime)
+            }
         });
+
+        const emailContent = `
+            <h6>Verify Your Email Address</h6>
+            
+            <p class="text-center">Verify your email to finish signing up with TryNutritions.
+            use the following verification code:
+            </p>
+
+            <h4 class="text-center">${otp}</h4>
+
+            <p>The verification code is valid for  2 minutes</p>
+        `;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // Use `true` for port 465, `false` for all other ports
+            auth: {
+              user: process.env.APP_EMAIL,
+              pass: process.env.APP_PASSWORD,
+            },
+        });
+                    
+        // send mail with defined transport object
+        const mailOptions = {
+            from: process.env.APP_EMAIL, // sender address
+            to: data.email, // list of receivers
+            subject: "OTP for account verification", // Subject line
+            text: `Your OTP for account verification is: ${otp}`, // plain text body
+            html: emailContent, // html body
+        };
+        
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                return console.log('err:', err)
+            }
+            
+            console.log("Message sent: %s", info.messageId);
+            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        })
+
+        // Schedule a task to delete the OTP after 2 minutes
+        setTimeout(async () => {
+            await Userdb.findOneAndUpdate(
+                { email: data.email },
+                { $unset: { emailOtp: "" } } // Delete the emailOtp field
+            );
+            console.log('OTP expired and deleted');
+        }, 2 * 60 * 1000);
+
+
 
         // generate a token for user
         const token = jwt.sign(

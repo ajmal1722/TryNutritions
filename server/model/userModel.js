@@ -48,7 +48,11 @@ const Schema = new mongoose.Schema({
         type: String,
         default: 'Active'
     },
-    addresses: [addressSchema] 
+    addresses: [addressSchema],
+    emailOtp: {
+        otp: String,
+        expiry: Date
+    }
 })
 
 const Userdb = mongoose.model('users', Schema);
