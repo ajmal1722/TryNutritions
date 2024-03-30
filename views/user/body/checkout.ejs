@@ -224,6 +224,10 @@
 <%- include('../partials/_footer')%>
 <!-- /Include Footer -->
 
+
+<!-- Razorpay library -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script> 
+
 <script>
     function showNewAddressForm () {
         document.getElementById('address-form-element').style.display = 'block'
@@ -253,11 +257,18 @@
                 paymentMethod: selectedPayment
             })
             .then(res => {
-                const orderId = res.data.saveOrder.orderId;
-                window.location.href = `/order-completed?id=${orderId}`;
+                const paymentMethod = res.data.paymentMethod;
+                if (paymentMethod === 'Razorpay'){
+                    console.log(res.data.paymentMethod);
+
+                     
+                } else {
+                    const orderId = res.data.saveOrder.orderId;
+                    window.location.href = `/order-completed?id=${orderId}`;
+                }
             })
             .catch(err => {
-                console.error('Error placing order:', err);
+                console.log('Error placing order:', err);
             });
     }
 

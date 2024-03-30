@@ -8,6 +8,15 @@ const Coupon = require('../model/coupon');
 const { calculateDiscount, calculateTotalBill } = require('../middlewares/script');
 const Order = require('../model/order');
 const nodemailer = require('nodemailer');
+const Razorpay = require('razorpay');
+
+
+// This razorpayInstance will be used to access any resource from razorpay
+const razorpayInstance = new Razorpay({
+    key_id: process.env.RAZORPAY_API_ID,
+    key_secret: process.env.RAZORPAY_API_KEY,
+})
+
 
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
@@ -464,12 +473,31 @@ exports.placeOrder = async (req, res) => {
             shippingAddress: address,
             paymentMethod
         })
-        
-        // before saving newOrder update the status to Placed.
-        newOrder.status = 'Placed'
-        const saveOrder = await newOrder.save();
 
-        console.log(saveOrder)
+        // if the payment method is razorpay proceed to razorpay
+        if (paymentMethod === 'Razorpay'){
+            // Calculate the total amount in the smallest currency unit (e.g., paisa for INR)
+            const amountInPaisa = finalAmount * 100; // Assuming finalAmount is in rupees
+
+            const options = {
+                amount: amountInPaisa,
+                currency: 'INR',
+                receipt: orderId.toString()
+            }
+
+            razorpayInstance.orders.create(options, (err, order) => {
+                if (err){
+                    console.log(err)
+                    return res.status(500).json({ error: 'Failed to create Razorpay order' });
+                }
+                console.log('new order:', order)
+            })
+            return res.json({
+                paymentMethod: paymentMethod,
+                order: newOrder
+            })
+        }
+
         // Update the orderId in the decoded token
         // decodedToken.orderId = orderId;
 
@@ -488,6 +516,10 @@ exports.placeOrder = async (req, res) => {
 
         // Clear the user's cart after successful order creation
         await Cart.findOneAndDelete({ user: userId });
+        
+        // before saving newOrder update the status to Placed.
+        newOrder.status = 'Placed'
+        const saveOrder = await newOrder.save(); 
 
         const emailContent = `
             <p>Dear ${user.name},</p>
@@ -521,9 +553,7 @@ exports.placeOrder = async (req, res) => {
               pass: process.env.APP_PASSWORD,
             },
         });
-          
-          // async..await is not allowed in global scope, must use a wrapper
-          
+                    
             // send mail with defined transport object
             const mailOptions = {
               from: process.env.APP_EMAIL, // sender address
@@ -541,12 +571,9 @@ exports.placeOrder = async (req, res) => {
                 console.log("Message sent: %s", info.messageId);
                 console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
             })
-            
-            // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
-          
+                     
 
-          
-
+        
         res.status(200).json({ saveOrder });
     } catch (error) {
         console.error(error);

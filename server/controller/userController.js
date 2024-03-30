@@ -182,3 +182,10 @@ exports.logout = (req, res) => {
     res.clearCookie('jwt'); // Clear the 'jwt' cookie
     res.redirect('/'); // Redirect to the login page or any other desired page
 }
+
+exports.makePayment = async (req, res) => {
+    const razorpayInstance = new Razorpay({
+        key_id: process.env.RAZORPAY_API_ID,
+        key_secret: process.env.RAZORPAY_API_KEY,
+    })
+}
