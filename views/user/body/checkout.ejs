@@ -257,11 +257,48 @@
                 paymentMethod: selectedPayment
             })
             .then(res => {
-                const paymentMethod = res.data.paymentMethod;
-                if (paymentMethod === 'Razorpay'){
-                    console.log(res.data.paymentMethod);
+                const { paymentMethod, order } = res.data;
 
-                     
+                if (paymentMethod === 'Razorpay'){
+                    console.log(res.data);
+
+                    var options = { 
+                        "key": "rzp_test_NJ7eH8nraHURq6",  
+                        "amount": order.amount,  // Amount should be in paisa (i.e., 49900 paisa = ₹499.00)
+                        "currency": "INR", 
+                        "name": "TryNutritions", 
+                        "description": "Transaction", 
+                        "order_id": order.id,   
+                        "handler": function (response){ 
+                            console.log(response) 
+                            alert("This step of Payment Succeeded"); 
+                        }, 
+                        "prefill": { 
+                            "contact":"9876543210",  
+                            "name": "Twinkle Sharma",   
+                            "email": "smtwinkle@gmail.com"  
+                        }, 
+                        "notes" : { 
+                            "description":"Best Course for SDE placements", 
+                            "language":"Available in 4 major Languages JAVA, C/C++, Python, Javascript", 
+                            "access":"This course have Lifetime Access" 
+                        },  
+                        "theme": { 
+                            "color": "#81c408" 
+                        } 
+                    };  
+
+                    var razorpayObject = new Razorpay(options); 
+                    console.log(razorpayObject); 
+
+                    razorpayObject.on('payment.failed', function (response){ 
+                            console.log(response); 
+                            alert("This step of Payment Failed"); 
+                    }); 
+                        
+                    razorpayObject.open();
+                    
+
                 } else {
                     const orderId = res.data.saveOrder.orderId;
                     window.location.href = `/order-completed?id=${orderId}`;

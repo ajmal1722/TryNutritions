@@ -475,29 +475,40 @@ exports.placeOrder = async (req, res) => {
         })
 
         // if the payment method is razorpay proceed to razorpay
-        if (paymentMethod === 'Razorpay'){
-            // Calculate the total amount in the smallest currency unit (e.g., paisa for INR)
+        if (paymentMethod === 'Razorpay') {
             const amountInPaisa = finalAmount * 100; // Assuming finalAmount is in rupees
-
+        
             const options = {
                 amount: amountInPaisa,
                 currency: 'INR',
                 receipt: orderId.toString()
-            }
-
+            };
+        
+            let isOrderCreated = false; // Flag to track if the Razorpay order is created
+        
             razorpayInstance.orders.create(options, (err, order) => {
-                if (err){
-                    console.log(err)
+                if (err) {
+                    console.log(err);
                     return res.status(500).json({ error: 'Failed to create Razorpay order' });
                 }
-                console.log('new order:', order)
-            })
-            return res.json({
-                paymentMethod: paymentMethod,
-                order: newOrder
-            })
-        }
-
+                console.log('new order:', order);
+        
+                // Update the flag to indicate that the Razorpay order is created
+                isOrderCreated = true;
+        
+                // Send the response with paymentMethod and order details
+                return res.json({
+                    paymentMethod: paymentMethod,
+                    order: order
+                });
+            });
+        
+            // If the Razorpay order creation is not completed yet, return from the route
+            if (!isOrderCreated) {
+                return;
+            }
+        } 
+        
         // Update the orderId in the decoded token
         // decodedToken.orderId = orderId;
 
