@@ -25,8 +25,9 @@ exports.otpPage = (req, res) => res.render('user/body/otpVerificationPage');
 
 exports.verifyOtp = async (req, res) => {
     try {
-        console.log('verified');
-        console.log(req)
+        const { otp } = req.body; // Destructuring (similar to const otp = req.body.otp)
+        console.log('otp:', otp);
+
     } catch (error) {
         console.error('Error verifying OTP:', error);
         res.status(500).send({ error: error.message });
