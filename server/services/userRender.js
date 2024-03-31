@@ -183,6 +183,11 @@ exports.addToCart = async (req, res) => {
         const productId = req.query.id;
         const userId = req.user._id;
 
+        // Check if userId is not present
+        if (!userId) {
+            return res.status(401).json({ error: "User is not logged in." });
+        }
+
         // Get the user's cart
         let cart = await Cart.findOne({ user: userId });
 
