@@ -24,6 +24,11 @@ exports.userSigup = (req, res) => res.render('user/body/signup');
 exports.otpPage = async (req, res) => {
     const email = req.query.email;
     const user = await User.findOne({ email: email });
+   
+    // Check if user exists and if emailOtp is defined
+    if (!user || !user.emailOtp) {
+        return res.redirect('/signup');
+    }
 
     const otpExpiration = user.emailOtp.expiry;
 
@@ -43,11 +48,12 @@ exports.verifyOtp = async (req, res) => {
 
         // Check if OTP is expired or not defined
         const otpExpiration = user.emailOtp ? user.emailOtp.expiry : undefined;
-        if (otpExpiration && otpExpiration < new Date()) {
+        console.log('otpExpiration:',otpExpiration)
+        if (otpExpiration && otpExpiration < new Date() || otpExpiration === undefined) {
             // OTP expired, delete user data
             await User.deleteOne({ email });
             console.log('user deleted ');
-            return res.status(400).json({ error: "OTP expired and deleted user data from database" });
+            return res.status(400).json({ error: "OTP is expired" });
         }
 
         // Check if the OTP matches
