@@ -19,6 +19,7 @@ route.get('/logout', controller.logout);
 
 // signup
 route.get('/signup', services.userSigup);
+route.post('/signup', controller.create);
 
 // otp verification page
 route.get('/otp-page', services.otpPage);
@@ -52,8 +53,6 @@ route.get('/contact', authentication.getCartInNotAuthorizedPage, authentication.
 // Category filtering in shop page
 route.get('/filter-category', services.filterCategory)
 
-
-route.post('/api/users', controller.create);
 
 route.post('/api/login', controller.login);
 

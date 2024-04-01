@@ -16,7 +16,7 @@
                 <div class="card shadow">
                     <div class="card-body p-4">
                         <h2 class="text-center mb-5 heading">Create Account</h2>
-                        <form id="signupForm" action="/api/users" method="post" onsubmit="return validateForm()">
+                        <form id="signupForm">
                             <div class="mb-4">
                                 <input type="text" class="form-control" name="name" id="name" placeholder="Enter your name">
                                 <span id="nameError" class="text-danger"></span>
@@ -24,6 +24,9 @@
                             <div class="mb-4">
                                 <input type="text" class="form-control" name="phone" id="phone" placeholder="Enter your phone">
                                 <span id="phoneError" class="text-danger"></span>
+                            </div>
+                            <div class="text-danger">
+                                <p id="displayErrorMessage"></p>
                             </div>
                             <div class="mb-4">
                                 <input type="text" class="form-control" name="email" id="email" placeholder="Enter your email">
@@ -40,7 +43,7 @@
                             </div>
                           
                             <div class="mb-4">
-                                <button type="submit" class="btn w-100">Register Now</button>
+                                <button type="button" class="btn w-100" onclick="registerUser()">Register Now</button>
                             </div>
                             <div class="text-center">
                                 <p>Already have an account? <a href="/login">Login now</a></p>
@@ -51,58 +54,77 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-      function validateForm() {
-          let name = document.getElementById("name").value;
-          let phone = document.getElementById("phone").value;
-          let email = document.getElementById("email").value;
-          let password = document.getElementById("password").value;
-          let checkbox = document.getElementById("termsCheckbox");
-  
-          let nameValid = /^[A-Za-z\s]{3,}$/.test(name);
-          let phoneValid = /^\d{10}$/.test(phone);
-          let emailValid = /^[\w.-]+@[\w-]+\.+[\w-]{2,}$/.test(email);
-          let passwordValid = /^[A-Za-z\d]{6,}$/.test(password);
-          let checkboxValid = checkbox.checked;
-  
-          // Reset error messages
-          document.getElementById("nameError").innerHTML = "";
-          document.getElementById("phoneError").innerHTML = "";
-          document.getElementById("emailError").innerHTML = "";
-          document.getElementById("passwordError").innerHTML = "";
-          document.getElementById("checkboxError").innerHTML = "";
-  
-          if (!nameValid) {
-              document.getElementById("nameError").innerHTML =
-                  "Minimum 3 characters required";
-          }
-  
-          if (!phoneValid) {
-              document.getElementById("phoneError").innerHTML =
-                  "Enter a valid phone number";
-          }
-  
-          if (!emailValid) {
-              document.getElementById("emailError").innerHTML =
-                  "Enter a valid email address";
-          }
-  
-          if (!passwordValid) {
-              document.getElementById("passwordError").innerHTML =
-                  "Password must be 6 characters";
-          }
-  
-          if (!checkboxValid) {
-              document.getElementById("checkboxError").innerHTML =
-                  "Please accept the terms and conditions";
-          }
-  
-          // If any validation fails, return false
-          return nameValid && phoneValid && emailValid && passwordValid && checkboxValid;
-      }
-  </script>
-  
+        function registerUser() {
+            const name = document.getElementById("name").value;
+            const phone = document.getElementById("phone").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const checkbox = document.getElementById("termsCheckbox").checked;
+
+            // Reset error messages
+            document.getElementById("nameError").innerHTML = "";
+            document.getElementById("phoneError").innerHTML = "";
+            document.getElementById("emailError").innerHTML = "";
+            document.getElementById("passwordError").innerHTML = "";
+            document.getElementById("checkboxError").innerHTML = "";
+
+            let valid = true;
+
+            // Validate name
+            if (name.trim().length < 3) {
+                document.getElementById("nameError").innerHTML = "Minimum 3 characters required";
+                valid = false;
+            }
+
+            // Validate phone
+            if (!/^\d{10}$/.test(phone)) {
+                document.getElementById("phoneError").innerHTML = "Enter a valid phone number";
+                valid = false;
+            }
+
+            // Validate email
+            if (!/^[\w.-]+@[\w-]+\.+[\w-]{2,}$/.test(email)) {
+                document.getElementById("emailError").innerHTML = "Enter a valid email address";
+                valid = false;
+            }
+
+            // Validate password
+            if (password.trim().length < 6) {
+                document.getElementById("passwordError").innerHTML = "Password must be 6 characters";
+                valid = false;
+            }
+
+            // Validate checkbox
+            if (!checkbox) {
+                document.getElementById("checkboxError").innerHTML = "Please accept the terms and conditions";
+                valid = false;
+            }
+
+            if (!valid) {
+                // Form validation failed, return
+                return;
+            }
+
+            // Form validation passed, send data to server
+            axios.post('/signup', {
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    password: password
+                })
+                .then(response => {
+                    console.log(response.data);
+                    window.location.href = `/otp-page?email=${email}`;
+                })
+                .catch(error => {
+                    document.getElementById('displayErrorMessage').textContent = error.response.data;
+                    console.log(error.response.data);
+                    // Display error message
+                });
+        }
+    </script>
 </body>
 
 </html>

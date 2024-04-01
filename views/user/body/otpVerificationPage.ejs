@@ -63,6 +63,7 @@
     <div class="container">
         <div class="otp-box card shadow">
             <h3 class="my-4">OTP Verification</h3>
+            <input type="hidden" value="<%= email %>" id="getEmail">
             <div class="form-group d-flex justify-content-center">
                 <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
                     required>
@@ -77,6 +78,7 @@
                 <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
                     required>
             </div>
+            <p id="otp-error-message" class="text-danger"></p>
             <button type="submit" class="btn btn-primary btn-block otp-verify-btn mt-3" disabled>Verify OTP</button>
             <div class="timer">OTP will expire in <span id="countdown">02:00</span></div>
             <a href="#" id="resendLink" class="mt-2 d-block text-muted">Resend OTP</a>
@@ -96,19 +98,23 @@
 
     <script>
 
+        const getEmail = document.getElementById('getEmail').value;
         // Verify OTP functionality
-        // const verifyBtn = document.querySelector('.otp-verify-btn');
         verifyBtn.addEventListener('click', function () {
             const otpValue = Array.from(otpInputs).map(input => input.value).join('');
-            console.log('Verifying OTP:', otpValue);
+            console.log('Verifying OTP:', otpValue, getEmail);
 
-            axios.post('/verify-otp', { otp: otpValue })
+            axios.post('/verify-otp', {
+                otp: otpValue,
+                email: getEmail
+            })
                 .then(response => {
                     console.log('Server response:', response.data);
-                    console.log('button is working')
+                    window.location.href = '/';
                 })
                 .catch(error => {
-                    console.log('Error verifying OTP:', error);
+                    document.getElementById('otp-error-message').textContent = error.response.data.error;
+                    console.log('Error verifying OTP:', error.response.data.error);
                 });
         });
 

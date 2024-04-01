@@ -21,12 +21,43 @@ const razorpayInstance = new Razorpay({
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
 
-exports.otpPage = (req, res) => res.render('user/body/otpVerificationPage');
+exports.otpPage = (req, res) => {
+    const email = req.query.email;
+
+    res.render('user/body/otpVerificationPage', { email: email });
+};
 
 exports.verifyOtp = async (req, res) => {
     try {
-        const { otp } = req.body; // Destructuring (similar to const otp = req.body.otp)
-        console.log('otp:', otp);
+        const { otp, email } = req.body;
+
+        // Find the user by email
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ error: "OTP is expired.Sign up again to get a new OTP" });
+        }
+
+        // Check if OTP is expired or not defined
+        const otpExpiration = user.emailOtp ? user.emailOtp.expiry : undefined;
+        if (otpExpiration && otpExpiration < new Date()) {
+            // OTP expired, delete user data
+            await User.deleteOne({ email });
+            return res.status(400).json({ error: "OTP expired and deleted user data from database" });
+        }
+
+        // Check if the OTP matches
+        if (user.emailOtp && user.emailOtp.otp !== otp) {
+            // OTP does not match
+            return res.status(400).json({ error: "Invalid OTP" });
+        }
+
+        // If OTP is valid, clear the emailOtp field
+        user.emailOtp = undefined;
+        await user.save();
+
+        console.log('OTP verfication completed')
+        res.status(200).json({ message: "OTP verified successfully" });
 
     } catch (error) {
         console.error('Error verifying OTP:', error);
