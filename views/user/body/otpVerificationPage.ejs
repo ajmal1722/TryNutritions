@@ -80,7 +80,43 @@
             </div>
             <p id="otp-error-message" class="text-danger"></p>
             <button type="submit" class="btn btn-primary btn-block otp-verify-btn mt-3" disabled>Verify OTP</button>
-            <div class="timer">OTP will expire in <span id="countdown">02:00</span></div>
+            <div class="timer">OTP will expire in 
+                <span id="countdown">
+                    <% if (expiry) { %>
+                        <script>
+                            // Calculate remaining time in milliseconds
+                            var remainingTime = new Date('<%= expiry %>').getTime() - new Date().getTime();
+            
+                            // Update countdown timer
+                            var countdownElement = document.getElementById('countdown');
+            
+                            // Function to update countdown
+                            function updateCountdown() {
+                                var minutes = Math.floor(remainingTime / (1000 * 60));
+                                var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+                                countdownElement.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+            
+                                // Stop countdown when remaining time is zero
+                                if (remainingTime <= 0) {
+                                    clearInterval(timer);
+                                    countdownElement.textContent = '0:00';
+                                }
+            
+                                // Update remaining time every second
+                                remainingTime -= 1000;
+                            }
+            
+                            // Initial update of countdown
+                            updateCountdown();
+            
+                            // Update countdown every second
+                            var timer = setInterval(updateCountdown, 1000);
+                        </script>
+                    <% } else { %>
+                        0:00
+                    <% } %>
+                </span>
+            </div>
             <a href="#" id="resendLink" class="mt-2 d-block text-muted">Resend OTP</a>
         </div>
     </div>

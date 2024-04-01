@@ -45,35 +45,35 @@ function checkAndEnableButton() {
 }
 
 // Countdown Timer
-const countdownElement = document.getElementById('countdown');
-let timeLeft = 120;
+// const countdownElement = document.getElementById('countdown');
+// let timeLeft = 120;
 
-function updateCountdown() {
-  const minutes = Math.floor(timeLeft / 60);
-  let seconds = timeLeft % 60;
-  seconds = seconds < 10 ? '0' + seconds : seconds;
-  countdownElement.textContent = `${minutes}:${seconds}`;
-  if (timeLeft === 0) {
-    clearInterval(timer);
-    verifyBtn.disabled = true;
-    resendLink.style.opacity = '1';
-  }
-  timeLeft--;
-}
+// function updateCountdown() {
+//   const minutes = Math.floor(timeLeft / 60);
+//   let seconds = timeLeft % 60;
+//   seconds = seconds < 10 ? '0' + seconds : seconds;
+//   countdownElement.textContent = `${minutes}:${seconds}`;
+//   if (timeLeft === 0) {
+//     clearInterval(timer);
+//     verifyBtn.disabled = true;
+//     resendLink.style.opacity = '1';
+//   }
+//   timeLeft--;
+// }
 
-let timer = setInterval(updateCountdown, 1000);
+// let timer = setInterval(updateCountdown, 1000);
 
-// Resend OTP functionality
-resendLink.addEventListener('click', function(event) {
-  event.preventDefault();
-  // Implement your resend OTP logic here
-  console.log('Resending OTP...');
-  // Reset timer
-  timeLeft = 120;
-  clearInterval(timer);
-  timer = setInterval(updateCountdown, 1000);
-  // Reset button and link
-  verifyBtn.classList.remove('show');
-  verifyBtn.disabled = true;
-  resendLink.style.opacity = '0.5';
-});
+// // Resend OTP functionality
+// resendLink.addEventListener('click', function(event) {
+//   event.preventDefault();
+//   // Implement your resend OTP logic here
+//   console.log('Resending OTP...');
+//   // Reset timer
+//   timeLeft = 120;
+//   clearInterval(timer);
+//   timer = setInterval(updateCountdown, 1000);
+//   // Reset button and link
+//   verifyBtn.classList.remove('show');
+//   verifyBtn.disabled = true;
+//   resendLink.style.opacity = '0.5';
+// });

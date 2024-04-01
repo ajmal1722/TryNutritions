@@ -21,10 +21,13 @@ const razorpayInstance = new Razorpay({
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
 
-exports.otpPage = (req, res) => {
+exports.otpPage = async (req, res) => {
     const email = req.query.email;
+    const user = await User.findOne({ email: email });
 
-    res.render('user/body/otpVerificationPage', { email: email });
+    const otpExpiration = user.emailOtp.expiry;
+
+    res.render('user/body/otpVerificationPage', { email: email, expiry: otpExpiration });
 };
 
 exports.verifyOtp = async (req, res) => {
@@ -43,6 +46,7 @@ exports.verifyOtp = async (req, res) => {
         if (otpExpiration && otpExpiration < new Date()) {
             // OTP expired, delete user data
             await User.deleteOne({ email });
+            console.log('user deleted ');
             return res.status(400).json({ error: "OTP expired and deleted user data from database" });
         }
 
