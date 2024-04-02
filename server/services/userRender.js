@@ -673,6 +673,14 @@ exports.placeOrder = async (req, res) => {
     }
 }
 
+exports.paymentSuccess = async (req, res) => {
+    try {
+        console.log(req.body)
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}
 
 exports.orderSuccess = async (req, res) => {
     const orderId = req.query.id;

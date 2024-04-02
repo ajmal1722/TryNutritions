@@ -270,8 +270,16 @@
                         "description": "Transaction", 
                         "order_id": order.id,   
                         "handler": function (response){ 
-                            console.log(response) 
-                            alert("This step of Payment Succeeded"); 
+                            console.log(response)
+                            // After successful payment, send the response to a different route for saving data
+                            axios.post('/save-payment-details', response)
+                                .then(saveRes => {
+                                    console.log('Payment details saved successfully:', saveRes.data);
+                                    alert("Payment Succeeded"); 
+                                })
+                                .catch(saveErr => {
+                                    console.error('Error saving payment details:', saveErr);
+                                }); 
                         }, 
                         "prefill": { 
                             "contact":"9876543210",  
