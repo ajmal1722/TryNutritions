@@ -38,6 +38,7 @@
                             <option value="Shipped">Shipped</option>
                             <option value="Out For Delivery">Out For Delivery</option>
                             <option value="Delivered">Delivered</option>
+                            <option value="Rejected">Reject Order</option>
                         </select>
                         <div class="d-flex justify-content-center">
                             <button id="update-status-button" class="btn btn-primary my-2 my-3" onclick="updateStatus()">
@@ -47,7 +48,7 @@
                         <div class="d-flex">
                             <h5 id="current-status" class="font-monospace">Current status : </h5>
                             <h6 class="mt-1 mx-3 <%= (Order.status === 'Pending') ? 'text-warning' :
-                                    (Order.status === 'Cancelled') ? 'text-danger' :
+                                    (Order.status === 'Cancelled' || Order.status === 'Rejected') ? 'text-danger' :
                                     (Order.status === 'Placed') ? 'text-secondary' :
                                     (Order.status === 'Shipped') ? 'text-primary' :
                                     (Order.status === 'Out For Delivery') ? 'text-primary' :
