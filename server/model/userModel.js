@@ -52,6 +52,10 @@ const Schema = new mongoose.Schema({
     emailOtp: {
         otp: String,
         expiry: Date
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
     }
 })
 

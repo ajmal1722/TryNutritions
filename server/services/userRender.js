@@ -46,15 +46,15 @@ exports.verifyOtp = async (req, res) => {
             return res.status(404).json({ error: "OTP is expired.Sign up again to get a new OTP" });
         }
 
-        // Check if OTP is expired or not defined
-        const otpExpiration = user.emailOtp ? user.emailOtp.expiry : undefined;
-        console.log('otpExpiration:',otpExpiration)
-        if (otpExpiration && otpExpiration < new Date() || otpExpiration === undefined) {
-            // OTP expired, delete user data
-            await User.deleteOne({ email });
-            console.log('user deleted ');
-            return res.status(400).json({ error: "OTP is expired" });
-        }
+       // Check if OTP is expired or not defined
+       const otpExpiration = user.emailOtp ? user.emailOtp.expiry : undefined;
+       console.log('otpExpiration:', otpExpiration);
+       if (otpExpiration && otpExpiration < new Date() || otpExpiration === undefined) {
+           // OTP expired, delete user data
+           await User.deleteOne({ email });
+           console.log('User deleted');
+           return res.status(400).json({ error: "OTP is expired" });
+       }
 
         // Check if the OTP matches
         if (user.emailOtp && user.emailOtp.otp !== otp) {
@@ -63,8 +63,14 @@ exports.verifyOtp = async (req, res) => {
         }
 
         // If OTP is valid, clear the emailOtp field
-        user.emailOtp = undefined;
+        user.isVerified = true;
         await user.save();
+
+        setTimeout(async() =>{
+            if (user.isVerified === false){
+                await User.deleteOne({ email });
+            }
+        })
 
         console.log('OTP verfication completed')
         res.status(200).json({ message: "OTP verified successfully" });

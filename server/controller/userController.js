@@ -159,7 +159,15 @@ exports.create = async (req, res) => {
             console.log('OTP expired and deleted');
         }, 2 * 60 * 1000);
 
-
+        // Schedule a task to delete user data if not validated after 3 minutes
+        setTimeout(async () => {
+            const user = await Userdb.findOne({ email: data.email });
+            console.log('user.isValidated:', user.isVerified)
+            if (user && user.isVerified === false) {
+                await Userdb.deleteOne({ email: data.email });
+                console.log('User data deleted after 2 minutes');
+            }
+        }, 2 * 60 * 1000);
 
         // generate a token for user
         const token = jwt.sign(
