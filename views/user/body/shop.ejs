@@ -173,15 +173,15 @@
                                 <div class="pagination d-flex justify-content-center mt-5">
                                     <% if (totalPages > 0) { %>
                                         <% if (currentPage > 1) { %>
-                                            <a href="/shop?page=<%= currentPage - 1 %>" class="rounded">&laquo;</a>
+                                            <a href="/shop?page=<%= currentPage - 1 %>&search=<%= searchQuery %>&sortBy=<%= sortBy %>" class="rounded">&laquo;</a>
                                         <% } %>
                                         <% for (let i = 1; i <= totalPages; i++) { %>
-                                            <a href="/shop?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %> rounded"><%= i %></a>
+                                            <a href="/shop?page=<%= i %>&search=<%= searchQuery %>&sortBy=<%= sortBy %>" class="<%= currentPage === i ? 'active' : '' %> rounded"><%= i %></a>
                                         <% } %>
                                         <% if (currentPage < totalPages) { %>
-                                            <a href="/shop?page=<%= currentPage + 1 %>" class="rounded">&raquo;</a>
+                                            <a href="/shop?page=<%= currentPage + 1 %>&search=<%= searchQuery %>&sortBy=<%= sortBy %>" class="rounded">&raquo;</a>
                                         <% } %>
-                                    <% } %>
+                                    <% } %>                                    
                                 </div>
                             </div>
                         </div>
@@ -323,18 +323,24 @@ function viewLess () {
 }
 
 
-// Sort by price
-const selectElement = document.getElementById('fruits');
+    // Sort by price
+    const selectElement = document.getElementById('fruits');
 
     selectElement.addEventListener('change', function(event) {
         const selectedValue = event.target.value;
         console.log('Selected value:', selectedValue);
 
+        // Update the URL with the selected sorting parameter
+        const url = new URL(window.location.href);
+        url.searchParams.set('sortBy', selectedValue);
+        window.history.pushState({}, '', url);
+        
         // Pass selected value to the server using Axios
         axios.get('/shop', { params: { sortBy: selectedValue } })
             .then(response => {
                 console.log('Server response:', response.data);
                 // Handle response from server if needed
+                window.location.reload()
             })
             .catch(error => {
                 console.error('Error:', error);

@@ -87,6 +87,18 @@ exports.shop = async (req, res) => {
         const page = parseInt(req.query.page) || 1; // Default to page 1 if not specified
         const productPerPage = 2;
         const searchQuery = req.query.search || ''; // Retrieve search query from request
+        const sortBy = req.query.sortBy || ''; // Retrieve sorting parameter from request
+
+        // Define the sorting criteria based on the sortBy parameter
+        let sortCriteria = {};
+        if (sortBy === 'priceLowToHigh') {
+            sortCriteria = { sellingPrice: 1 }; // Sort by price low to high
+        } else if (sortBy === 'priceHighToLow') {
+            sortCriteria = { sellingPrice: -1 }; // Sort by price high to low
+        } else {
+            // Default sorting criteria, e.g., no sorting or default database order
+            sortCriteria = {};
+        }
 
         const totalProducts = await Products.countDocuments({
             name: { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search by name
@@ -96,10 +108,12 @@ exports.shop = async (req, res) => {
         const products = await Products.find({
             name: { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search by name
         })
+        .sort(sortCriteria) // Apply sorting criteria
         .skip((page - 1) * productPerPage)
         .limit(productPerPage)
         .exec();
         
+        console.log(products)
         const categories = await Category.find().exec();
         const featuredProducts = await Products.find({})
             .sort({ discount: -1 })
@@ -115,6 +129,7 @@ exports.shop = async (req, res) => {
             currentPage: page, // Pass the current page number
             totalPages: totalPages,
             searchQuery: searchQuery,
+            sortBy: sortBy, // Pass the sorting parameter to the view
             req: req // Pass the request object for further processing if needed
         });
     } catch (error) {
@@ -122,6 +137,7 @@ exports.shop = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 };
+
 
 exports.viewMore = async (req, res) => {
     const featuredProducts = await Products.find({})
