@@ -257,7 +257,7 @@
                 paymentMethod: selectedPayment
             })
             .then(res => {
-                const { paymentMethod, order } = res.data;
+                const { paymentMethod, order, newOrder } = res.data;
 
                 if (paymentMethod === 'Razorpay'){
                     console.log(res.data);
@@ -272,10 +272,15 @@
                         "handler": function (response){ 
                             console.log(response)
                             // After successful payment, send the response to a different route for saving data
-                            axios.post('/save-payment-details', response)
+                            axios.post('/save-payment-details', {
+                                paymentResponse: response, 
+                                orderDetails: order,
+                                newOrder: newOrder
+                            })
                                 .then(saveRes => {
                                     console.log('Payment details saved successfully:', saveRes.data);
-                                    alert("Payment Succeeded"); 
+                                    const orderId = saveRes.data.orderId;
+                                    window.location.href = `/order-completed?id=${orderId}`
                                 })
                                 .catch(saveErr => {
                                     console.error('Error saving payment details:', saveErr);

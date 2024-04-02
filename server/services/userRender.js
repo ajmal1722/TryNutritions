@@ -556,7 +556,8 @@ exports.placeOrder = async (req, res) => {
         })
 
         // if the payment method is razorpay proceed to razorpay
-        if (paymentMethod === 'Razorpay') {
+        if (paymentMethod === 'Razorpay') { 
+
             const amountInPaisa = finalAmount * 100; // Assuming finalAmount is in rupees
         
             const options = {
@@ -576,11 +577,12 @@ exports.placeOrder = async (req, res) => {
         
                 // Update the flag to indicate that the Razorpay order is created
                 isOrderCreated = true;
-        
+
                 // Send the response with paymentMethod and order details
                 return res.json({
                     paymentMethod: paymentMethod,
-                    order: order
+                    order: order,
+                    newOrder: newOrder
                 });
             });
         
@@ -603,7 +605,7 @@ exports.placeOrder = async (req, res) => {
             const product = await Products.findById(item.itemId)
             product.salesCount += item.quantity;
             product.stock -= item.quantity;
-            await product.save()
+            await product.save();
         }
 
         // Clear the user's cart after successful order creation
@@ -675,7 +677,87 @@ exports.placeOrder = async (req, res) => {
 
 exports.paymentSuccess = async (req, res) => {
     try {
-        console.log(req.body)
+        const { paymentResponse, orderDetails, newOrder } = req.body;
+
+        const userId = req.user._id;
+        const orderId = orderDetails.receipt;
+        console.log(userId);
+
+        const cart = await Cart.findOne({ user: userId });
+        const user = await User.findById(userId)
+
+        // Increment the sales count in Product and update the stocks
+        for (const item of cart.items) {
+            const product = await Products.findById(item.itemId)
+            product.salesCount += item.quantity;
+            product.stock -= item.quantity;
+            await product.save();
+        }
+
+        // Clear the user's cart after successful order creation
+        await Cart.findOneAndDelete({ user: userId });
+        
+        // before saving newOrder update the status to Placed.
+        const totalAmount = cart.bill >= 300 ? cart.bill : cart.bill + 30;
+        const finalAmount = totalAmount - newOrder.couponDiscount;
+
+        const placeOrder = new Order(newOrder)
+        placeOrder.status = 'Placed'
+        const saveOrder = await placeOrder.save(); 
+        console.log(saveOrder);
+
+        const emailContent = `
+            <p>Dear ${user.name},</p>
+
+            <p>Thank you for choosing TryNutritions! We are pleased to inform you that your order has been successfully placed and is now being processed. Below are the details of your order:</p>
+            
+            <ul>
+                <li><strong>Order ID:</strong> ${saveOrder.orderId}</li>
+                <li><strong>Order Date:</strong> ${saveOrder.createdAt}</li>
+            </ul>
+            
+            <h3>Order Summary:</h3>
+            
+            <p><strong>Total Amount:</strong> ${finalAmount}</p>
+            <p><strong>Payment Method:</strong> ${saveOrder.paymentMethod}</p>
+            
+            <p>Thank you for shopping with us. We appreciate your business and hope you enjoy your purchase!</p>
+            
+            <p>Best regards,<br>
+            Admin<br>
+            TryNutritions</p>
+        `;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // Use `true` for port 465, `false` for all other ports
+            auth: {
+              user: process.env.APP_EMAIL,
+              pass: process.env.APP_PASSWORD,
+            },
+        });
+                    
+            // send mail with defined transport object
+        const mailOptions = {
+            from: process.env.APP_EMAIL, // sender address
+            to: user.email, // list of receivers
+            subject: "Order Placed", // Subject line
+            text: "Your order is placed!", // plain text body
+            html: emailContent, // html body
+        };
+        
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                return console.log('err:', err)
+            }
+            
+            console.log("Message sent: %s", info.messageId);
+            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        })
+                          
+        res.status(200).json(saveOrder)
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
