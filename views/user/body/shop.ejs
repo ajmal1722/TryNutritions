@@ -38,9 +38,9 @@
                         <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
                             <label for="fruits">Sort By Price:</label>
                             <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3" form="fruitform">
-                                <option value="volvo">Nothing</option>
-                                <option value="saab">High to Low</option>
-                                <option value="opel">Low to High</option>
+                                <option value="Nothing">Nothing</option>
+                                <option value="priceHighToLow">High to Low</option>
+                                <option value="priceLowToHigh">Low to High</option>
                             </select>
                         </div>
                     </div>
@@ -321,6 +321,26 @@ function viewMore() {
 function viewLess () {
     window.location.reload();
 }
+
+
+// Sort by price
+const selectElement = document.getElementById('fruits');
+
+    selectElement.addEventListener('change', function(event) {
+        const selectedValue = event.target.value;
+        console.log('Selected value:', selectedValue);
+
+        // Pass selected value to the server using Axios
+        axios.get('/shop', { params: { sortBy: selectedValue } })
+            .then(response => {
+                console.log('Server response:', response.data);
+                // Handle response from server if needed
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle error if needed
+            });
+    });
 </script>
  
 
