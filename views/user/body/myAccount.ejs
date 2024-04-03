@@ -25,7 +25,7 @@
             <div class="list-group">
               <a href="#" class="list-group-item list-group-item-action active" onclick="showProfile()">My Profile</a>
               <a href="#" class="list-group-item list-group-item-action" onclick="showOrders()">My Orders</a>
-              <a href="#" class="list-group-item list-group-item-action" onclick="showAddAddress()">Settings</a>
+              <a href="#" class="list-group-item list-group-item-action" onclick="showAddAddress()">Addresses</a>
               <a href="#" class="list-group-item list-group-item-action" onclick="showChangePassword()">Change
                 Password</a>
               <a href="logout" class="list-group-item list-group-item-action">Logout</a>
@@ -42,7 +42,7 @@
                 </button>
               </div>
               <div class="welcome">
-                <p>Hello, <strong>User123</strong></p>
+                <p>Hello, <strong>Userddf123</strong></p>
               </div>
               <p>From your account dashboard, you can easily check & view your recent orders, manage your shipping and
                 billing addresses, and edit your password and account details.</p>
@@ -91,12 +91,158 @@
           </div>
           <div id="orders" class="col-md-9" style="display: none;">
             <!-- Orders Content -->
-            <h1>orders</h1>
-            <!-- Your orders content goes here -->
+            <div class="myaccount-content">
+              <h3>Orders</h3>
+              
+              <!-- Static data as an example -->
+              <div class="myaccount-table table-responsive text-center">
+                  <!-- ORDER HISTORY TABLE STARTS ----------------------------------------------------------------------->
+                  <div class="d-flex py-2 mb-2 align-items-center rounded" style="border: 2px solid rgb(224, 222, 222); background-color: #eeeeee;">
+                      <div class="product col-4">
+                          <img src="example.jpg" alt="" width="150px">
+      
+                          <div class="mt-2">
+                              <!-- Example cancel order button -->
+                              <button class="rounded" onclick="openCancelModal('orderId', 'productId')">Cancel Order</button>
+                          </div>
+                      </div>
+      
+                      <div class="d-grid text-start">
+                          <h6>Product Name</h6>
+                          <p class="m-0"><small>Color: Color Name & Price: $10</small></p>
+                          <p class="m-0"><small>Size: Medium & Quantity: 1</small></p>
+                          <p class="m-0"><small>Seller: Seller Name</small></p>
+                          <p class="m-0"><small>Expected Delivery: 2024-02-07</small></p>
+                          <p class="m-0"><small>Order Status: Delivered</small></p>
+                          <p class="m-0"><small>Delivery Address: John Doe, 123 Street, District, ZIP Code, State, Phone Number</small></p>
+                      </div>
+                  </div>
+                  <!-- MODAL FOR ORDER CANCELLATION -->
+                  <div class="modal fade" id="cancelModal_productId" tabindex="-1" aria-labelledby="cancelModalLabel_productId" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="cancelModalLabel_productId">Cancel Order</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  <form id="cancelOrderForm_productId" onsubmit="submitCancellation(event, 'orderId', 'productId')">
+                                      <div class="mb-3">
+                                          <label for="cancelReason_productId" class="form-label">Cancellation Reason</label>
+                                          <textarea class="form-control" id="cancelReason_productId" name="cancelReason" rows="3" required></textarea>
+                                      </div>
+                                      <input type="hidden" id="orderIdInput_productId" value="orderId">
+                                      <button type="submit" class="btn btn-primary">Submit</button>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Repeat this structure for each order -->
+              </div>
+              <!-- End of myaccount-table -->
+          </div>
+          <!-- End of myaccount-content -->
+          
           </div>
           <div id="addAddress" class="col-md-9" style="display: none;">
             <!-- Address Content -->
-            <h1>addess</h1>
+            <div class="" id="address-edit" role="tabpanel" aria-labelledby="address-edit-tab">
+              <div class="myaccount-content">
+                <div class="d-flex justify-content-between">
+                  <h3>Addresses</h3>
+                  <button type="button" class="text-center" id="addAddressButton"
+                    style="color: white; background-color: #81c408; height: 30px; border-radius: 5px; border: 2px;">
+                    Add new address
+                  </button>
+                </div>
+                <div class="">
+                  <div id="addressList">
+                    <!-- Static Address Data -->
+                    <div class="my-3 px-4 py-3 form-check rounded d-flex justify-content-between"
+                      style="border: 2px solid rgb(223, 223, 223); background-color: rgb(246, 246, 246);">
+                      <div>
+                        <p class="m-0"><strong>John Doe</strong></p>
+                        <p class="m-0">123 Main St</p>
+                        <p class="m-0">New York, NY, 10001</p>
+                        <p class="m-0">john.doe@example.com</p>
+                        <p class="m-0">123-456-7890</p>
+                      </div>
+                      <!-- Edit and Delete Buttons -->
+                      <div class="mt-3 ">
+                        <button type="button" class="btn btn-sm border edit-address-btn" data-toggle="modal"
+                          data-target="#editAddressModal" data-address-id="address_1">
+                          <i class="fas fa-edit text-success"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm border ml-2 delete-address-btn"
+                          data-address-id="address_1">
+                          <i class="fas fa-trash text-danger"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal for add address -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                  aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New Address</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form id="addressForm" class="row g-3" novalidate>
+                          <!-- Static Address Form Fields -->
+                          <div class="col-12 p-2">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" name="name" class="form-control" id="name" placeholder="Your Name"
+                              required>
+                          </div>
+                          <div class="col-12 p-2">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" name="address" class="form-control" id="address"
+                              placeholder="Enter your address" required>
+                          </div>
+                          <div class="col-md-6 p-2">
+                            <label for="district" class="form-label">District</label>
+                            <input type="text" name="district" class="form-control" id="district"
+                              placeholder="Town or city" required>
+                          </div>
+                          <div class="col-md-6 p-2">
+                            <label for="state" class="form-label">State</label>
+                            <input type="text" name="state" class="form-control" id="state"
+                              placeholder="Enter your state" required>
+                          </div>
+                          <div class="col-md-6 p-2">
+                            <label for="zip" class="form-label">Zip</label>
+                            <input type="text" name="zip" class="form-control" id="zip" placeholder="Zip/Postal"
+                              required>
+                          </div>
+                          <div class="col-md-6 p-2">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" name="phone" class="form-control" id="phone" placeholder="Your Phone"
+                              required>
+                          </div>
+                          <div class="col-12 p-2">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Your Email"
+                              required>
+                          </div>
+
+                          <div class="col-12 pt-3">
+                            <button type="button" id="submitAddressBtn" class="btn btn-primary"
+                              data-dismiss="modal">Submit</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- address modal ends here -->
+              </div>
+            </div>
             <!-- Your address content goes here -->
           </div>
           <div id="changePassword" class="col-md-9" style="display: none;">
@@ -146,14 +292,25 @@
           document.getElementById('sidebar').classList.toggle('d-none');
           document.body.classList.toggle('sidebar-modal-open'); // Add a class to body for styling
         });
+
+
+
+
+        // edit profile
+        document.getElementById('editProfileButton').addEventListener('click', function () {
+          var modal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+          modal.show();
+        });
+
+        // add address
+        document.getElementById('addAddressButton').addEventListener('click', function () {
+          var modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+          modal.show();
+        });
+
       </script>
 
-<script>
-  document.getElementById('editProfileButton').addEventListener('click', function() {
-    var modal = new bootstrap.Modal(document.getElementById('editProfileModal'));
-    modal.show();
-  });
-</script>
+
 
 
 
