@@ -61,11 +61,12 @@
                     <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                  <form id="editProfileForm" action="/editprofile" method="post">
+                  <form id="editProfileForm" action="/update-profile" method="post">
                     <div class="modal-body">
                       <div class="form-group">
+                        <input type="hidden" name="userId" value="<%= User._id %>">
                         <label for="editUsername">Username</label>
-                        <input type="text" class="form-control" name="userName" id="editUsername" value="<%= User.name %>">
+                        <input type="text" class="form-control" name="name" id="editUsername" value="<%= User.name %>">
                       </div>
                       <div class="form-group">
                         <label for="editEmail">Email</label>

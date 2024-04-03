@@ -259,3 +259,22 @@ exports.makePayment = async (req, res) => {
         key_secret: process.env.RAZORPAY_API_KEY,
     })
 }
+
+
+exports.updateProfile = async (req, res) => {
+    try {
+        const userData = req.body;
+        const userId = userData.userId; // Extract userId from the request body
+
+        // Find the user by userId and update their profile information
+        const updateUser = await Userdb.findOneAndUpdate(
+            { _id: userId }, // Filter to find the user by userId
+            { $set: userData }, // Update the user data
+            { new: true } // Return the updated user document
+        );
+
+        res.status(200).redirect('back');
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
