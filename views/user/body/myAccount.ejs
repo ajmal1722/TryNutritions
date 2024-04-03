@@ -41,14 +41,14 @@
                 </button>
               </div>
               <div class="welcome">
-                <p>Hello, <strong>Userddf123</strong></p>
+                <p>Hello, <strong><%= User.name %></strong></p>
               </div>
               <p>From your account dashboard, you can easily check & view your recent orders, manage your shipping and
                 billing addresses, and edit your password and account details.</p>
               <div class="welcome">
-                <p>Your email: <strong>user123@example.com</strong></p>
+                <p>Your email: <strong><%= User.email %></strong></p>
                 <p>Joined On: <strong>January 1, 2023</strong></p>
-                <p>Phone: <strong>123-456-7890</strong></p>
+                <p>Phone: <strong><%= User.phone %></strong></p>
               </div>
             </div>
 
@@ -65,16 +65,16 @@
                     <div class="modal-body">
                       <div class="form-group">
                         <label for="editUsername">Username</label>
-                        <input type="text" class="form-control" name="userName" id="editUsername" value="User123">
+                        <input type="text" class="form-control" name="userName" id="editUsername" value="<%= User.name %>">
                       </div>
                       <div class="form-group">
                         <label for="editEmail">Email</label>
-                        <input type="text" name="email" class="form-control" id="editEmail" value="user123@example.com">
+                        <input type="text" name="email" class="form-control" id="editEmail" value="<%= User.email %>">
                         <small id="emailError" class="error text-danger font-weight-bold"></small>
                       </div>
                       <div class="form-group">
                         <label for="editPhone">Phone</label>
-                        <input type="tel" name="phone" class="form-control" id="editPhone" value="123-456-7890">
+                        <input type="tel" name="phone" class="form-control" id="editPhone" value="<%= User.phone %>">
                         <small id="phoneError" class="error text-danger"></small>
                       </div>
                     </div>
@@ -302,7 +302,6 @@
           document.getElementById('sidebar').classList.toggle('d-none');
           document.body.classList.toggle('sidebar-modal-open'); // Add a class to body for styling
         });
-
 
 
 
