@@ -13,163 +13,149 @@
     <%- include('../partials/_header2')%>
       <!--/include single page header -->
 
+      <div class="d-flex justify-content-end mt-4 mx-3">
+        <button id="sidebarModalToggle" class="btn d-md-none" style="font-weight: 30px;">
+          <span class="fa fa-bars text-primary"></span>
+        </button>
+      </div>
       <div class="container mt-5">
         <div class="row">
-
-
-          <div class="col-md-3 mt-5 d-none d-md-block" id="sidebar">
+          <div class="col-md-3 my-4 d-none d-md-block" id="sidebar">
             <!-- Sidebar/Menu -->
             <div class="list-group">
-              <a href="" class="list-group-item list-group-item-action active">Dashboard</a>
-              <a href="#orders" class="list-group-item list-group-item-action">My Orders</a>
-              <a href="#profileForm" class="list-group-item list-group-item-action">My Profile</a>
-              <a href="#addAddress" class="list-group-item list-group-item-action">Settings</a>
+              <a href="#" class="list-group-item list-group-item-action active" onclick="showProfile()">My Profile</a>
+              <a href="#" class="list-group-item list-group-item-action" onclick="showOrders()">My Orders</a>
+              <a href="#" class="list-group-item list-group-item-action" onclick="showAddAddress()">Settings</a>
+              <a href="#" class="list-group-item list-group-item-action" onclick="showChangePassword()">Change
+                Password</a>
               <a href="logout" class="list-group-item list-group-item-action">Logout</a>
             </div>
           </div>
 
-          <div id="orders" class="col-md-9">
-
-
-            <!-- Content -->
-            <div class="d-flex justify-content-between my-4">
-              <div class="">
-                <h2>My Account</h2>
-                <p>Welcome <%= userName %>!</p>
+          <div id="profile" class="col-md-9 border p-4">
+            <div class="myaccount-content">
+              <div class="d-flex justify-content-between">
+                <h3>Dashboard</h3>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn" id="editProfileButton">
+                  <i class="fa fa-edit fa-lg"></i>
+                </button>
               </div>
-              <div class="">
-                <!-- Icon for sidebar toggle -->
-                <span id="sidebarToggle" class="bi bi-list" style="font-size: 2rem; cursor: pointer;"></span>
+              <div class="welcome">
+                <p>Hello, <strong>User123</strong></p>
               </div>
-            </div>
-
-
-            <!-- Example Content: Orders -->
-            <div class="card">
-              <div class="card-header">
-                Orders
-              </div>
-              <div class="card-body">
-                <!-- Display a list of orders here -->
-                <!-- Example: -->
-                <ul class="list-group">
-                  <li class="list-group-item">Order #12345 - Date: [Order Date]</li>
-                  <li class="list-group-item">Order #67890 - Date: [Order Date]</li>
-                  <!-- Add more order items as needed -->
-                </ul>
+              <p>From your account dashboard, you can easily check & view your recent orders, manage your shipping and
+                billing addresses, and edit your password and account details.</p>
+              <div class="welcome">
+                <p>Your email: <strong>user123@example.com</strong></p>
+                <p>Joined On: <strong>January 1, 2023</strong></p>
+                <p>Phone: <strong>123-456-7890</strong></p>
               </div>
             </div>
 
-            <!-- Example Content: Profile -->
-            <div class="card mt-3">
-              <div class="card-header">
-                Profile
-              </div>
-              <div class="card-body">
-                <!-- Display user profile information and edit options -->
-                <!-- Example: -->
-                <form id="profileForm">
-                  <div class="form-group">
-                    <label for="userName">Name:</label>
-                    <input type="text" class="form-control" id="userName" value="[User Name]" readonly>
+            <!-- Modal -->
+            <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                  <div class="form-group">
-                    <label for="userEmail">Email:</label>
-                    <input type="email" class="form-control" id="userEmail" value="[User Email]" readonly>
-                  </div>
-                  <div class="form-group">
-                    <label for="userPhone">Phone:</label>
-                    <input type="tel" class="form-control" id="userPhone" value="[User Phone]" readonly>
-                  </div>
-                  <div class="form-group">
-                    <label for="userAddress">Address:</label>
-                    <textarea class="form-control" id="userAddress" rows="3" readonly>[User Address]</textarea>
-                  </div>
-                  <button type="button" class="btn btn-primary mt-3" onclick="enableEdit()">Edit Profile</button>
-                  <button type="button" class="btn btn-success" onclick="saveProfile()" style="display: none;">Save
-                    Changes</button>
-                </form>
+                  <form id="editProfileForm" action="/editprofile" method="post">
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label for="editUsername">Username</label>
+                        <input type="text" class="form-control" name="userName" id="editUsername" value="User123">
+                      </div>
+                      <div class="form-group">
+                        <label for="editEmail">Email</label>
+                        <input type="text" name="email" class="form-control" id="editEmail" value="user123@example.com">
+                        <small id="emailError" class="error text-danger font-weight-bold"></small>
+                      </div>
+                      <div class="form-group">
+                        <label for="editPhone">Phone</label>
+                        <input type="tel" name="phone" class="form-control" id="editPhone" value="123-456-7890">
+                        <small id="phoneError" class="error text-danger"></small>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-success">Save changes</button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
 
-            <div id="addAddress" class="card mt-3">
-              <div class="card-header">
-                Add Address
-              </div>
-              <div class="card-body">
-                <!-- Display address information and edit options -->
-                <!-- Example: -->
-                <form id="addressForm">
-                  <div class="form-group">
-                    <label for="address1">Address 1:</label>
-                    <input type="text" class="form-control" id="address1" value="[User Address 1]" readonly>
-                  </div>
-                  <div class="form-group">
-                    <label for="address2">Address 2:</label>
-                    <input type="text" class="form-control" id="address2" value="[User Address 2]" readonly>
-                  </div>
-                  <div class="form-group">
-                    <label for="city">City:</label>
-                    <input type="text" class="form-control" id="city" value="[User City]" readonly>
-                  </div>
-                  <div class="form-group">
-                    <label for="state">State:</label>
-                    <input type="text" class="form-control" id="state" value="[User State]" readonly>
-                  </div>
-                  <div class="form-group">
-                    <label for="zipCode">Zip Code:</label>
-                    <input type="text" class="form-control" id="zipCode" value="[User Zip Code]" readonly>
-                  </div>
-                  <button type="button" class="btn btn-primary" onclick="enableEditAddress()">Edit Address</button>
-                  <button type="button" class="btn btn-success" onclick="saveAddress()" style="display: none;">Save
-                    Changes</button>
-                </form>
-              </div>
-            </div>
           </div>
-
+          <div id="orders" class="col-md-9" style="display: none;">
+            <!-- Orders Content -->
+            <h1>orders</h1>
+            <!-- Your orders content goes here -->
+          </div>
+          <div id="addAddress" class="col-md-9" style="display: none;">
+            <!-- Address Content -->
+            <h1>addess</h1>
+            <!-- Your address content goes here -->
+          </div>
+          <div id="changePassword" class="col-md-9" style="display: none;">
+            <!-- Change Password Content -->
+            <h1>password</h1>
+            <!-- Your change password content goes here -->
+          </div>
         </div>
       </div>
-      </div>
-
-
-
 
       <script>
 
-        // JavaScript to toggle sidebar visibility
-        document.getElementById('sidebarToggle').addEventListener('click', function () {
+        // Function to show profile section and hide other sections
+        function showProfile() {
+          document.getElementById('profile').style.display = 'block';
+          document.getElementById('orders').style.display = 'none';
+          document.getElementById('addAddress').style.display = 'none';
+          document.getElementById('changePassword').style.display = 'none';
+        }
+
+        // Function to show orders section and hide other sections
+        function showOrders() {
+          document.getElementById('profile').style.display = 'none';
+          document.getElementById('orders').style.display = 'block';
+          document.getElementById('addAddress').style.display = 'none';
+          document.getElementById('changePassword').style.display = 'none';
+        }
+
+        // Function to show add address section and hide other sections
+        function showAddAddress() {
+          document.getElementById('profile').style.display = 'none';
+          document.getElementById('orders').style.display = 'none';
+          document.getElementById('addAddress').style.display = 'block';
+          document.getElementById('changePassword').style.display = 'none';
+        }
+
+        // Function to show change password section and hide other sections
+        function showChangePassword() {
+          document.getElementById('profile').style.display = 'none';
+          document.getElementById('orders').style.display = 'none';
+          document.getElementById('addAddress').style.display = 'none';
+          document.getElementById('changePassword').style.display = 'block';
+        }
+
+        // Function to toggle sidebar visibility like a modal
+        document.getElementById('sidebarModalToggle').addEventListener('click', function () {
           document.getElementById('sidebar').classList.toggle('d-none');
+          document.body.classList.toggle('sidebar-modal-open'); // Add a class to body for styling
         });
-
-
-
-        function enableEdit() {
-          // Enable editing of input fields
-          document.getElementById('userName').readOnly = false;
-          document.getElementById('userEmail').readOnly = false;
-          document.getElementById('userPhone').readOnly = false;
-          document.getElementById('userAddress').readOnly = false;
-
-          // Show the "Save Changes" button and hide the "Edit Profile" button
-          document.querySelector('.btn-primary').style.display = 'none';
-          document.querySelector('.btn-success').style.display = 'inline-block';
-        }
-
-        function saveProfile() {
-          // Implement logic to save changes to the server/database
-
-          // Disable editing of input fields
-          document.getElementById('userName').readOnly = true;
-          document.getElementById('userEmail').readOnly = true;
-          document.getElementById('userPhone').readOnly = true;
-          document.getElementById('userAddress').readOnly = true;
-
-          // Show the "Edit Profile" button and hide the "Save Changes" button
-          document.querySelector('.btn-primary').style.display = 'inline-block';
-          document.querySelector('.btn-success').style.display = 'none';
-        }
       </script>
+
+<script>
+  document.getElementById('editProfileButton').addEventListener('click', function() {
+    var modal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+    modal.show();
+  });
+</script>
+
+
 
       <!-- Include Footer -->
       <%- include('../partials/_footer')%>

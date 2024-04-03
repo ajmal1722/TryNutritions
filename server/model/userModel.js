@@ -57,7 +57,7 @@ const Schema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
-})
+}, { timestamps: true })
 
 const Userdb = mongoose.model('users', Schema);
 
