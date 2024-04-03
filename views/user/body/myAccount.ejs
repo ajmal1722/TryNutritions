@@ -93,57 +93,44 @@
             <!-- Orders Content -->
             <div class="myaccount-content">
               <h3>Orders</h3>
-              
+
               <!-- Static data as an example -->
               <div class="myaccount-table table-responsive text-center">
-                  <!-- ORDER HISTORY TABLE STARTS ----------------------------------------------------------------------->
-                  <div class="d-flex py-2 mb-2 align-items-center rounded" style="border: 2px solid rgb(224, 222, 222); background-color: #eeeeee;">
-                      <div class="product col-4">
-                          <img src="example.jpg" alt="" width="150px">
-      
-                          <div class="mt-2">
-                              <!-- Example cancel order button -->
-                              <button class="rounded" onclick="openCancelModal('orderId', 'productId')">Cancel Order</button>
-                          </div>
-                      </div>
-      
-                      <div class="d-grid text-start">
-                          <h6>Product Name</h6>
-                          <p class="m-0"><small>Color: Color Name & Price: $10</small></p>
-                          <p class="m-0"><small>Size: Medium & Quantity: 1</small></p>
-                          <p class="m-0"><small>Seller: Seller Name</small></p>
-                          <p class="m-0"><small>Expected Delivery: 2024-02-07</small></p>
-                          <p class="m-0"><small>Order Status: Delivered</small></p>
-                          <p class="m-0"><small>Delivery Address: John Doe, 123 Street, District, ZIP Code, State, Phone Number</small></p>
-                      </div>
+                <!-- ORDER HISTORY TABLE STARTS ----------------------------------------------------------------------->
+                <div class="p-3"
+                style="border: 2px solid rgb(224, 222, 222); background-color: #eeeeee;">
+                  <div class="d-flex py-2 mb-2 align-items-center rounded">
+                    <div class="product col-4">
+                      <!-- Static image -->
+                      <img src="static_image.jpg" alt="Product Image" width="150px">
+
+
+                    </div>
+
+                    <div class="d-grid text-start">
+                      <h6>Product Name</h6>
+                      <p class="m-0"><small>Color: Color Name & Price: $10</small></p>
+                      <p class="m-0"><small>Size: Medium & Quantity: 1</small></p>
+                      <p class="m-0"><small>Seller: Seller Name</small></p>
+                      <p class="m-0"><small>Expected Delivery: 2024-02-07</small></p>
+                      <p class="m-0"><small>Order Status: Delivered</small></p>
+                      <p class="m-0"><small>Delivery Address: John Doe, 123 Street, District, ZIP Code, State, Phone
+                          Number</small></p>
+                    </div>
                   </div>
-                  <!-- MODAL FOR ORDER CANCELLATION -->
-                  <div class="modal fade" id="cancelModal_productId" tabindex="-1" aria-labelledby="cancelModalLabel_productId" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered">
-                          <div class="modal-content">
-                              <div class="modal-header">
-                                  <h5 class="modal-title" id="cancelModalLabel_productId">Cancel Order</h5>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body">
-                                  <form id="cancelOrderForm_productId" onsubmit="submitCancellation(event, 'orderId', 'productId')">
-                                      <div class="mb-3">
-                                          <label for="cancelReason_productId" class="form-label">Cancellation Reason</label>
-                                          <textarea class="form-control" id="cancelReason_productId" name="cancelReason" rows="3" required></textarea>
-                                      </div>
-                                      <input type="hidden" id="orderIdInput_productId" value="orderId">
-                                      <button type="submit" class="btn btn-primary">Submit</button>
-                                  </form>
-                              </div>
-                          </div>
-                      </div>
+                  <div class="my-3 ">
+                    <!-- Example cancel order button -->
+                    <button class="rounded btn btn-danger">Cancel Order</button>
                   </div>
-                  <!-- Repeat this structure for each order -->
+                </div>
+                
               </div>
               <!-- End of myaccount-table -->
-          </div>
-          <!-- End of myaccount-content -->
-          
+            </div>
+            <!-- End of tab-pane -->
+
+            <!-- End of myaccount-content -->
+
           </div>
           <div id="addAddress" class="col-md-9" style="display: none;">
             <!-- Address Content -->
