@@ -108,38 +108,35 @@
               <!-- Static data as an example -->
               <div class="myaccount-table table-responsive text-center">
                 <!-- ORDER HISTORY TABLE STARTS ----------------------------------------------------------------------->
-                <div class="p-3" style="border: 2px solid rgb(224, 222, 222); background-color: #eeeeee;">
-                  <div class="d-flex py-2 mb-2 align-items-center rounded">
-                    <div class="product col-4">
-                      <!-- Static image -->
-                      <img src="static_image.jpg" alt="Product Image" width="150px">
-
-
-                    </div>
-
-                    <div class="d-grid text-start">
-                      <h6>Product Name</h6>
-                      <p class="m-0"><small>Color: Color Name & Price: $10</small></p>
-                      <p class="m-0"><small>Size: Medium & Quantity: 1</small></p>
-                      <p class="m-0"><small>Seller: Seller Name</small></p>
-                      <p class="m-0"><small>Expected Delivery: 2024-02-07</small></p>
-                      <p class="m-0"><small>Order Status: Delivered</small></p>
-                      <p class="m-0"><small>Delivery Address: John Doe, 123 Street, District, ZIP Code, State, Phone
-                          Number</small></p>
-                    </div>
-                  </div>
-                  <div class="my-3 ">
-                    <!-- Example cancel order button -->
-                    <button class="rounded btn btn-danger">Cancel Order</button>
-                  </div>
-                </div>
-
+                <% Orders.forEach(order => { %>
+                  <% order.items.forEach(item => { %>
+                      <div class="p-3 my-3" style="border: 2px solid rgb(224, 222, 222); background-color: #eeeeee; border-radius: 5px;">
+                          <div class="d-flex py-2 mb-2 align-items-center rounded">
+                              <div class="product col-4">
+                                  <img src="<%= item.imageUrl %>" alt="Product Image" width="150px">
+                              </div>
+                              <div class="d-grid text-start">
+                                  <h6><%= item.name %></h6>
+                                  <p class="m-0"><small>Quantity: <%= item.quantity %></small></p>
+                                  <p class="m-0"><small>Price: ₹ <%= item.price %></small></p>
+                                  <p class="m-0"><small>Sub Total: ₹ <%= order.subTotal %></small></p>
+                                  <p class="m-0"><small>Order Date: <%= order.orderDate.toDateString() %></small></p>
+                                  <p class="m-0"><small>Order Status: <%= order.status %></small></p>
+                                  <p class="m-0"><small>Delivery Address: <%= order.shippingAddress.name %>, <%= order.shippingAddress.streetName %>, <%= order.shippingAddress.district %>, <%= order.shippingAddress.state %>, <%= order.shippingAddress.pinCode %></small></p>
+                              </div>
+                          </div>
+                          <div class="my-3">
+                              <!-- Example cancel order button -->
+                              <button class="rounded btn btn-danger">Cancel Order</button>
+                          </div>
+                      </div>
+                  <% }) %>
+              <% }) %>
+              
+              
               </div>
               <!-- End of myaccount-table -->
             </div>
-            <!-- End of tab-pane -->
-
-            <!-- End of myaccount-content -->
 
           </div>
           <div id="addAddress" class="col-md-9" style="display: none;">
@@ -250,48 +247,7 @@
         </div>
       </div>
 
-      <script>
-
-        
-
-      //   function validateForm() {
-      //     const nameInput = document.getElementById('editUsername');
-      //     const emailInput = document.getElementById('editEmail');
-      //     const phoneInput = document.getElementById('editPhone');
-
-      //     // Reset error messages
-      //     document.getElementById('nameError').textContent = '';
-      //     document.getElementById('emailError').textContent = '';
-      //     document.getElementById('phoneError').textContent = '';
-
-      //     // Validate name
-      //     const nameRegex = /^[a-zA-Z ]{3,}$/;
-      //     if (!nameRegex.test(nameInput.value)) {
-      //         document.getElementById('nameError').textContent = 'Name must contain at least 3 letters.';
-      //         return false;
-      //     }
-
-      //     // Validate email
-      //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      //     if (!emailRegex.test(emailInput.value)) {
-      //         document.getElementById('emailError').textContent = 'Invalid email format';
-      //         return false;
-      //     }
-
-      //     // Validate phone
-      //     const phoneRegex = /^\d{10}$/;
-      //     if (!phoneRegex.test(phoneInput.value)) {
-      //         document.getElementById('phoneError').textContent = 'Phone number must contain 10 digits and only numbers are allowed';
-      //         return false;
-      //     }
-
-      //     return true; // Form is valid, allow submission
-      // }
-
-      </script>
-
-
-
+    
 
 
       <!-- Include Footer -->

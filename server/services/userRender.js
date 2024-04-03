@@ -222,9 +222,27 @@ exports.myAccount = async (req, res) => {
         const userId = req.user._id;
     
         const user = await User.findById(userId);
+        const orders = await Order.find({ userId });
+
+        // Iterate through each order and fetch image URLs for items
+        for (let order of orders) {
+            // Extract product ids from the order items
+            const productIds = order.items.map(item => item.product);
+
+            // Fetch products with the extracted product ids
+            const products = await Products.find({ _id: { $in: productIds } });
+
+            // Map each item to include imageUrl
+            order.items = order.items.map((item, index) => ({
+                ...item.toObject(),
+                imageUrl: products[index].imageUrl
+            }));
+        }
+        
         res.status(201).render('user/body/myAccount', {
             pageName: 'My Account',
-            User: user
+            User: user,
+            Orders: orders
         });
     } catch (error) {
         res.status(500).send({ error: error.message });
