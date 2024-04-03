@@ -39,6 +39,7 @@
     <div class="d-flex justify-content-end">
         <div class="px-5 py-3">
             <select id="sortSelect" class="form-select" aria-label="Sort By">
+                <option value="oldest">Sort</option>
                 <option value="oldest">Oldest</option>
                 <option value="latest">Latest</option>
             </select>
@@ -106,18 +107,24 @@
 
             sortSelect.addEventListener('change', function(event) {
                 const selectedValue = event.target.value;
-                console.log(selectedValue)
+                console.log(selectedValue);
+                
+                // Update the URL with the selected sorting parameter
+                const url = new URL(window.location.href);
+                url.searchParams.set('sortBy', selectedValue);
+                window.history.pushState({}, '', url);
 
                 // Send request to server using Axios
-                // axios.post('/sort', { sortBy: selectedValue })
-                //     .then(response => {
-                //         console.log('Server response:', response.data);
-                //         // Handle response from server if needed
-                //     })
-                //     .catch(error => {
-                //         console.error('Error:', error);
-                //         // Handle error if needed
-                //     });
+                axios.get('/admin/orders', { params: 
+                    { sortBy: selectedValue }
+                })
+                    .then(response => {
+                        console.log('Server response:', response.data);
+                        window.location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             });
         });
     </script>

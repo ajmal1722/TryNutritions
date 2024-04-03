@@ -45,13 +45,28 @@ exports.adminLogin = (req, res) => res.render('admin/body/login');
 
 // orders
 exports.orders = async (req, res) => {
-    const order = await Orders.find({}).exec()
+    try {
+        const sortValue = req.query.sortBy;
+        let sortCriteria = {};
 
-    res.render('admin/body/orders', { 
-        pageName: 'Orders',
-        Orders: order
-     })
-} 
+        if (sortValue === 'latest') {
+            sortCriteria = { orderDate: -1 }; // Sort by createdAt field in descending order for latest
+        } else if (sortValue === 'oldest') {
+            sortCriteria = { orderDate: 1 }; // Sort by createdAt field in ascending order for oldest
+        }
+
+        const orders = await Orders.find({}).sort(sortCriteria).exec();
+
+        res.render('admin/body/orders', { 
+            pageName: 'Orders',
+            Orders: orders
+        });
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        res.status(500).send({ error: error.message });
+    }
+};
+
 
 exports.orderDetails = async (req, res) => {
     try {
