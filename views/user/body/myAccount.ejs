@@ -23,13 +23,17 @@
           <div class="col-md-3 my-4 d-none d-md-block" id="sidebar">
             <!-- Sidebar/Menu -->
             <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action active" id="profileTab" onclick="showProfile()">My Profile</a>
-                <a href="#" class="list-group-item list-group-item-action" id="ordersTab" onclick="showOrders()">My Orders</a>
-                <a href="#" class="list-group-item list-group-item-action" id="addressTab" onclick="showAddAddress()">Addresses</a>
-                <a href="#" class="list-group-item list-group-item-action" id="passwordTab" onclick="showChangePassword()">Change Password</a>
-                <a href="logout" class="list-group-item list-group-item-action">Logout</a>
+              <a href="#" class="list-group-item list-group-item-action active" id="profileTab"
+                onclick="showProfile()">My Profile</a>
+              <a href="#" class="list-group-item list-group-item-action" id="ordersTab" onclick="showOrders()">My
+                Orders</a>
+              <a href="#" class="list-group-item list-group-item-action" id="addressTab"
+                onclick="showAddAddress()">Addresses</a>
+              <a href="#" class="list-group-item list-group-item-action" id="passwordTab"
+                onclick="showChangePassword()">Change Password</a>
+              <a href="logout" class="list-group-item list-group-item-action">Logout</a>
             </div>
-        </div>
+          </div>
 
           <div id="profile" class="col-md-9 border p-4">
             <div class="myaccount-content">
@@ -41,14 +45,20 @@
                 </button>
               </div>
               <div class="welcome">
-                <p>Hello, <strong><%= User.name %></strong></p>
+                <p>Hello, <strong>
+                    <%= User.name %>
+                  </strong></p>
               </div>
               <p>From your account dashboard, you can easily check & view your recent orders, manage your shipping and
                 billing addresses, and edit your password and account details.</p>
               <div class="welcome">
-                <p>Your email: <strong><%= User.email %></strong></p>
+                <p>Your email: <strong>
+                    <%= User.email %>
+                  </strong></p>
                 <p>Joined On: <strong>January 1, 2023</strong></p>
-                <p>Phone: <strong><%= User.phone %></strong></p>
+                <p>Phone: <strong>
+                    <%= User.phone %>
+                  </strong></p>
               </div>
             </div>
 
@@ -61,12 +71,13 @@
                     <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                  <form id="editProfileForm" action="/update-profile" method="post">
+                  <form id="editProfileForm" action="/update-profile" method="post" onsubmit="return validateForm()">
                     <div class="modal-body">
                       <div class="form-group">
                         <input type="hidden" name="userId" value="<%= User._id %>">
                         <label for="editUsername">Username</label>
                         <input type="text" class="form-control" name="name" id="editUsername" value="<%= User.name %>">
+                        <small id="nameError" class="error text-danger font-weight-bold"></small>
                       </div>
                       <div class="form-group">
                         <label for="editEmail">Email</label>
@@ -76,7 +87,7 @@
                       <div class="form-group">
                         <label for="editPhone">Phone</label>
                         <input type="tel" name="phone" class="form-control" id="editPhone" value="<%= User.phone %>">
-                        <small id="phoneError" class="error text-danger"></small>
+                        <small id="phoneError" class="error text-danger font-weight-bold"></small>
                       </div>
                     </div>
                     <div class="modal-footer">
@@ -97,8 +108,7 @@
               <!-- Static data as an example -->
               <div class="myaccount-table table-responsive text-center">
                 <!-- ORDER HISTORY TABLE STARTS ----------------------------------------------------------------------->
-                <div class="p-3"
-                style="border: 2px solid rgb(224, 222, 222); background-color: #eeeeee;">
+                <div class="p-3" style="border: 2px solid rgb(224, 222, 222); background-color: #eeeeee;">
                   <div class="d-flex py-2 mb-2 align-items-center rounded">
                     <div class="product col-4">
                       <!-- Static image -->
@@ -123,7 +133,7 @@
                     <button class="rounded btn btn-danger">Cancel Order</button>
                   </div>
                 </div>
-                
+
               </div>
               <!-- End of myaccount-table -->
             </div>
@@ -242,81 +252,41 @@
 
       <script>
 
-        // Function to show profile section and hide other sections
-        function showProfile() {
-          // Show profile section and hide others
-          document.getElementById('profile').style.display = 'block';
-          document.getElementById('orders').style.display = 'none';
-          document.getElementById('addAddress').style.display = 'none';
-          document.getElementById('changePassword').style.display = 'none';
-          
-          // Set active class and remove from others
-          setActiveTab('profileTab');
-        }
+        
 
-        function showOrders() {
-          // Show orders section and hide others
-          document.getElementById('profile').style.display = 'none';
-          document.getElementById('orders').style.display = 'block';
-          document.getElementById('addAddress').style.display = 'none';
-          document.getElementById('changePassword').style.display = 'none';
-          
-          // Set active class and remove from others
-          setActiveTab('ordersTab');
-        }
+      //   function validateForm() {
+      //     const nameInput = document.getElementById('editUsername');
+      //     const emailInput = document.getElementById('editEmail');
+      //     const phoneInput = document.getElementById('editPhone');
 
-        function showAddAddress() {
-          // Show add address section and hide others
-          document.getElementById('profile').style.display = 'none';
-          document.getElementById('orders').style.display = 'none';
-          document.getElementById('addAddress').style.display = 'block';
-          document.getElementById('changePassword').style.display = 'none';
-          
-          // Set active class and remove from others
-          setActiveTab('addressTab');
-        }
+      //     // Reset error messages
+      //     document.getElementById('nameError').textContent = '';
+      //     document.getElementById('emailError').textContent = '';
+      //     document.getElementById('phoneError').textContent = '';
 
-        function showChangePassword() {
-          // Show change password section and hide others
-          document.getElementById('profile').style.display = 'none';
-          document.getElementById('orders').style.display = 'none';
-          document.getElementById('addAddress').style.display = 'none';
-          document.getElementById('changePassword').style.display = 'block';
-          
-          // Set active class and remove from others
-          setActiveTab('passwordTab');
-        }
+      //     // Validate name
+      //     const nameRegex = /^[a-zA-Z ]{3,}$/;
+      //     if (!nameRegex.test(nameInput.value)) {
+      //         document.getElementById('nameError').textContent = 'Name must contain at least 3 letters.';
+      //         return false;
+      //     }
 
-        // Function to set active tab
-        function setActiveTab(tabId) {
-            // Remove active class from all tabs
-            var tabs = document.querySelectorAll('.list-group-item');
-            tabs.forEach(tab => {
-                tab.classList.remove('active');
-            });
-            // Add active class to the clicked tab
-            document.getElementById(tabId).classList.add('active');
-        }
+      //     // Validate email
+      //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      //     if (!emailRegex.test(emailInput.value)) {
+      //         document.getElementById('emailError').textContent = 'Invalid email format';
+      //         return false;
+      //     }
 
-        // Function to toggle sidebar visibility like a modal
-        document.getElementById('sidebarModalToggle').addEventListener('click', function () {
-          document.getElementById('sidebar').classList.toggle('d-none');
-          document.body.classList.toggle('sidebar-modal-open'); // Add a class to body for styling
-        });
+      //     // Validate phone
+      //     const phoneRegex = /^\d{10}$/;
+      //     if (!phoneRegex.test(phoneInput.value)) {
+      //         document.getElementById('phoneError').textContent = 'Phone number must contain 10 digits and only numbers are allowed';
+      //         return false;
+      //     }
 
-
-
-        // edit profile
-        document.getElementById('editProfileButton').addEventListener('click', function () {
-          var modal = new bootstrap.Modal(document.getElementById('editProfileModal'));
-          modal.show();
-        });
-
-        // add address
-        document.getElementById('addAddressButton').addEventListener('click', function () {
-          var modal = new bootstrap.Modal(document.getElementById('exampleModal'));
-          modal.show();
-        });
+      //     return true; // Form is valid, allow submission
+      // }
 
       </script>
 
@@ -328,7 +298,8 @@
       <%- include('../partials/_footer')%>
         <!-- /Include Footer -->
 
+        <script src="users/js/myAccount.js"></script>
 
         <!-- Include layoutFoot -->
         <%- include('../partials/_layoutFoot')%>
-        <!-- /Include layoutFoot -->
+          <!-- /Include layoutFoot -->
