@@ -23,14 +23,13 @@
           <div class="col-md-3 my-4 d-none d-md-block" id="sidebar">
             <!-- Sidebar/Menu -->
             <div class="list-group">
-              <a href="#" class="list-group-item list-group-item-action active" onclick="showProfile()">My Profile</a>
-              <a href="#" class="list-group-item list-group-item-action" onclick="showOrders()">My Orders</a>
-              <a href="#" class="list-group-item list-group-item-action" onclick="showAddAddress()">Addresses</a>
-              <a href="#" class="list-group-item list-group-item-action" onclick="showChangePassword()">Change
-                Password</a>
-              <a href="logout" class="list-group-item list-group-item-action">Logout</a>
+                <a href="#" class="list-group-item list-group-item-action active" id="profileTab" onclick="showProfile()">My Profile</a>
+                <a href="#" class="list-group-item list-group-item-action" id="ordersTab" onclick="showOrders()">My Orders</a>
+                <a href="#" class="list-group-item list-group-item-action" id="addressTab" onclick="showAddAddress()">Addresses</a>
+                <a href="#" class="list-group-item list-group-item-action" id="passwordTab" onclick="showChangePassword()">Change Password</a>
+                <a href="logout" class="list-group-item list-group-item-action">Logout</a>
             </div>
-          </div>
+        </div>
 
           <div id="profile" class="col-md-9 border p-4">
             <div class="myaccount-content">
@@ -244,34 +243,58 @@
 
         // Function to show profile section and hide other sections
         function showProfile() {
+          // Show profile section and hide others
           document.getElementById('profile').style.display = 'block';
           document.getElementById('orders').style.display = 'none';
           document.getElementById('addAddress').style.display = 'none';
           document.getElementById('changePassword').style.display = 'none';
+          
+          // Set active class and remove from others
+          setActiveTab('profileTab');
         }
 
-        // Function to show orders section and hide other sections
         function showOrders() {
+          // Show orders section and hide others
           document.getElementById('profile').style.display = 'none';
           document.getElementById('orders').style.display = 'block';
           document.getElementById('addAddress').style.display = 'none';
           document.getElementById('changePassword').style.display = 'none';
+          
+          // Set active class and remove from others
+          setActiveTab('ordersTab');
         }
 
-        // Function to show add address section and hide other sections
         function showAddAddress() {
+          // Show add address section and hide others
           document.getElementById('profile').style.display = 'none';
           document.getElementById('orders').style.display = 'none';
           document.getElementById('addAddress').style.display = 'block';
           document.getElementById('changePassword').style.display = 'none';
+          
+          // Set active class and remove from others
+          setActiveTab('addressTab');
         }
 
-        // Function to show change password section and hide other sections
         function showChangePassword() {
+          // Show change password section and hide others
           document.getElementById('profile').style.display = 'none';
           document.getElementById('orders').style.display = 'none';
           document.getElementById('addAddress').style.display = 'none';
           document.getElementById('changePassword').style.display = 'block';
+          
+          // Set active class and remove from others
+          setActiveTab('passwordTab');
+        }
+
+        // Function to set active tab
+        function setActiveTab(tabId) {
+            // Remove active class from all tabs
+            var tabs = document.querySelectorAll('.list-group-item');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Add active class to the clicked tab
+            document.getElementById(tabId).classList.add('active');
         }
 
         // Function to toggle sidebar visibility like a modal
@@ -308,4 +331,4 @@
 
         <!-- Include layoutFoot -->
         <%- include('../partials/_layoutFoot')%>
-          <!-- /Include layoutFoot -->
+        <!-- /Include layoutFoot -->
