@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .otp-box {
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 30px;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            text-align: center;
+            margin: 0 5px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .otp-verify-btn {
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .otp-verify-btn.show {
+            opacity: 1;
+        }
+
+        .timer {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="otp-box card shadow">
+            <h3 class="my-4">OTP Verification</h3>
+            <input type="hidden" value="<%= email %>" id="getEmail">
+            <div class="form-group d-flex justify-content-center">
+                <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
+                    required>
+                <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
+                    required>
+                <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
+                    required>
+                <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
+                    required>
+                <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
+                    required>
+                <input type="text" class="form-control otp-input" maxlength="1" pattern="\d" inputmode="numeric"
+                    required>
+            </div>
+            <p id="otp-error-message" class="text-danger"></p>
+            <button type="submit" class="btn btn-primary btn-block otp-verify-btn mt-3" disabled>Verify OTP</button>
+            <div class="timer">OTP will expire in 
+                <span id="countdown">
+                    <% if (expiry) { %>
+                        <script>
+                            // Calculate remaining time in milliseconds
+                            var remainingTime = new Date('<%= expiry %>').getTime() - new Date().getTime();
+            
+                            // Update countdown timer
+                            var countdownElement = document.getElementById('countdown');
+            
+                            // Function to update countdown
+                            function updateCountdown() {
+                                var minutes = Math.floor(remainingTime / (1000 * 60));
+                                var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+                                countdownElement.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+            
+                                // Stop countdown when remaining time is zero
+                                if (remainingTime <= 0) {
+                                    clearInterval(timer);
+                                    countdownElement.textContent = '0:00';
+                                }
+            
+                                // Update remaining time every second
+                                remainingTime -= 1000;
+                            }
+            
+                            // Initial update of countdown
+                            updateCountdown();
+            
+                            // Update countdown every second
+                            var timer = setInterval(updateCountdown, 1000);
+                        </script>
+                    <% } else { %>
+                        0:00
+                    <% } %>
+                </span>
+            </div>
+            <!-- <a href="#" id="resendLink" class="mt-2 d-block text-muted">Resend OTP</a> -->
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="/users/js/otp.js"></script>
+
+    <script>
+
+        const getEmail = document.getElementById('getEmail').value;
+        // Verify OTP functionality
+        verifyBtn.addEventListener('click', function () {
+            const otpValue = Array.from(otpInputs).map(input => input.value).join('');
+            console.log('Verifying OTP:', otpValue, getEmail);
+
+            axios.post('/verify-otp', {
+                otp: otpValue,
+                email: getEmail
+            })
+                .then(response => {
+                    console.log('Server response:', response.data);
+                    window.location.href = '/';
+                })
+                .catch(error => {
+                    document.getElementById('otp-error-message').textContent = error.response.data.error;
+                    console.log('Error verifying OTP:', error.response.data.error);
+                });
+        });
+
+    </script>
+</body>
+
+</html>

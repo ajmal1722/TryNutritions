@@ -77,9 +77,11 @@
 									<td>₹ <%= item.finalAmount %></td>
 									<td>
 										<span class="status <%= (item.status === 'Pending') ? 'bg-warning' :
-															  (item.status === 'Cancelled') ? 'bg-danger' :
-															  (item.status === 'Placed') ? 'bg-primary' :
-															  (item.status === 'Completed') ? 'bg-success' : '' %>">
+												(item.status === 'Cancelled') ? 'bg-danger' :
+												(item.status === 'Placed') ? 'bg-secondary' :
+												(item.status === 'Shipped') ? 'bg-primary bg-gradient' :
+												(item.status === 'Out For Delivery') ? 'bg-primary' :
+												(item.status === 'Delivered') ? 'bg-success' : '' %>">
 											<%= item.status %>
 										</span>
 									</td>

@@ -8,14 +8,112 @@ const Coupon = require('../model/coupon');
 const { calculateDiscount, calculateTotalBill } = require('../middlewares/script');
 const Order = require('../model/order');
 const nodemailer = require('nodemailer');
+const Razorpay = require('razorpay');
+
+
+// This razorpayInstance will be used to access any resource from razorpay
+const razorpayInstance = new Razorpay({
+    key_id: process.env.RAZORPAY_API_ID,
+    key_secret: process.env.RAZORPAY_API_KEY,
+})
+
 
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
 
+exports.otpPage = async (req, res) => {
+    const email = req.query.email;
+    const user = await User.findOne({ email: email });
+   
+    // Check if user exists and if emailOtp is defined
+    if (!user || !user.emailOtp) {
+        return res.redirect('/signup');
+    }
+
+    const otpExpiration = user.emailOtp.expiry;
+
+    res.render('user/body/otpVerificationPage', { email: email, expiry: otpExpiration });
+};
+
+exports.verifyOtp = async (req, res) => {
+    try {
+        const { otp, email } = req.body;
+
+        // Find the user by email
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ error: "OTP is expired.Sign up again to get a new OTP" });
+        }
+
+       // Check if OTP is expired or not defined
+       const otpExpiration = user.emailOtp ? user.emailOtp.expiry : undefined;
+       console.log('otpExpiration:', otpExpiration);
+       if (otpExpiration && otpExpiration < new Date() || otpExpiration === undefined) {
+           // OTP expired, delete user data
+           await User.deleteOne({ email });
+           console.log('User deleted');
+           return res.status(400).json({ error: "OTP is expired" });
+       }
+
+        // Check if the OTP matches
+        if (user.emailOtp && user.emailOtp.otp !== otp) {
+            // OTP does not match
+            return res.status(400).json({ error: "Invalid OTP" });
+        }
+
+        // If OTP is valid, clear the emailOtp field
+        user.isVerified = true;
+        await user.save();
+
+        setTimeout(async() =>{
+            if (user.isVerified === false){
+                await User.deleteOne({ email });
+            }
+        })
+
+        console.log('OTP verfication completed')
+        res.status(200).json({ message: "OTP verified successfully" });
+
+    } catch (error) {
+        console.error('Error verifying OTP:', error);
+        res.status(500).send({ error: error.message });
+    }
+}
+
 // shop
 exports.shop = async (req, res) => {
     try {
-        const products = await Products.find(req.query).exec();
+        const page = parseInt(req.query.page) || 1; // Default to page 1 if not specified
+        const productPerPage = 2;
+        const searchQuery = req.query.search || ''; // Retrieve search query from request
+        const sortBy = req.query.sortBy || ''; // Retrieve sorting parameter from request
+
+        // Define the sorting criteria based on the sortBy parameter
+        let sortCriteria = {};
+        if (sortBy === 'priceLowToHigh') {
+            sortCriteria = { sellingPrice: 1 }; // Sort by price low to high
+        } else if (sortBy === 'priceHighToLow') {
+            sortCriteria = { sellingPrice: -1 }; // Sort by price high to low
+        } else {
+            // Default sorting criteria, e.g., no sorting or default database order
+            sortCriteria = {};
+        }
+
+        const totalProducts = await Products.countDocuments({
+            name: { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search by name
+        });
+        const totalPages = Math.ceil(totalProducts / productPerPage);
+
+        const products = await Products.find({
+            name: { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search by name
+        })
+        .sort(sortCriteria) // Apply sorting criteria
+        .skip((page - 1) * productPerPage)
+        .limit(productPerPage)
+        .exec();
+        
+        console.log(products)
         const categories = await Category.find().exec();
         const featuredProducts = await Products.find({})
             .sort({ discount: -1 })
@@ -28,6 +126,10 @@ exports.shop = async (req, res) => {
             Categories: categories,
             feauturedProducts: featuredProducts,
             selectedCategories: [], // Initialize selected categories as empty
+            currentPage: page, // Pass the current page number
+            totalPages: totalPages,
+            searchQuery: searchQuery,
+            sortBy: sortBy, // Pass the sorting parameter to the view
             req: req // Pass the request object for further processing if needed
         });
     } catch (error) {
@@ -35,6 +137,7 @@ exports.shop = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 };
+
 
 exports.viewMore = async (req, res) => {
     const featuredProducts = await Products.find({})
@@ -75,6 +178,7 @@ exports.filterCategory = async (req, res) => {
 
 // shop-details
 exports.shopDetails = async (req, res) => {
+    const searchQuery = req.query.search || '';
     const productId = req.query.id;
     const product = await Products.findById(productId);
     const category = await Category.find({}).exec();
@@ -89,6 +193,7 @@ exports.shopDetails = async (req, res) => {
         Product: product,
         Categories: category,
         relatedProducts: relatedProduct,
+        searchQuery: searchQuery,
         feauturedProducts: feauturedProduct
     });
 } 
@@ -140,6 +245,11 @@ exports.addToCart = async (req, res) => {
     try {
         const productId = req.query.id;
         const userId = req.user._id;
+
+        // Check if userId is not present
+        if (!userId) {
+            return res.status(401).json({ error: "User is not logged in." });
+        }
 
         // Get the user's cart
         let cart = await Cart.findOne({ user: userId });
@@ -444,12 +554,44 @@ exports.placeOrder = async (req, res) => {
             shippingAddress: address,
             paymentMethod
         })
-        
-        // before saving newOrder update the status to Placed.
-        newOrder.status = 'Placed'
-        const saveOrder = await newOrder.save();
 
-        console.log(saveOrder)
+        // if the payment method is razorpay proceed to razorpay
+        if (paymentMethod === 'Razorpay') { 
+
+            const amountInPaisa = finalAmount * 100; // Assuming finalAmount is in rupees
+        
+            const options = {
+                amount: amountInPaisa,
+                currency: 'INR',
+                receipt: orderId.toString()
+            };
+        
+            let isOrderCreated = false; // Flag to track if the Razorpay order is created
+        
+            razorpayInstance.orders.create(options, (err, order) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({ error: 'Failed to create Razorpay order' });
+                }
+                console.log('new order:', order);
+        
+                // Update the flag to indicate that the Razorpay order is created
+                isOrderCreated = true;
+
+                // Send the response with paymentMethod and order details
+                return res.json({
+                    paymentMethod: paymentMethod,
+                    order: order,
+                    newOrder: newOrder
+                });
+            });
+        
+            // If the Razorpay order creation is not completed yet, return from the route
+            if (!isOrderCreated) {
+                return;
+            }
+        } 
+        
         // Update the orderId in the decoded token
         // decodedToken.orderId = orderId;
 
@@ -463,12 +605,69 @@ exports.placeOrder = async (req, res) => {
             const product = await Products.findById(item.itemId)
             product.salesCount += item.quantity;
             product.stock -= item.quantity;
-            await product.save()
+            await product.save();
         }
 
         // Clear the user's cart after successful order creation
         await Cart.findOneAndDelete({ user: userId });
+        
+        // before saving newOrder update the status to Placed.
+        newOrder.status = 'Placed'
+        const saveOrder = await newOrder.save(); 
 
+        const emailContent = `
+            <p>Dear ${user.name},</p>
+
+            <p>Thank you for choosing TryNutritions! We are pleased to inform you that your order has been successfully placed and is now being processed. Below are the details of your order:</p>
+            
+            <ul>
+                <li><strong>Order ID:</strong> ${saveOrder.orderId}</li>
+                <li><strong>Order Date:</strong> ${saveOrder.createdAt}</li>
+            </ul>
+            
+            <h3>Order Summary:</h3>
+            
+            <p><strong>Total Amount:</strong> ${finalAmount}</p>
+            <p><strong>Payment Method:</strong> ${saveOrder.paymentMethod}</p>
+            
+            <p>Thank you for shopping with us. We appreciate your business and hope you enjoy your purchase!</p>
+            
+            <p>Best regards,<br>
+            Admin<br>
+            TryNutritions</p>
+        `;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // Use `true` for port 465, `false` for all other ports
+            auth: {
+              user: process.env.APP_EMAIL,
+              pass: process.env.APP_PASSWORD,
+            },
+        });
+                    
+            // send mail with defined transport object
+            const mailOptions = {
+              from: process.env.APP_EMAIL, // sender address
+              to: user.email, // list of receivers
+              subject: "Order Placed", // Subject line
+              text: "Your order is placed!", // plain text body
+              html: emailContent, // html body
+            };
+          
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    return console.log('err:', err)
+                }
+                
+                console.log("Message sent: %s", info.messageId);
+                console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+            })
+                     
+
+        
         res.status(200).json({ saveOrder });
     } catch (error) {
         console.error(error);
@@ -476,13 +675,101 @@ exports.placeOrder = async (req, res) => {
     }
 }
 
+exports.paymentSuccess = async (req, res) => {
+    try {
+        const { paymentResponse, orderDetails, newOrder } = req.body;
+
+        const userId = req.user._id;
+        const orderId = orderDetails.receipt;
+        console.log(userId);
+
+        const cart = await Cart.findOne({ user: userId });
+        const user = await User.findById(userId)
+
+        // Increment the sales count in Product and update the stocks
+        for (const item of cart.items) {
+            const product = await Products.findById(item.itemId)
+            product.salesCount += item.quantity;
+            product.stock -= item.quantity;
+            await product.save();
+        }
+
+        // Clear the user's cart after successful order creation
+        await Cart.findOneAndDelete({ user: userId });
+        
+        // before saving newOrder update the status to Placed.
+        const totalAmount = cart.bill >= 300 ? cart.bill : cart.bill + 30;
+        const finalAmount = totalAmount - newOrder.couponDiscount;
+
+        const placeOrder = new Order(newOrder)
+        placeOrder.status = 'Placed'
+        const saveOrder = await placeOrder.save(); 
+        console.log(saveOrder);
+
+        const emailContent = `
+            <p>Dear ${user.name},</p>
+
+            <p>Thank you for choosing TryNutritions! We are pleased to inform you that your order has been successfully placed and is now being processed. Below are the details of your order:</p>
+            
+            <ul>
+                <li><strong>Order ID:</strong> ${saveOrder.orderId}</li>
+                <li><strong>Order Date:</strong> ${saveOrder.createdAt}</li>
+            </ul>
+            
+            <h3>Order Summary:</h3>
+            
+            <p><strong>Total Amount:</strong> ${finalAmount}</p>
+            <p><strong>Payment Method:</strong> ${saveOrder.paymentMethod}</p>
+            
+            <p>Thank you for shopping with us. We appreciate your business and hope you enjoy your purchase!</p>
+            
+            <p>Best regards,<br>
+            Admin<br>
+            TryNutritions</p>
+        `;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // Use `true` for port 465, `false` for all other ports
+            auth: {
+              user: process.env.APP_EMAIL,
+              pass: process.env.APP_PASSWORD,
+            },
+        });
+                    
+            // send mail with defined transport object
+        const mailOptions = {
+            from: process.env.APP_EMAIL, // sender address
+            to: user.email, // list of receivers
+            subject: "Order Placed", // Subject line
+            text: "Your order is placed!", // plain text body
+            html: emailContent, // html body
+        };
+        
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                return console.log('err:', err)
+            }
+            
+            console.log("Message sent: %s", info.messageId);
+            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        })
+                          
+        res.status(200).json(saveOrder)
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}
 
 exports.orderSuccess = async (req, res) => {
     const orderId = req.query.id;
 
     console.log('orderId:token', orderId)
 
-    const order = await Order.findOne({ orderId })
+    const order = await Order.findOne({ orderId }).populate('items.product')
     console.log(order)
 
     res.render('user/body/orderCompletion', {

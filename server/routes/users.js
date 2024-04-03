@@ -19,6 +19,11 @@ route.get('/logout', controller.logout);
 
 // signup
 route.get('/signup', services.userSigup);
+route.post('/signup', controller.create);
+
+// otp verification page
+route.get('/otp-page', services.otpPage);
+route.post('/verify-otp', services.verifyOtp);
 
 // shop
 route.get('/shop' || '/shop/shop', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.shop);
@@ -49,8 +54,6 @@ route.get('/contact', authentication.getCartInNotAuthorizedPage, authentication.
 route.get('/filter-category', services.filterCategory)
 
 
-route.post('/api/users', controller.create);
-
 route.post('/api/login', controller.login);
 
 
@@ -64,5 +67,6 @@ route.post('/removeCoupon', authentication.checkAuth, services.removeCoupon);
 // route.post('/proceed-to-checkout', authentication.checkAuth, services.proceedToCheckout);
 route.post('/add-address', authentication.checkAuth, services.addNewAddress);
 route.post('/place-order', authentication.checkAuth, services.placeOrder);
+route.post('/save-payment-details', authentication.checkAuth, services.paymentSuccess)
 
 module.exports = route;

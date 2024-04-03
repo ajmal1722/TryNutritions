@@ -211,8 +211,14 @@
                 <div class="row g-4 fruite">
                     <div class="col-lg-12">
                         <div class="input-group w-100 mx-auto d-flex mb-4">
-                            <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
-                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                            <form action="/shop" method="GET">
+                                <div class="d-flex">
+                                    <input type="text" name="search" placeholder="Search by product name" class="form-control p-3" value="<%= searchQuery %>" style="border-end-end-radius: 0;border-start-end-radius: 0;">
+                                    <button id="search-icon-1" type="submit" class="input-group-text p-3" style="border-start-start-radius: 0;border-end-start-radius: 0;">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                         <div class="mb-4">
                             <h4>Categories</h4>

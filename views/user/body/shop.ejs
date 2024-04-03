@@ -24,15 +24,23 @@
             <div class="col-lg-12">
                 <div class="row g-4">
                     <div class="col-xl-3">
+                        <form action="/shop" method="GET">
+                            <div class="d-flex">
+                                <input type="text" name="search" placeholder="Search by product name" class="form-control p-3" value="<%= searchQuery %>" style="border-end-end-radius: 0;border-start-end-radius: 0;">
+                                <button id="search-icon-1" type="submit" class="input-group-text p-3" style="border-start-start-radius: 0;border-end-start-radius: 0;">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                     <div class="col-6"></div>
                     <div class="col-xl-3">
                         <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
                             <label for="fruits">Sort By Price:</label>
                             <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3" form="fruitform">
-                                <option value="volvo">Nothing</option>
-                                <option value="saab">High to Low</option>
-                                <option value="opel">Low to High</option>
+                                <option value="Nothing">Nothing</option>
+                                <option value="priceHighToLow">High to Low</option>
+                                <option value="priceLowToHigh">Low to High</option>
                             </select>
                         </div>
                     </div>
@@ -62,7 +70,6 @@
                                             <span>(<%= Products.length %>)</span>
                                         </div>
                                     </ul>
-                                    
                                 </div>
                             </div>
                             <div class="col-lg-12">
@@ -164,14 +171,17 @@
                             <% }) %>
                             <div class="col-12">
                                 <div class="pagination d-flex justify-content-center mt-5">
-                                    <a href="#" class="rounded">&laquo;</a>
-                                    <a href="#" class="active rounded">1</a>
-                                    <a href="#" class="rounded">2</a>
-                                    <a href="#" class="rounded">3</a>
-                                    <a href="#" class="rounded">4</a>
-                                    <a href="#" class="rounded">5</a>
-                                    <a href="#" class="rounded">6</a>
-                                    <a href="#" class="rounded">&raquo;</a>
+                                    <% if (totalPages > 0) { %>
+                                        <% if (currentPage > 1) { %>
+                                            <a href="/shop?page=<%= currentPage - 1 %>&search=<%= searchQuery %>&sortBy=<%= sortBy %>" class="rounded">&laquo;</a>
+                                        <% } %>
+                                        <% for (let i = 1; i <= totalPages; i++) { %>
+                                            <a href="/shop?page=<%= i %>&search=<%= searchQuery %>&sortBy=<%= sortBy %>" class="<%= currentPage === i ? 'active' : '' %> rounded"><%= i %></a>
+                                        <% } %>
+                                        <% if (currentPage < totalPages) { %>
+                                            <a href="/shop?page=<%= currentPage + 1 %>&search=<%= searchQuery %>&sortBy=<%= sortBy %>" class="rounded">&raquo;</a>
+                                        <% } %>
+                                    <% } %>                                    
                                 </div>
                             </div>
                         </div>
@@ -311,8 +321,34 @@ function viewMore() {
 function viewLess () {
     window.location.reload();
 }
-</script>
 
+
+    // Sort by price
+    const selectElement = document.getElementById('fruits');
+
+    selectElement.addEventListener('change', function(event) {
+        const selectedValue = event.target.value;
+        console.log('Selected value:', selectedValue);
+
+        // Update the URL with the selected sorting parameter
+        const url = new URL(window.location.href);
+        url.searchParams.set('sortBy', selectedValue);
+        window.history.pushState({}, '', url);
+        
+        // Pass selected value to the server using Axios
+        axios.get('/shop', { params: { sortBy: selectedValue } })
+            .then(response => {
+                console.log('Server response:', response.data);
+                // Handle response from server if needed
+                window.location.reload()
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle error if needed
+            });
+    });
+</script>
+ 
 
  <!-- Include layoutFoot -->
  <%- include('../partials/_layoutFoot')%>
