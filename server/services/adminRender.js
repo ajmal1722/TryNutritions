@@ -9,6 +9,7 @@ const fs = require('fs');
 const uploads = require('../middlewares/multer');
 const cloudinary = require('../middlewares/cloudinary');
 const { error } = require("console");
+const nodemailer = require('nodemailer')
 
 // admin dashboard
 exports.admindashboard = async (req, res) => {
@@ -435,8 +436,45 @@ exports.updateOrderStatus = async (req, res) => {
         const order = await Orders.findById(orderId);
         // Update the order status
         order.status = status;
-
         await order.save();
+
+        // Retrieve the user associated with the order
+        const user = await Users.findById(order.userId);
+
+        const emailContent = `
+            <p>Dear ${order.user},</p>
+
+            <p>Your order with orderId: <strong>${order.orderId}</strong> has been <strong>${order.status}</strong></p>
+        `;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // Use `true` for port 465, `false` for all other ports
+            auth: {
+              user: process.env.APP_EMAIL,
+              pass: process.env.APP_PASSWORD,
+            },
+        });
+                    
+            // send mail with defined transport object
+        const mailOptions = {
+            from: process.env.APP_EMAIL, // sender address
+            to: user.email, // list of receivers
+            subject: "Order Updated", // Subject line
+            text: "Your order status is updated!", // plain text body
+            html: emailContent, // html body
+        };
+        
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                return console.log('err:', err)
+            }
+            
+            console.log("Message sent: %s", info.messageId);
+            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        })
 
         res.status(200).json({ message: 'Order status updated successfully', order });
     } catch (error) {
