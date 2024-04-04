@@ -454,7 +454,10 @@
             }
           }).then(response => {
             console.log(response.data);
-            window.location.reload();
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+            showToast('Address deleted succesfully!')
           }).catch(error => {
             console.log(error);
           });
