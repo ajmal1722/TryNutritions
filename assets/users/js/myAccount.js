@@ -81,12 +81,14 @@ document
     });
 
  // Show the edit modal
- document
-    .getElementById("view-edit-modal-btn")
-    .addEventListener("click", function () {
-        var modal = new bootstrap.Modal(document.getElementById("editAddressModal"));
+ document.querySelectorAll(".edit-address-btn").forEach(function (button, index) {
+    button.addEventListener("click", function () {
+        var modalId = "editAddressModal" + (index + 1); // Generate the modal ID based on the index
+        var modal = new bootstrap.Modal(document.getElementById(modalId));
         modal.show();
     });
+});
+
 
 function validateForm() {
     const nameInput = document.getElementById("editUsername");
