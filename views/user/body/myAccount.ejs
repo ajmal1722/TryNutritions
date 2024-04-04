@@ -108,32 +108,37 @@
               <!-- Static data as an example -->
               <div class="myaccount-table table-responsive text-center">
                 <!-- ORDER HISTORY TABLE STARTS ----------------------------------------------------------------------->
-                <% Orders.forEach(order => { %>
-                  <% order.items.forEach(item => { %>
-                      <div class="p-3 my-3" style="border: 2px solid rgb(224, 222, 222); background-color: #eeeeee; border-radius: 5px;">
-                          <div class="d-flex py-2 mb-2 align-items-center rounded">
-                              <div class="product col-4">
-                                  <img src="<%= item.imageUrl %>" alt="Product Image" width="150px">
-                              </div>
-                              <div class="d-grid text-start">
-                                  <h6><%= item.name %></h6>
-                                  <p class="m-0"><small>Quantity: <%= item.quantity %></small></p>
-                                  <p class="m-0"><small>Price: ₹ <%= item.price %></small></p>
-                                  <p class="m-0"><small>Sub Total: ₹ <%= order.subTotal %></small></p>
-                                  <p class="m-0"><small>Order Date: <%= order.orderDate.toDateString() %></small></p>
-                                  <p class="m-0"><small>Order Status: <%= order.status %></small></p>
-                                  <p class="m-0"><small>Delivery Address: <%= order.shippingAddress.name %>, <%= order.shippingAddress.streetName %>, <%= order.shippingAddress.district %>, <%= order.shippingAddress.state %>, <%= order.shippingAddress.pinCode %></small></p>
-                              </div>
-                          </div>
-                          <div class="my-3">
-                              <!-- Example cancel order button -->
-                              <button class="rounded btn btn-danger">Cancel Order</button>
-                          </div>
+                <% Orders.forEach(order=> { %>
+                  <% order.items.forEach(item=> { %>
+                    <div class="p-3 my-3"
+                      style="border: 2px solid rgb(224, 222, 222); background-color: #eeeeee; border-radius: 5px;">
+                      <div class="d-flex py-2 mb-2 align-items-center rounded">
+                        <div class="product col-4">
+                          <img src="<%= item.imageUrl %>" alt="Product Image" width="150px">
+                        </div>
+                        <div class="d-grid text-start">
+                          <h6>
+                            <%= item.name %>
+                          </h6>
+                          <p class="m-0"><small>Quantity: <%= item.quantity %></small></p>
+                          <p class="m-0"><small>Price: ₹ <%= item.price %></small></p>
+                          <p class="m-0"><small>Sub Total: ₹ <%= order.subTotal %></small></p>
+                          <p class="m-0"><small>Order Date: <%= order.orderDate.toDateString() %></small></p>
+                          <p class="m-0"><small>Order Status: <%= order.status %></small></p>
+                          <p class="m-0"><small>Delivery Address: <%= order.shippingAddress.name %>, <%=
+                                  order.shippingAddress.streetName %>, <%= order.shippingAddress.district %>, <%=
+                                      order.shippingAddress.state %>, <%= order.shippingAddress.pinCode %></small></p>
+                        </div>
                       </div>
-                  <% }) %>
-              <% }) %>
-              
-              
+                      <div class="my-3">
+                        <!-- Example cancel order button -->
+                        <button class="rounded btn btn-danger">Cancel Order</button>
+                      </div>
+                    </div>
+                    <% }) %>
+                      <% }) %>
+
+
               </div>
               <!-- End of myaccount-table -->
             </div>
@@ -187,46 +192,55 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        <form id="addressForm" class="row g-3" novalidate>
+                        <form id="addressForm" action="/add-address" method="post" class="row g-3" novalidate>
                           <!-- Static Address Form Fields -->
-                          <div class="col-12 p-2">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" name="name" class="form-control" id="name" placeholder="Your Name"
-                              required>
+                          <div class="col-12 ">
+                            <label class="form-label my-3">Name<sup>*</sup></label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Your Name">
+                            <p id="nameError" class="text-danger"></p>
                           </div>
                           <div class="col-12 p-2">
-                            <label for="address" class="form-label">Address</label>
-                            <input type="text" name="address" class="form-control" id="address"
-                              placeholder="Enter your address" required>
+                            <label class="form-label my-3">Phone<sup>*</sup></label>
+                            <input type="number" class="form-control" id="phone" name="phone"
+                              placeholder="Phone Number">
+                            <p id="phoneError" class="text-danger"></p>
                           </div>
                           <div class="col-md-6 p-2">
-                            <label for="district" class="form-label">District</label>
-                            <input type="text" name="district" class="form-control" id="district"
-                              placeholder="Town or city" required>
+                            <label class="form-label">House Name<sup>*</sup></label>
+                            <input type="text" class="form-control" id="address" name="houseName"
+                              placeholder="House Name">
+                            <p id="addressError" class="text-danger"></p>
                           </div>
                           <div class="col-md-6 p-2">
-                            <label for="state" class="form-label">State</label>
-                            <input type="text" name="state" class="form-control" id="state"
-                              placeholder="Enter your state" required>
+                            <label class="form-label">Street Name<sup>*</sup></label>
+                            <input type="text" class="form-control" id="townCity" name="streetName"
+                              placeholder="Street Name">
+                            <p id="townCityError" class="text-danger"></p>
                           </div>
                           <div class="col-md-6 p-2">
-                            <label for="zip" class="form-label">Zip</label>
-                            <input type="text" name="zip" class="form-control" id="zip" placeholder="Zip/Postal"
-                              required>
+                            <label class="form-label">District<sup>*</sup></label>
+                            <input type="text" class="form-control" id="district" name="district"
+                              placeholder="District">
+                            <p id="districtError" class="text-danger"></p>
                           </div>
                           <div class="col-md-6 p-2">
-                            <label for="phone" class="form-label">Phone Number</label>
-                            <input type="tel" name="phone" class="form-control" id="phone" placeholder="Your Phone"
-                              required>
+                            <label class="form-label">Post Office<sup>*</sup></label>
+                            <input type="text" class="form-control" name="postOffice" id="postOffice"
+                              placeholder="Post Office">
+                            <p id="postOfficeError" class="text-danger"></p>
                           </div>
-                          <div class="col-12 p-2">
-                            <label for="email" class="form-label">Email Address</label>
-                            <input type="email" name="email" class="form-control" id="email" placeholder="Your Email"
-                              required>
+                          <div class="col-md-6 p-2">
+                            <label class="form-label">State<sup>*</sup></label>
+                            <input type="text" class="form-control" id="state" name="state" placeholder="State">
+                            <p id="stateError" class="text-danger"></p>
                           </div>
-
-                          <div class="col-12 pt-3">
-                            <button type="button" id="submitAddressBtn" class="btn btn-primary"
+                          <div class="col-md-6 p-2">
+                            <label class="form-label">Pin Code<sup>*</sup></label>
+                            <input type="text" class="form-control" id="pinCode" name="pinCode" placeholder="Pin Code">
+                            <p id="pinCodeError" class="text-danger"></p>
+                          </div>
+                          <div class="col-12 pt-3 px-3">
+                            <button type="submit" id="submitAddressBtn" class="btn btn-primary text-light my-3 px-4"
                               data-dismiss="modal">Submit</button>
                           </div>
                         </form>
@@ -247,7 +261,82 @@
         </div>
       </div>
 
-    
+      <script>
+        // Form Validation
+        document.getElementById('addressForm').addEventListener('submit', function (event) {
+          event.preventDefault();
+
+          // Reset error messages
+          document.getElementById('nameError').textContent = '';
+          document.getElementById('phoneError').textContent = '';
+          document.getElementById('addressError').textContent = '';
+          document.getElementById('townCityError').textContent = '';
+          document.getElementById('districtError').textContent = '';
+          document.getElementById('postOfficeError').textContent = '';
+          document.getElementById('stateError').textContent = '';
+          document.getElementById('pinCodeError').textContent = '';
+
+          // Validate each field
+          const name = document.getElementById('name').value.trim();
+          const phone = document.getElementById('phone').value.trim();
+          console.log(name, phone)
+          const address = document.getElementById('address').value.trim();
+          const townCity = document.getElementById('townCity').value.trim();
+          const district = document.getElementById('district').value.trim();
+          const postOffice = document.getElementById('postOffice').value.trim();
+          const state = document.getElementById('state').value.trim();
+          const pinCode = document.getElementById('pinCode').value.trim();
+
+          let isValid = true;
+
+          if (name === '') {
+            document.getElementById('nameError').textContent = 'Name is required';
+            isValid = false;
+          } else if (!/^[a-zA-Z\s]{3,}$/.test(name)) {
+            document.getElementById('nameError').textContent = 'Name must be at least 3 letters and only include letters';
+            isValid = false;
+          }
+          if (phone === '') {
+            document.getElementById('phoneError').textContent = 'Phone number is required';
+            isValid = false;
+          } else if (!/^\d{10}$/.test(phone)) {
+            document.getElementById('phoneError').textContent = 'Phone number must be 10 digits';
+            isValid = false;
+          }
+          if (address === '') {
+            document.getElementById('addressError').textContent = 'House Number or House Name is required';
+            isValid = false;
+          }
+          if (townCity === '') {
+            document.getElementById('townCityError').textContent = 'Street Name is required';
+            isValid = false;
+          }
+          if (district === '') {
+            document.getElementById('districtError').textContent = 'District is required';
+            isValid = false;
+          }
+          if (postOffice === '') {
+            document.getElementById('postOfficeError').textContent = 'Post Office is required';
+            isValid = false;
+          }
+          if (state === '') {
+            document.getElementById('stateError').textContent = 'State is required';
+            isValid = false;
+          }
+          if (pinCode === '') {
+            document.getElementById('pinCodeError').textContent = 'Pin Code is required';
+            isValid = false;
+          } else if (!/^\d{6}$/.test(pinCode)) {
+            document.getElementById('pinCodeError').textContent = 'Pin Code must be 6 digits';
+            isValid = false;
+          }
+
+          if (isValid) {
+            // Form is valid, submit it
+            this.submit();
+          }
+        });
+      </script>
 
 
       <!-- Include Footer -->
