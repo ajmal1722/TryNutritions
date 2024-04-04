@@ -70,5 +70,6 @@ route.post('/place-order', authentication.checkAuth, services.placeOrder);
 route.post('/save-payment-details', authentication.checkAuth, services.paymentSuccess);
 
 route.post('/update-profile', authentication.checkAuth, controller.updateProfile);
+route.post('/update-address', authentication.checkAuth, controller.updateAddress);
 
 module.exports = route;

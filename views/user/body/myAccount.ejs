@@ -192,7 +192,7 @@
                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                   </div>
                                   <div class="modal-body">
-                                      <form id="editAddressForm<%= index + 1 %>" action="/edit-address" method="post" class="row g-3"
+                                      <form id="editAddressForm<%= index + 1 %>" action="/update-address" method="post" class="row g-3"
                                           novalidate>
                                           <!-- Edit Address Form Fields -->
                                           <input type="hidden" id="editAddressId<%= index + 1 %>" name="addressId" value="<%= address._id %>">

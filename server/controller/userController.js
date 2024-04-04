@@ -278,3 +278,24 @@ exports.updateProfile = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 }
+
+exports.updateAddress = async (req, res) => {
+    try {
+        const data = req.body;
+        const userId = req.user._id; // Assuming you have the user ID in the request object
+
+        const addressId = data.addressId; // Extract addressId from the request body
+        // delete data.addressId; // Remove addressId from the data object
+
+        // Find the user by their ID and update the specific address
+        const updateUser = await Userdb.findOneAndUpdate(
+            { _id: userId, "addresses._id": addressId }, // Filter to find the user and address by their IDs
+            { $set: { "addresses.$": data } }, // Update the specific address in the addresses array
+            { new: true } // Return the updated user document
+        );
+
+        res.status(200).redirect('back');
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
