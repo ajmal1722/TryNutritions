@@ -490,7 +490,7 @@
           if (confirmPassword.trim().length === 0){
             confirmPasswordError.textContent = 'Please fill this field';
             return
-          }
+          } 
 
           // Validate password complexity
           const passwordRegex = /^(?=.*[a-zA-Z0-9!@#$%^&*])(?=.{6,14})/;
@@ -512,18 +512,17 @@
               confirmPassword: confirmPassword
           };
 
-          // Send data to the server using Axios or fetch API
-          // Replace the placeholder '/change-password' with your actual endpoint
           axios.post('/change-password', data)
               .then(response => {
-                  // Handle success response
-                  console.log(response.data);
-                  // Optionally, perform any additional actions after successful password change
-                  alert("Password changed successfully!");
+                 // Clear input fields
+                 document.getElementById("currentPassword").value = '';
+                 document.getElementById("newPassword").value = '';
+                 document.getElementById("confirmPassword").value = '';
+                 
+                  showToast("Password changed successfully!");
               })
               .catch(error => {
-                  // Handle error response
-                  console.error(error);
+                  console.error(error.response);
                   currentPasswordError.textContent = error.response.data.error;
               });
       }

@@ -24,3 +24,15 @@ function addToCartAlert(itemId) {
             console.log(err);
         });
 }
+
+
+function showToast(message) {
+    // Display toast message using Toastify library
+    Toastify({
+      text: message,
+      duration: 3000, // Duration in milliseconds
+      gravity: "bottom", // Position of the toast message
+      position: "center",
+      backgroundColor: "black", // Background color of the toast
+    }).showToast();
+}
