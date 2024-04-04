@@ -282,7 +282,7 @@ exports.updateProfile = async (req, res) => {
 exports.updateAddress = async (req, res) => {
     try {
         const data = req.body;
-        const userId = req.user._id; // Assuming you have the user ID in the request object
+        const userId = req.user._id;
 
         const addressId = data.addressId; // Extract addressId from the request body
         // delete data.addressId; // Remove addressId from the data object
@@ -295,6 +295,24 @@ exports.updateAddress = async (req, res) => {
         );
 
         res.status(200).redirect('back');
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+exports.deleteAddress = async (req, res) => {
+    try {
+        const addressId = req.query.id;
+        const userId = req.user._id;
+
+        // Find the user by their ID and update the addresses array to remove the specified address
+        const updatedUser = await Userdb.findOneAndUpdate(
+            { _id: userId },
+            { $pull: { addresses: { _id: addressId } } },
+            { new: true }
+        );
+
+        res.status(200).json({ updatedUser });
     } catch (error) {
         res.status(500).send({ error: error.message });
     }

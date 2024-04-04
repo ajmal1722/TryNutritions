@@ -158,102 +158,113 @@
                 <div class="">
                   <div id="addressList">
                     <!-- Static Address Data -->
-                    <% User.addresses.forEach((address, index) => { %>
+                    <% User.addresses.forEach((address, index)=> { %>
                       <div class="my-3 px-4 py-3 form-check rounded d-flex justify-content-between"
-                          style="border: 2px solid rgb(223, 223, 223); background-color: rgb(246, 246, 246);">
-                          <div>
-                              <p class="m-0"><strong><%= address.name %></strong></p>
-                              <p class="m-0"><%= address.phone %></p>
-                              <p class="m-0"><%= address.houseName %>, <%= address.streetName %>, <%= address.postOffice %></p>
-                              <p class="m-0"><%= address.district %>, <%= address.state %></p>
-                              <p class="m-0"><%= address.pinCode %></p>
-                          </div>
-                          <!-- Edit and Delete Buttons -->
-                          <div class="mt-3">
-                              <button type="button" class="btn btn-sm border edit-address-btn"
-                                  data-toggle="modal" data-target="#editAddressModal<%= index + 1 %>"
-                                  data-address-id="address_<%= index + 1 %>">
-                                  <i class="fas fa-edit text-success"></i>
-                              </button>
-                              <button type="button" class="btn btn-sm border ml-2 delete-address-btn"
-                                  data-address-id="address_<%= index + 1 %>">
-                                  <i class="fas fa-trash text-danger"></i>
-                              </button>
-                          </div>
+                        style="border: 2px solid rgb(223, 223, 223); background-color: rgb(246, 246, 246);">
+                        <div>
+                          <p class="m-0"><strong>
+                              <%= address.name %>
+                            </strong></p>
+                          <p class="m-0">
+                            <%= address.phone %>
+                          </p>
+                          <p class="m-0">
+                            <%= address.houseName %>, <%= address.streetName %>, <%= address.postOffice %>
+                          </p>
+                          <p class="m-0">
+                            <%= address.district %>, <%= address.state %>
+                          </p>
+                          <p class="m-0">
+                            <%= address.pinCode %>
+                          </p>
+                        </div>
+                        <!-- Edit and Delete Buttons -->
+                        <div class="mt-3">
+                          <button type="button" class="btn btn-sm border edit-address-btn" data-toggle="modal"
+                            data-target="#editAddressModal<%= index + 1 %>" data-address-id="address_<%= index + 1 %>">
+                            <i class="fas fa-edit text-success"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm border ml-2 delete-address-btn"
+                            data-address-id="address_<%= index + 1 %>" onclick="deleteAddress('<%= address._id %>')">
+                            <i class="fas fa-trash text-danger"></i>
+                          </button>
+                        </div>
                       </div>
-                  
+
                       <!-- Edit Address Modal -->
                       <div class="modal fade" id="editAddressModal<%= index + 1 %>" tabindex="-1" role="dialog"
-                          aria-labelledby="editAddressModalLabel<%= index + 1 %>" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                              <div class="modal-content">
-                                  <div class="modal-header">
-                                      <h5 class="modal-title" id="editAddressModalLabel<%= index + 1 %>">Edit Address</h5>
-                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                  <div class="modal-body">
-                                      <form id="editAddressForm<%= index + 1 %>" action="/update-address" method="post" class="row g-3"
-                                          novalidate>
-                                          <!-- Edit Address Form Fields -->
-                                          <input type="hidden" id="editAddressId<%= index + 1 %>" name="addressId" value="<%= address._id %>">
-                                          <div class="col-12 ">
-                                              <label class="form-label my-3">Name<sup>*</sup></label>
-                                              <input type="text" class="form-control" id="editName<%= index + 1 %>" name="name"
-                                                  value="<%= address.name %>">
-                                              <p id="editNameError<%= index + 1 %>" class="text-danger"></p>
-                                          </div>
-                                          <div class="col-12 p-2">
-                                              <label class="form-label my-3">Phone<sup>*</sup></label>
-                                              <input type="tel" class="form-control" id="editPhone<%= index + 1 %>" name="phone"
-                                                  value="<%= address.phone %>">
-                                              <p id="editPhoneError<%= index + 1 %>" class="text-danger"></p>
-                                          </div>
-                                          <div class="col-md-6 p-2">
-                                              <label class="form-label">House Name<sup>*</sup></label>
-                                              <input type="text" class="form-control" id="editHouseName<%= index + 1 %>" name="houseName"
-                                                  value="<%= address.houseName %>">
-                                              <p id="editHouseNameError<%= index + 1 %>" class="text-danger"></p>
-                                          </div>
-                                          <div class="col-md-6 p-2">
-                                              <label class="form-label">Street Name<sup>*</sup></label>
-                                              <input type="text" class="form-control" id="editStreetName<%= index + 1 %>" name="streetName"
-                                                  value="<%= address.streetName %>">
-                                              <p id="editStreetNameError<%= index + 1 %>" class="text-danger"></p>
-                                          </div>
-                                          <div class="col-md-6 p-2">
-                                              <label class="form-label">District<sup>*</sup></label>
-                                              <input type="text" class="form-control" id="editDistrict<%= index + 1 %>" name="district"
-                                                  value="<%= address.district %>">
-                                              <p id="editDistrictError<%= index + 1 %>" class="text-danger"></p>
-                                          </div>
-                                          <div class="col-md-6 p-2">
-                                              <label class="form-label">Post Office<sup>*</sup></label>
-                                              <input type="text" class="form-control" name="postOffice" id="editPostOffice<%= index + 1 %>"
-                                                  value="<%= address.postOffice %>">
-                                              <p id="editPostOfficeError<%= index + 1 %>" class="text-danger"></p>
-                                          </div>
-                                          <div class="col-md-6 p-2">
-                                              <label class="form-label">State<sup>*</sup></label>
-                                              <input type="text" class="form-control" id="editState<%= index + 1 %>" name="state"
-                                                  value="<%= address.state %>">
-                                              <p id="editStateError<%= index + 1 %>" class="text-danger"></p>
-                                          </div>
-                                          <div class="col-md-6 p-2">
-                                              <label class="form-label">Pin Code<sup>*</sup></label>
-                                              <input type="text" class="form-control" id="editPinCode<%= index + 1 %>" name="pinCode"
-                                                  value="<%= address.pinCode %>">
-                                              <p id="editPinCodeError<%= index + 1 %>" class="text-danger"></p>
-                                          </div>
-                                          <div class="col-12 pt-3 px-3">
-                                              <button type="submit" id="submitEditAddressBtn<%= index + 1 %>"
-                                                  class="btn btn-primary text-light my-3 px-4">Submit</button>
-                                          </div>
-                                      </form>
-                                  </div>
-                              </div>
+                        aria-labelledby="editAddressModalLabel<%= index + 1 %>" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="editAddressModalLabel<%= index + 1 %>">Edit Address</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form id="editAddressForm<%= index + 1 %>" action="/update-address" method="post"
+                                class="row g-3" novalidate>
+                                <!-- Edit Address Form Fields -->
+                                <input type="hidden" id="editAddressId<%= index + 1 %>" name="addressId"
+                                  value="<%= address._id %>">
+                                <div class="col-12 ">
+                                  <label class="form-label my-3">Name<sup>*</sup></label>
+                                  <input type="text" class="form-control" id="editName<%= index + 1 %>" name="name"
+                                    value="<%= address.name %>">
+                                  <p id="editNameError<%= index + 1 %>" class="text-danger"></p>
+                                </div>
+                                <div class="col-12 p-2">
+                                  <label class="form-label my-3">Phone<sup>*</sup></label>
+                                  <input type="tel" class="form-control" id="editPhone<%= index + 1 %>" name="phone"
+                                    value="<%= address.phone %>">
+                                  <p id="editPhoneError<%= index + 1 %>" class="text-danger"></p>
+                                </div>
+                                <div class="col-md-6 p-2">
+                                  <label class="form-label">House Name<sup>*</sup></label>
+                                  <input type="text" class="form-control" id="editHouseName<%= index + 1 %>"
+                                    name="houseName" value="<%= address.houseName %>">
+                                  <p id="editHouseNameError<%= index + 1 %>" class="text-danger"></p>
+                                </div>
+                                <div class="col-md-6 p-2">
+                                  <label class="form-label">Street Name<sup>*</sup></label>
+                                  <input type="text" class="form-control" id="editStreetName<%= index + 1 %>"
+                                    name="streetName" value="<%= address.streetName %>">
+                                  <p id="editStreetNameError<%= index + 1 %>" class="text-danger"></p>
+                                </div>
+                                <div class="col-md-6 p-2">
+                                  <label class="form-label">District<sup>*</sup></label>
+                                  <input type="text" class="form-control" id="editDistrict<%= index + 1 %>"
+                                    name="district" value="<%= address.district %>">
+                                  <p id="editDistrictError<%= index + 1 %>" class="text-danger"></p>
+                                </div>
+                                <div class="col-md-6 p-2">
+                                  <label class="form-label">Post Office<sup>*</sup></label>
+                                  <input type="text" class="form-control" name="postOffice"
+                                    id="editPostOffice<%= index + 1 %>" value="<%= address.postOffice %>">
+                                  <p id="editPostOfficeError<%= index + 1 %>" class="text-danger"></p>
+                                </div>
+                                <div class="col-md-6 p-2">
+                                  <label class="form-label">State<sup>*</sup></label>
+                                  <input type="text" class="form-control" id="editState<%= index + 1 %>" name="state"
+                                    value="<%= address.state %>">
+                                  <p id="editStateError<%= index + 1 %>" class="text-danger"></p>
+                                </div>
+                                <div class="col-md-6 p-2">
+                                  <label class="form-label">Pin Code<sup>*</sup></label>
+                                  <input type="text" class="form-control" id="editPinCode<%= index + 1 %>"
+                                    name="pinCode" value="<%= address.pinCode %>">
+                                  <p id="editPinCodeError<%= index + 1 %>" class="text-danger"></p>
+                                </div>
+                                <div class="col-12 pt-3 px-3">
+                                  <button type="submit" id="submitEditAddressBtn<%= index + 1 %>"
+                                    class="btn btn-primary text-light my-3 px-4">Submit</button>
+                                </div>
+                              </form>
+                            </div>
                           </div>
+                        </div>
                       </div>
-                  <% }) %>
+                      <% }) %>
                   </div>
                 </div>
 
@@ -413,6 +424,19 @@
             this.submit();
           }
         });
+
+        function deleteAddress(addressId) {
+          axios.delete('/delete-address', {
+            params: {
+              id: addressId // assuming your server expects the address ID as 'id'
+            }
+          }).then(response => {
+            console.log(response.data);
+            window.location.reload();
+          }).catch(error => {
+            console.log(error);
+          });
+        }
       </script>
 
 
