@@ -135,8 +135,8 @@
                         <button class="rounded btn btn-danger">Cancel Order</button>
                       </div>
                     </div>
-                    <% }) %>
-                      <% }) %>
+                  <% }) %>
+                <% }) %>
 
 
               </div>
@@ -158,14 +158,15 @@
                 <div class="">
                   <div id="addressList">
                     <!-- Static Address Data -->
-                    <div class="my-3 px-4 py-3 form-check rounded d-flex justify-content-between"
+                    <% User.addresses.forEach(address=> { %>
+                      <div class="my-3 px-4 py-3 form-check rounded d-flex justify-content-between"
                       style="border: 2px solid rgb(223, 223, 223); background-color: rgb(246, 246, 246);">
                       <div>
-                        <p class="m-0"><strong>John Doe</strong></p>
-                        <p class="m-0">123 Main St</p>
-                        <p class="m-0">New York, NY, 10001</p>
-                        <p class="m-0">john.doe@example.com</p>
-                        <p class="m-0">123-456-7890</p>
+                        <p class="m-0"><strong><%= address.name %></strong></p>
+                        <p class="m-0"><%= address.phone %></p>
+                        <p class="m-0"><%= address.houseName %>, <%= address.streetName %>, <%= address.postOffice %></p>
+                        <p class="m-0"><%= address.district %>, <%= address.state %></p>
+                        <p class="m-0"><%= address.pinCode %></p>
                       </div>
                       <!-- Edit and Delete Buttons -->
                       <div class="mt-3 ">
@@ -179,6 +180,7 @@
                         </button>
                       </div>
                     </div>
+                    <% }) %>
                   </div>
                 </div>
 
