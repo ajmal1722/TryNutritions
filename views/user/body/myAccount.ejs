@@ -524,8 +524,7 @@
               .catch(error => {
                   // Handle error response
                   console.error(error);
-                  // Optionally, display an error message to the user
-                  alert("Failed to change password. Please try again.");
+                  currentPasswordError.textContent = error.response.data.error;
               });
       }
 
