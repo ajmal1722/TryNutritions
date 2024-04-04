@@ -343,7 +343,29 @@
           </div>
           <div id="changePassword" class="col-md-9" style="display: none;">
             <!-- Change Password Content -->
-            <h1>password</h1>
+            <div class="tab-pane border p-3" id="account-info" role="tabpanel" aria-labelledby="account-info-tab">
+              <div class="myaccount-content">
+                  <h3>Change Password</h3>
+
+                  <form id="changePasswordForm" class="form-group" onsubmit="changePassword(event)">
+                    <label for="currentPassword">Current Password</label><br>
+                    <input id="currentPassword" type="password" class="form-control"><br>
+                    <p id="currentPasswordError" style="color: red; margin-top: -18px;"></p>
+                
+                    <label for="newPassword">New Password</label><br>
+                    <input id="newPassword" type="password" class="form-control"><br>
+                    <p id="newPasswordError" style="color: red; margin-top: -18px;"></p>
+                
+                    <label for="confirmPassword">Confirm Password</label><br>
+                    <input id="confirmPassword" type="password" class="form-control"><br>
+                    <p id="confirmPasswordError" style="color: red; margin-top: -18px;"></p>
+                
+                    <button type="submit" class="btn btn-dark px-4">Submit</button>
+                </form>
+
+              </div>
+          </div>
+
             <!-- Your change password content goes here -->
           </div>
         </div>
@@ -437,6 +459,77 @@
             console.log(error);
           });
         }
+
+        function changePassword(event) {
+          event.preventDefault(); // Prevent form submission
+
+          // Get form inputs
+          const currentPassword = document.getElementById("currentPassword").value;
+          const newPassword = document.getElementById("newPassword").value;
+          const confirmPassword = document.getElementById("confirmPassword").value;
+
+          // Get error message elements
+          const currentPasswordError = document.getElementById("currentPasswordError");
+          const newPasswordError = document.getElementById("newPasswordError");
+          const confirmPasswordError = document.getElementById("confirmPasswordError");
+
+          // Clear previous error messages
+          currentPasswordError.textContent = "";
+          newPasswordError.textContent = "";
+          confirmPasswordError.textContent = "";
+
+          // Validate form data
+          if (currentPassword.trim().length === 0){
+            currentPasswordError.textContent = 'Please fill this field';
+            return
+          }
+          if (newPassword.trim().length === 0){
+            newPasswordError.textContent = 'Please fill this field';
+            return
+          }
+          if (confirmPassword.trim().length === 0){
+            confirmPasswordError.textContent = 'Please fill this field';
+            return
+          }
+
+          // Validate password complexity
+          const passwordRegex = /^(?=.*[a-zA-Z0-9!@#$%^&*])(?=.{6,14})/;
+          if (!passwordRegex.test(newPassword)) {
+              newPasswordError.textContent = "Password must be 6-14 characters long and contain only letters, numbers, or special characters.";
+              return;
+          }
+
+          // Validate new password and confirm password match
+          if (newPassword !== confirmPassword) {
+              confirmPasswordError.textContent = "Password do not match.";
+              return;
+          }
+
+          // Prepare data object to send to the server
+          const data = {
+              currentPassword: currentPassword,
+              newPassword: newPassword,
+              confirmPassword: confirmPassword
+          };
+
+          // Send data to the server using Axios or fetch API
+          // Replace the placeholder '/change-password' with your actual endpoint
+          axios.post('/change-password', data)
+              .then(response => {
+                  // Handle success response
+                  console.log(response.data);
+                  // Optionally, perform any additional actions after successful password change
+                  alert("Password changed successfully!");
+              })
+              .catch(error => {
+                  // Handle error response
+                  console.error(error);
+                  // Optionally, display an error message to the user
+                  alert("Failed to change password. Please try again.");
+              });
+      }
+
+
       </script>
 
 
