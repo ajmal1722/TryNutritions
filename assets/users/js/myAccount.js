@@ -80,6 +80,14 @@ document
         modal.show();
     });
 
+ // Show the edit modal
+ document
+    .getElementById("view-edit-modal-btn")
+    .addEventListener("click", function () {
+        var modal = new bootstrap.Modal(document.getElementById("editAddressModal"));
+        modal.show();
+    });
+
 function validateForm() {
     const nameInput = document.getElementById("editUsername");
     const emailInput = document.getElementById("editEmail");

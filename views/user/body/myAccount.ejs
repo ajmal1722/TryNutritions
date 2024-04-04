@@ -170,10 +170,9 @@
                       </div>
                       <!-- Edit and Delete Buttons -->
                       <div class="mt-3 ">
-                        <button type="button" class="btn btn-sm border edit-address-btn" data-toggle="modal"
-                          data-target="#editAddressModal" data-address-id="address_1">
+                        <button type="button" id="view-edit-modal-btn" class="btn btn-sm border edit-address-btn" data-toggle="modal" data-target="#editAddressModal" data-address-id="address_1">
                           <i class="fas fa-edit text-success"></i>
-                        </button>
+                      </button>
                         <button type="button" class="btn btn-sm border ml-2 delete-address-btn"
                           data-address-id="address_1">
                           <i class="fas fa-trash text-danger"></i>
@@ -251,6 +250,69 @@
                   </div>
                 </div>
                 <!-- address modal ends here -->
+
+                <!-- Edit Address Modal -->
+                <div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                              <form id="editAddressForm" action="/edit-address" method="post" class="row g-3" novalidate>
+                                  <!-- Edit Address Form Fields -->
+                                  <input type="hidden" id="editAddressId" name="addressId">
+                                  <div class="col-12 ">
+                                      <label class="form-label my-3">Name<sup>*</sup></label>
+                                      <input type="text" class="form-control" id="editName" name="name" placeholder="Your Name">
+                                      <p id="editNameError" class="text-danger"></p>
+                                  </div>
+                                  <div class="col-12 p-2">
+                                      <label class="form-label my-3">Phone<sup>*</sup></label>
+                                      <input type="tel" class="form-control" id="editPhone" name="phone" placeholder="Phone Number">
+                                      <p id="editPhoneError" class="text-danger"></p>
+                                  </div>
+                                  <div class="col-md-6 p-2">
+                                      <label class="form-label">House Name<sup>*</sup></label>
+                                      <input type="text" class="form-control" id="editHouseName" name="houseName" placeholder="House Name">
+                                      <p id="editHouseNameError" class="text-danger"></p>
+                                  </div>
+                                  <div class="col-md-6 p-2">
+                                      <label class="form-label">Street Name<sup>*</sup></label>
+                                      <input type="text" class="form-control" id="editStreetName" name="streetName" placeholder="Street Name">
+                                      <p id="editStreetNameError" class="text-danger"></p>
+                                  </div>
+                                  <div class="col-md-6 p-2">
+                                      <label class="form-label">District<sup>*</sup></label>
+                                      <input type="text" class="form-control" id="editDistrict" name="district" placeholder="District">
+                                      <p id="editDistrictError" class="text-danger"></p>
+                                  </div>
+                                  <div class="col-md-6 p-2">
+                                      <label class="form-label">Post Office<sup>*</sup></label>
+                                      <input type="text" class="form-control" name="postOffice" id="editPostOffice" placeholder="Post Office">
+                                      <p id="editPostOfficeError" class="text-danger"></p>
+                                  </div>
+                                  <div class="col-md-6 p-2">
+                                      <label class="form-label">State<sup>*</sup></label>
+                                      <input type="text" class="form-control" id="editState" name="state" placeholder="State">
+                                      <p id="editStateError" class="text-danger"></p>
+                                  </div>
+                                  <div class="col-md-6 p-2">
+                                      <label class="form-label">Pin Code<sup>*</sup></label>
+                                      <input type="text" class="form-control" id="editPinCode" name="pinCode" placeholder="Pin Code">
+                                      <p id="editPinCodeError" class="text-danger"></p>
+                                  </div>
+                                  <div class="col-12 pt-3 px-3">
+                                      <button type="submit" id="submitEditAddressBtn" class="btn btn-primary text-light my-3 px-4">Submit</button>
+                                  </div>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+
+
               </div>
             </div>
             <!-- Your address content goes here -->
