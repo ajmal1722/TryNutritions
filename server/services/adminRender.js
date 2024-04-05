@@ -483,3 +483,24 @@ exports.updateOrderStatus = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+
+
+
+
+
+
+// exports.deleteOrder = async (req, res) => {
+//     try {
+//         const orderId = req.query.id;
+//         console.log('orderId:', orderId)
+
+//         // Fetch the order and populate the product field to access the imageUrl
+//         const deleteOrder = await Orders.findOneAndDelete({ _id: orderId})
+
+//         res.redirect('back')
+//     } catch (error) {
+//         console.error('Error fetching order details:', error);
+//         res.status(500).json({ error: error.message });
+//     }
+// }

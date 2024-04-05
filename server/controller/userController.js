@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const Category = require('../model/category');
 const Products = require('../model/products');
 const nodemailer = require('nodemailer');
+const Order = require('../model/order');
 
 // home route (home page)
 exports.homeRoutes = async (req, res) => {
@@ -341,6 +342,17 @@ exports.changePassword = async (req, res) => {
         await user.save();
 
         res.status(200).json({ message: "Password updated successfully." });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+exports.cancelOrder = async (req, res) => {
+    try {
+        const { orderId } = req.body;
+
+        const order = await Order.findByIdAndUpdate(orderId, { status: 'Cancelled' })
+        res.status(200).json({ order });
     } catch (error) {
         res.status(500).send({ error: error.message });
     }

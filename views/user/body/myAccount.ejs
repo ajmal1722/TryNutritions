@@ -73,18 +73,18 @@
                   </div>
                   <form id="editProfileForm" action="/update-profile" method="post" onsubmit="return validateForm()">
                     <div class="modal-body">
-                      <div class="form-group">
+                      <div class="form-group my-3">
                         <input type="hidden" name="userId" value="<%= User._id %>">
                         <label for="editUsername">Username</label>
                         <input type="text" class="form-control" name="name" id="editUsername" value="<%= User.name %>">
                         <small id="nameError" class="error text-danger font-weight-bold"></small>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group my-3">
                         <label for="editEmail">Email</label>
                         <input type="text" name="email" class="form-control" id="editEmail" value="<%= User.email %>">
                         <small id="emailError" class="error text-danger font-weight-bold"></small>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group my-3">
                         <label for="editPhone">Phone</label>
                         <input type="tel" name="phone" class="form-control" id="editPhone" value="<%= User.phone %>">
                         <small id="phoneError" class="error text-danger font-weight-bold"></small>
@@ -132,7 +132,19 @@
                       </div>
                       <div class="my-3">
                         <!-- Example cancel order button -->
-                        <button class="rounded btn btn-danger">Cancel Order</button>
+                        <input type="hidden" id="get-orderId" value="<%= order._id %>">
+                        <% if (order.status === 'Cancelled') { %>
+                          <h5 class="text-danger">This Order has been Cancelled!</h5>
+                        <% } else if (order.status === 'Rejected') { %>
+                          <h5 class="text-danger">This Order is Rejected!</h5>
+                        <% }else if (order.status === 'Delivered') { %>
+                          <h5 class="text-success">This Product has been Delivered!</h5>
+                        <% } else { %>
+                          <button id="cancel-btn" class="rounded btn btn-danger" onclick="cancelOrder()">
+                            Cancel Order
+                          </button>
+                          <h5 id="cancel-message" class="text-danger" style="display: none;">This Order has been Cancelled!</h5>
+                        <% } %>
                       </div>
                     </div>
                     <% }) %>
@@ -530,6 +542,23 @@
               });
       }
 
+
+      // cancelOrder
+      function cancelOrder () {
+        const orderId = document.getElementById('get-orderId').value;
+        console.log(orderId)
+        
+        axios.post('/cancel-order', { orderId: orderId })
+          .then(response => {
+            document.getElementById('cancel-btn').style.display = 'none';
+            document.getElementById('cancel-message').style.display = 'block';
+
+            showToast('Order Cancelled successfully!');
+          })
+          .catch(error => {
+            console.error(error);
+          });
+        }
 
       </script>
 

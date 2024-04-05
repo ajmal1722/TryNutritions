@@ -73,5 +73,6 @@ route.post('/update-profile', authentication.checkAuth, controller.updateProfile
 route.post('/update-address', authentication.checkAuth, controller.updateAddress);
 route.delete('/delete-address', authentication.checkAuth, controller.deleteAddress);
 route.post('/change-password', authentication.checkAuth, controller.changePassword);
+route.post('/cancel-order', authentication.checkAuth, controller.cancelOrder);
 
 module.exports = route;

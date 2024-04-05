@@ -70,5 +70,6 @@ route.post('/updateCoupon', services.updateCoupon);
 route.get('/orders', adminAuth.checkAuth, services.orders);
 route.get('/order-details', adminAuth.checkAuth, services.orderDetails);
 route.post('/update-order-status', adminAuth.checkAuth, services.updateOrderStatus);
+// route.get('/delete-order', adminAuth.checkAuth, services.deleteOrder);
 
 module.exports = route;
