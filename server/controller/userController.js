@@ -208,16 +208,12 @@ exports.login = async (req, res) => {
 
         // check if the user exists
         if (!userData) {
-            return res.status(401).json({ success: false, message: 'user does not exist' });
+            return res.status(401).json({ error: 'user does not exist' });
         }
 
         // check if the user is Active or Blocked
         if (userData.isBlocked === 'Blocked') {
-            return res.status(403).render('user/body/error', {
-                pageName: '403 Error',
-                statusCode: 403,
-                errorMessage: "You're Account has been blocked by Admin.. "
-            });
+            return res.status(403).json( { error: "You're Account has been blocked by Admin" });
         }
 
         // match the password
@@ -238,10 +234,10 @@ exports.login = async (req, res) => {
                 httpOnly: true
             };
             res.cookie('jwt', token, options)
-            res.status(201).redirect('/')
+            res.status(201).json({ userData })
 
         } else {
-            res.status(401).json({ success: false, message: 'Invalid email or password' });
+            res.status(401).json({ error: 'Invalid password' });
         }
 
         // send token in user cookie
