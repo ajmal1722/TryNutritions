@@ -142,7 +142,7 @@ exports.shop = async (req, res) => {
 exports.viewMore = async (req, res) => {
     const featuredProducts = await Products.find({})
         .sort({ discount: -1 })
-        .skip(3)
+        .skip(4)
         .limit(6)
         .exec();
 
