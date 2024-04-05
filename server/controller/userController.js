@@ -6,12 +6,14 @@ const Category = require('../model/category');
 const Products = require('../model/products');
 const nodemailer = require('nodemailer');
 const Order = require('../model/order');
+const Banner = require('../model/banner');
 
 // home route (home page)
 exports.homeRoutes = async (req, res) => {
     const limit = 8;
     const searchQuery = req.query.search || '';
     const category = await Category.find({}).exec();
+    const banner = await Banner.find({}).exec();
     const product = await Products.find({}).exec();
     const latestProduct = await Products.find({})
                                 .sort({createdAt: -1})
@@ -20,7 +22,8 @@ exports.homeRoutes = async (req, res) => {
     const bestSellerProduct = await Products.find({})
                                 .sort({salesCount: -1})
                                 .limit(9)
-                                .exec();
+                                .exec();      
+                                console.log(banner)     
     try {
         const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR);
         
@@ -31,7 +34,8 @@ exports.homeRoutes = async (req, res) => {
             latestProducts: latestProduct,
             searchQuery: searchQuery,
             bestSellerProducts: bestSellerProduct,
-            limit: limit
+            limit: limit,
+            Banner: banner
         })
     } catch (error) {
         if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
