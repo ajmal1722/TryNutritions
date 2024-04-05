@@ -1,572 +1,919 @@
 <!-- Include layoutHead -->
 <%- include('../partials/_layoutHead')%>
-  <!-- /Include layoutHead -->
+<!-- /Include layoutHead -->
 
+<!-- include Header -->
+<%- include('../partials/_header')%>
+<!-- include Header -->
 
+<!-- include single page header -->
+<%- include('../partials/_header2')%>
+<!--/include single page header -->
 
-  <!-- include Header -->
-  <%- include('../partials/_header')%>
-    <!-- include Header -->
-
-
-    <!-- include single page header -->
-    <%- include('../partials/_header2')%>
-      <!--/include single page header -->
-
-      <div class="d-flex justify-content-end mt-4 mx-3">
-        <button id="sidebarModalToggle" class="btn d-md-none" style="font-weight: 30px;">
-          <span class="fa fa-bars text-primary"></span>
-        </button>
+<div class="d-flex justify-content-end mt-4 mx-3">
+  <button
+    id="sidebarModalToggle"
+    class="btn d-md-none"
+    style="font-weight: 30px"
+  >
+    <span class="fa fa-bars text-primary"></span>
+  </button>
+</div>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-3 my-4 d-none d-md-block" id="sidebar">
+      <!-- Sidebar/Menu -->
+      <div class="list-group">
+        <a
+          href="#"
+          class="list-group-item list-group-item-action active"
+          id="profileTab"
+          onclick="showProfile()"
+          >My Profile</a
+        >
+        <a
+          href="#"
+          class="list-group-item list-group-item-action"
+          id="ordersTab"
+          onclick="showOrders()"
+          >My Orders</a
+        >
+        <a
+          href="#"
+          class="list-group-item list-group-item-action"
+          id="addressTab"
+          onclick="showAddAddress()"
+          >Addresses</a
+        >
+        <a
+          href="#"
+          class="list-group-item list-group-item-action"
+          id="passwordTab"
+          onclick="showChangePassword()"
+          >Change Password</a
+        >
+        <a href="logout" class="list-group-item list-group-item-action"
+          >Logout</a
+        >
       </div>
-      <div class="container mt-5">
-        <div class="row">
-          <div class="col-md-3 my-4 d-none d-md-block" id="sidebar">
-            <!-- Sidebar/Menu -->
-            <div class="list-group">
-              <a href="#" class="list-group-item list-group-item-action active" id="profileTab"
-                onclick="showProfile()">My Profile</a>
-              <a href="#" class="list-group-item list-group-item-action" id="ordersTab" onclick="showOrders()">My
-                Orders</a>
-              <a href="#" class="list-group-item list-group-item-action" id="addressTab"
-                onclick="showAddAddress()">Addresses</a>
-              <a href="#" class="list-group-item list-group-item-action" id="passwordTab"
-                onclick="showChangePassword()">Change Password</a>
-              <a href="logout" class="list-group-item list-group-item-action">Logout</a>
+    </div>
+
+    <div id="profile" class="col-md-9 border p-4">
+      <div class="myaccount-content">
+        <div class="d-flex justify-content-between">
+          <h3>Dashboard</h3>
+          <!-- Button trigger modal -->
+          <button type="button" class="btn" id="editProfileButton">
+            <i class="fa fa-edit fa-lg"></i>
+          </button>
+        </div>
+        <div class="welcome">
+          <p>Hello, <strong> <%= User.name %> </strong></p>
+        </div>
+        <p>
+          From your account dashboard, you can easily check & view your recent
+          orders, manage your shipping and billing addresses, and edit your
+          password and account details.
+        </p>
+        <div class="welcome">
+          <p>Your email: <strong> <%= User.email %> </strong></p>
+          <p>Joined On: <strong>January 1, 2023</strong></p>
+          <p>Phone: <strong> <%= User.phone %> </strong></p>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="editProfileModal"
+        tabindex="-1"
+        aria-labelledby="editProfileModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editProfileModalLabel">
+                Edit Profile
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <form
+              id="editProfileForm"
+              action="/update-profile"
+              method="post"
+              onsubmit="return validateForm()"
+            >
+              <div class="modal-body">
+                <div class="form-group my-3">
+                  <input type="hidden" name="userId" value="<%= User._id %>" />
+                  <label for="editUsername">Username</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="name"
+                    id="editUsername"
+                    value="<%= User.name %>"
+                  />
+                  <small
+                    id="nameError"
+                    class="error text-danger font-weight-bold"
+                  ></small>
+                </div>
+                <div class="form-group my-3">
+                  <label for="editEmail">Email</label>
+                  <input
+                    type="text"
+                    name="email"
+                    class="form-control"
+                    id="editEmail"
+                    value="<%= User.email %>"
+                  />
+                  <small
+                    id="emailError"
+                    class="error text-danger font-weight-bold"
+                  ></small>
+                </div>
+                <div class="form-group my-3">
+                  <label for="editPhone">Phone</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    class="form-control"
+                    id="editPhone"
+                    value="<%= User.phone %>"
+                  />
+                  <small
+                    id="phoneError"
+                    class="error text-danger font-weight-bold"
+                  ></small>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="submit" class="btn btn-success">
+                  Save changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="orders" class="col-md-9" style="display: none">
+      <!-- Orders Content -->
+      <div class="myaccount-content">
+        <h3>Orders</h3>
+
+        <!-- Static data as an example -->
+        <div class="myaccount-table table-responsive text-center">
+          <!-- ORDER HISTORY TABLE STARTS ----------------------------------------------------------------------->
+          <% Orders.forEach(order=> { %> <% order.items.forEach(item=> { %>
+          <div
+            class="p-3 my-3"
+            style="
+              border: 2px solid rgb(224, 222, 222);
+              background-color: #eeeeee;
+              border-radius: 5px;
+            "
+          >
+            <div class="d-flex py-2 mb-2 align-items-center rounded">
+              <div class="product col-4">
+                <img
+                  src="<%= item.imageUrl %>"
+                  alt="Product Image"
+                  width="150px"
+                />
+              </div>
+              <div class="d-grid text-start">
+                <h6><%= item.name %></h6>
+                <p class="m-0"><small>Quantity: <%= item.quantity %></small></p>
+                <p class="m-0"><small>Price: ₹ <%= item.price %></small></p>
+                <p class="m-0">
+                  <small>Sub Total: ₹ <%= order.subTotal %></small>
+                </p>
+                <p class="m-0">
+                  <small
+                    >Order Date: <%= order.orderDate.toDateString() %></small
+                  >
+                </p>
+                <p class="m-0">
+                  <small>Order Status: <%= order.status %></small>
+                </p>
+                <p class="m-0">
+                  <small
+                    >Delivery Address: <%= order.shippingAddress.name %>, <%=
+                    order.shippingAddress.streetName %>, <%=
+                    order.shippingAddress.district %>, <%=
+                    order.shippingAddress.state %>, <%=
+                    order.shippingAddress.pinCode %></small
+                  >
+                </p>
+              </div>
+            </div>
+            <div class="my-3">
+              <!-- Example cancel order button -->
+              <input type="hidden" id="get-orderId" value="<%= order._id %>" />
+              <% if (order.status==='Cancelled' ) { %>
+              <h5 class="text-danger">This Order has been Cancelled!</h5>
+              <% } else if (order.status==='Rejected' ) { %>
+              <h5 class="text-danger">This Order is Rejected!</h5>
+              <% }else if (order.status==='Delivered' ) { %>
+              <h5 class="text-success">This Product has been Delivered!</h5>
+              <% } else { %>
+              <button
+                id="cancel-btn"
+                class="rounded btn btn-danger"
+                onclick="cancelOrder()"
+              >
+                Cancel Order
+              </button>
+              <h5 id="cancel-message" class="text-danger" style="display: none">
+                This Order has been Cancelled!
+              </h5>
+              <% } %>
+            </div>
+          </div>
+          <% }) %> <% }) %>
+        </div>
+        <!-- End of myaccount-table -->
+      </div>
+    </div>
+    <div id="addAddress" class="col-md-9" style="display: none">
+      <!-- Address Content -->
+      <div
+        class=""
+        id="address-edit"
+        role="tabpanel"
+        aria-labelledby="address-edit-tab"
+      >
+        <div class="myaccount-content">
+          <div class="d-flex justify-content-between">
+            <h3>Addresses</h3>
+            <button
+              type="button"
+              class="text-center"
+              id="addAddressButton"
+              style="
+                color: white;
+                background-color: #81c408;
+                height: 30px;
+                border-radius: 5px;
+                border: 2px;
+              "
+            >
+              Add new address
+            </button>
+          </div>
+          <div class="">
+            <div id="addressList">
+              <!-- Static Address Data -->
+              <% User.addresses.forEach((address, index)=> { %>
+              <div
+                class="my-3 px-4 py-3 form-check rounded d-flex justify-content-between"
+                style="
+                  border: 2px solid rgb(223, 223, 223);
+                  background-color: rgb(246, 246, 246);
+                "
+              >
+                <div>
+                  <p class="m-0"><strong> <%= address.name %> </strong></p>
+                  <p class="m-0"><%= address.phone %></p>
+                  <p class="m-0">
+                    <%= address.houseName %>, <%= address.streetName %>, <%=
+                    address.postOffice %>
+                  </p>
+                  <p class="m-0">
+                    <%= address.district %>, <%= address.state %>
+                  </p>
+                  <p class="m-0"><%= address.pinCode %></p>
+                </div>
+                <!-- Edit and Delete Buttons -->
+                <div class="mt-3">
+                  <button
+                    type="button"
+                    class="btn btn-sm border edit-address-btn"
+                    data-toggle="modal"
+                    data-target="#editAddressModal<%= index + 1 %>"
+                    data-address-id="address_<%= index + 1 %>"
+                  >
+                    <i class="fas fa-edit text-success"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-sm border ml-2 delete-address-btn"
+                    data-address-id="address_<%= index + 1 %>"
+                    onclick="deleteAddress('<%= address._id %>')"
+                  >
+                    <i class="fas fa-trash text-danger"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Edit Address Modal -->
+              <div
+                class="modal fade"
+                id="editAddressModal<%= index + 1 %>"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="editAddressModalLabel<%= index + 1 %>"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5
+                        class="modal-title"
+                        id="editAddressModalLabel<%= index + 1 %>"
+                      >
+                        Edit Address
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <form
+                        id="editAddressForm<%= index + 1 %>"
+                        action="/update-address"
+                        method="post"
+                        class="row g-3"
+                        novalidate
+                      >
+                        <!-- Edit Address Form Fields -->
+                        <input
+                          type="hidden"
+                          id="editAddressId<%= index + 1 %>"
+                          name="addressId"
+                          value="<%= address._id %>"
+                        />
+                        <div class="col-12">
+                          <label class="form-label my-3"
+                            >Name<sup>*</sup></label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="editName<%= index + 1 %>"
+                            name="name"
+                            value="<%= address.name %>"
+                          />
+                          <p
+                            id="editNameError<%= index + 1 %>"
+                            class="text-danger"
+                          ></p>
+                        </div>
+                        <div class="col-12 p-2">
+                          <label class="form-label my-3"
+                            >Phone<sup>*</sup></label
+                          >
+                          <input
+                            type="tel"
+                            class="form-control"
+                            id="editPhone<%= index + 1 %>"
+                            name="phone"
+                            value="<%= address.phone %>"
+                          />
+                          <p
+                            id="editPhoneError<%= index + 1 %>"
+                            class="text-danger"
+                          ></p>
+                        </div>
+                        <div class="col-md-6 p-2">
+                          <label class="form-label"
+                            >House Name<sup>*</sup></label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="editHouseName<%= index + 1 %>"
+                            name="houseName"
+                            value="<%= address.houseName %>"
+                          />
+                          <p
+                            id="editHouseNameError<%= index + 1 %>"
+                            class="text-danger"
+                          ></p>
+                        </div>
+                        <div class="col-md-6 p-2">
+                          <label class="form-label"
+                            >Street Name<sup>*</sup></label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="editStreetName<%= index + 1 %>"
+                            name="streetName"
+                            value="<%= address.streetName %>"
+                          />
+                          <p
+                            id="editStreetNameError<%= index + 1 %>"
+                            class="text-danger"
+                          ></p>
+                        </div>
+                        <div class="col-md-6 p-2">
+                          <label class="form-label">District<sup>*</sup></label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="editDistrict<%= index + 1 %>"
+                            name="district"
+                            value="<%= address.district %>"
+                          />
+                          <p
+                            id="editDistrictError<%= index + 1 %>"
+                            class="text-danger"
+                          ></p>
+                        </div>
+                        <div class="col-md-6 p-2">
+                          <label class="form-label"
+                            >Post Office<sup>*</sup></label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="postOffice"
+                            id="editPostOffice<%= index + 1 %>"
+                            value="<%= address.postOffice %>"
+                          />
+                          <p
+                            id="editPostOfficeError<%= index + 1 %>"
+                            class="text-danger"
+                          ></p>
+                        </div>
+                        <div class="col-md-6 p-2">
+                          <label class="form-label">State<sup>*</sup></label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="editState<%= index + 1 %>"
+                            name="state"
+                            value="<%= address.state %>"
+                          />
+                          <p
+                            id="editStateError<%= index + 1 %>"
+                            class="text-danger"
+                          ></p>
+                        </div>
+                        <div class="col-md-6 p-2">
+                          <label class="form-label">Pin Code<sup>*</sup></label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="editPinCode<%= index + 1 %>"
+                            name="pinCode"
+                            value="<%= address.pinCode %>"
+                          />
+                          <p
+                            id="editPinCodeError<%= index + 1 %>"
+                            class="text-danger"
+                          ></p>
+                        </div>
+                        <div class="col-12 pt-3 px-3">
+                          <button
+                            type="submit"
+                            id="submitEditAddressBtn<%= index + 1 %>"
+                            class="btn btn-primary text-light my-3 px-4"
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <% }) %>
             </div>
           </div>
 
-          <div id="profile" class="col-md-9 border p-4">
-            <div class="myaccount-content">
-              <div class="d-flex justify-content-between">
-                <h3>Dashboard</h3>
-                <!-- Button trigger modal -->
-                <button type="button" class="btn" id="editProfileButton">
-                  <i class="fa fa-edit fa-lg"></i>
-                </button>
-              </div>
-              <div class="welcome">
-                <p>Hello, <strong>
-                    <%= User.name %>
-                  </strong></p>
-              </div>
-              <p>From your account dashboard, you can easily check & view your recent orders, manage your shipping and
-                billing addresses, and edit your password and account details.</p>
-              <div class="welcome">
-                <p>Your email: <strong>
-                    <%= User.email %>
-                  </strong></p>
-                <p>Joined On: <strong>January 1, 2023</strong></p>
-                <p>Phone: <strong>
-                    <%= User.phone %>
-                  </strong></p>
-              </div>
-            </div>
-
-            <!-- Modal -->
-            <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
-              aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <form id="editProfileForm" action="/update-profile" method="post" onsubmit="return validateForm()">
-                    <div class="modal-body">
-                      <div class="form-group my-3">
-                        <input type="hidden" name="userId" value="<%= User._id %>">
-                        <label for="editUsername">Username</label>
-                        <input type="text" class="form-control" name="name" id="editUsername" value="<%= User.name %>">
-                        <small id="nameError" class="error text-danger font-weight-bold"></small>
-                      </div>
-                      <div class="form-group my-3">
-                        <label for="editEmail">Email</label>
-                        <input type="text" name="email" class="form-control" id="editEmail" value="<%= User.email %>">
-                        <small id="emailError" class="error text-danger font-weight-bold"></small>
-                      </div>
-                      <div class="form-group my-3">
-                        <label for="editPhone">Phone</label>
-                        <input type="tel" name="phone" class="form-control" id="editPhone" value="<%= User.phone %>">
-                        <small id="phoneError" class="error text-danger font-weight-bold"></small>
-                      </div>
+          <!-- Modal for add address -->
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">
+                    New Address
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <form
+                    id="addressForm"
+                    action="/add-address"
+                    method="post"
+                    class="row g-3"
+                    novalidate
+                  >
+                    <!-- Static Address Form Fields -->
+                    <div class="col-12">
+                      <label class="form-label my-3">Name<sup>*</sup></label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="name"
+                        name="name"
+                        placeholder="Your Name"
+                      />
+                      <p id="nameErrors" class="text-danger"></p>
                     </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-success">Save changes</button>
+                    <div class="col-12 p-2">
+                      <label class="form-label my-3">Phone<sup>*</sup></label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="phone"
+                        name="phone"
+                        placeholder="Phone Number"
+                      />
+                      <p id="phoneErrors" class="text-danger"></p>
+                    </div>
+                    <div class="col-md-6 p-2">
+                      <label class="form-label">House Name<sup>*</sup></label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="address"
+                        name="houseName"
+                        placeholder="House Name"
+                      />
+                      <p id="addressError" class="text-danger"></p>
+                    </div>
+                    <div class="col-md-6 p-2">
+                      <label class="form-label">Street Name<sup>*</sup></label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="townCity"
+                        name="streetName"
+                        placeholder="Street Name"
+                      />
+                      <p id="townCityError" class="text-danger"></p>
+                    </div>
+                    <div class="col-md-6 p-2">
+                      <label class="form-label">District<sup>*</sup></label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="district"
+                        name="district"
+                        placeholder="District"
+                      />
+                      <p id="districtError" class="text-danger"></p>
+                    </div>
+                    <div class="col-md-6 p-2">
+                      <label class="form-label">Post Office<sup>*</sup></label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="postOffice"
+                        id="postOffice"
+                        placeholder="Post Office"
+                      />
+                      <p id="postOfficeError" class="text-danger"></p>
+                    </div>
+                    <div class="col-md-6 p-2">
+                      <label class="form-label">State<sup>*</sup></label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="state"
+                        name="state"
+                        placeholder="State"
+                      />
+                      <p id="stateError" class="text-danger"></p>
+                    </div>
+                    <div class="col-md-6 p-2">
+                      <label class="form-label">Pin Code<sup>*</sup></label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="pinCode"
+                        name="pinCode"
+                        placeholder="Pin Code"
+                      />
+                      <p id="pinCodeError" class="text-danger"></p>
+                    </div>
+                    <div class="col-12 pt-3 px-3">
+                      <button
+                        type="submit"
+                        id="submitAddressBtn"
+                        class="btn btn-primary text-light my-3 px-4"
+                        data-dismiss="modal"
+                      >
+                        Submit
+                      </button>
                     </div>
                   </form>
                 </div>
               </div>
             </div>
-
           </div>
-          <div id="orders" class="col-md-9" style="display: none;">
-            <!-- Orders Content -->
-            <div class="myaccount-content">
-              <h3>Orders</h3>
+          <!-- address modal ends here -->
+        </div>
+      </div>
+      <!-- Your address content goes here -->
+    </div>
+    <div id="changePassword" class="col-md-9" style="display: none">
+      <!-- Change Password Content -->
+      <div
+        class="tab-pane border p-3"
+        id="account-info"
+        role="tabpanel"
+        aria-labelledby="account-info-tab"
+      >
+        <div class="myaccount-content">
+          <h3>Change Password</h3>
 
-              <!-- Static data as an example -->
-              <div class="myaccount-table table-responsive text-center">
-                <!-- ORDER HISTORY TABLE STARTS ----------------------------------------------------------------------->
-                <% Orders.forEach(order=> { %>
-                  <% order.items.forEach(item=> { %>
-                    <div class="p-3 my-3"
-                      style="border: 2px solid rgb(224, 222, 222); background-color: #eeeeee; border-radius: 5px;">
-                      <div class="d-flex py-2 mb-2 align-items-center rounded">
-                        <div class="product col-4">
-                          <img src="<%= item.imageUrl %>" alt="Product Image" width="150px">
-                        </div>
-                        <div class="d-grid text-start">
-                          <h6>
-                            <%= item.name %>
-                          </h6>
-                          <p class="m-0"><small>Quantity: <%= item.quantity %></small></p>
-                          <p class="m-0"><small>Price: ₹ <%= item.price %></small></p>
-                          <p class="m-0"><small>Sub Total: ₹ <%= order.subTotal %></small></p>
-                          <p class="m-0"><small>Order Date: <%= order.orderDate.toDateString() %></small></p>
-                          <p class="m-0"><small>Order Status: <%= order.status %></small></p>
-                          <p class="m-0"><small>Delivery Address: <%= order.shippingAddress.name %>, <%=
-                                  order.shippingAddress.streetName %>, <%= order.shippingAddress.district %>, <%=
-                                      order.shippingAddress.state %>, <%= order.shippingAddress.pinCode %></small></p>
-                        </div>
-                      </div>
-                      <div class="my-3">
-                        <!-- Example cancel order button -->
-                        <input type="hidden" id="get-orderId" value="<%= order._id %>">
-                        <% if (order.status === 'Cancelled') { %>
-                          <h5 class="text-danger">This Order has been Cancelled!</h5>
-                        <% } else if (order.status === 'Rejected') { %>
-                          <h5 class="text-danger">This Order is Rejected!</h5>
-                        <% }else if (order.status === 'Delivered') { %>
-                          <h5 class="text-success">This Product has been Delivered!</h5>
-                        <% } else { %>
-                          <button id="cancel-btn" class="rounded btn btn-danger" onclick="cancelOrder()">
-                            Cancel Order
-                          </button>
-                          <h5 id="cancel-message" class="text-danger" style="display: none;">This Order has been Cancelled!</h5>
-                        <% } %>
-                      </div>
-                    </div>
-                    <% }) %>
-                  <% }) %>
-              </div>
-              <!-- End of myaccount-table -->
-            </div>
+          <form
+            id="changePasswordForm"
+            class="form-group"
+            onsubmit="changePassword(event)"
+          >
+            <label for="currentPassword">Current Password</label><br />
+            <input
+              id="currentPassword"
+              type="password"
+              class="form-control"
+            /><br />
+            <p
+              id="currentPasswordError"
+              style="color: red; margin-top: -18px"
+            ></p>
 
-          </div>
-          <div id="addAddress" class="col-md-9" style="display: none;">
-            <!-- Address Content -->
-            <div class="" id="address-edit" role="tabpanel" aria-labelledby="address-edit-tab">
-              <div class="myaccount-content">
-                <div class="d-flex justify-content-between">
-                  <h3>Addresses</h3>
-                  <button type="button" class="text-center" id="addAddressButton"
-                    style="color: white; background-color: #81c408; height: 30px; border-radius: 5px; border: 2px;">
-                    Add new address
-                  </button>
-                </div>
-                <div class="">
-                  <div id="addressList">
-                    <!-- Static Address Data -->
-                    <% User.addresses.forEach((address, index)=> { %>
-                      <div class="my-3 px-4 py-3 form-check rounded d-flex justify-content-between"
-                        style="border: 2px solid rgb(223, 223, 223); background-color: rgb(246, 246, 246);">
-                        <div>
-                          <p class="m-0"><strong>
-                              <%= address.name %>
-                            </strong></p>
-                          <p class="m-0">
-                            <%= address.phone %>
-                          </p>
-                          <p class="m-0">
-                            <%= address.houseName %>, <%= address.streetName %>, <%= address.postOffice %>
-                          </p>
-                          <p class="m-0">
-                            <%= address.district %>, <%= address.state %>
-                          </p>
-                          <p class="m-0">
-                            <%= address.pinCode %>
-                          </p>
-                        </div>
-                        <!-- Edit and Delete Buttons -->
-                        <div class="mt-3">
-                          <button type="button" class="btn btn-sm border edit-address-btn" data-toggle="modal"
-                            data-target="#editAddressModal<%= index + 1 %>" data-address-id="address_<%= index + 1 %>">
-                            <i class="fas fa-edit text-success"></i>
-                          </button>
-                          <button type="button" class="btn btn-sm border ml-2 delete-address-btn"
-                            data-address-id="address_<%= index + 1 %>" onclick="deleteAddress('<%= address._id %>')">
-                            <i class="fas fa-trash text-danger"></i>
-                          </button>
-                        </div>
-                      </div>
+            <label for="newPassword">New Password</label><br />
+            <input
+              id="newPassword"
+              type="password"
+              class="form-control"
+            /><br />
+            <p id="newPasswordError" style="color: red; margin-top: -18px"></p>
 
-                      <!-- Edit Address Modal -->
-                      <div class="modal fade" id="editAddressModal<%= index + 1 %>" tabindex="-1" role="dialog"
-                        aria-labelledby="editAddressModalLabel<%= index + 1 %>" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="editAddressModalLabel<%= index + 1 %>">Edit Address</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                              <form id="editAddressForm<%= index + 1 %>" action="/update-address" method="post"
-                                class="row g-3" novalidate>
-                                <!-- Edit Address Form Fields -->
-                                <input type="hidden" id="editAddressId<%= index + 1 %>" name="addressId"
-                                  value="<%= address._id %>">
-                                <div class="col-12 ">
-                                  <label class="form-label my-3">Name<sup>*</sup></label>
-                                  <input type="text" class="form-control" id="editName<%= index + 1 %>" name="name"
-                                    value="<%= address.name %>">
-                                  <p id="editNameError<%= index + 1 %>" class="text-danger"></p>
-                                </div>
-                                <div class="col-12 p-2">
-                                  <label class="form-label my-3">Phone<sup>*</sup></label>
-                                  <input type="tel" class="form-control" id="editPhone<%= index + 1 %>" name="phone"
-                                    value="<%= address.phone %>">
-                                  <p id="editPhoneError<%= index + 1 %>" class="text-danger"></p>
-                                </div>
-                                <div class="col-md-6 p-2">
-                                  <label class="form-label">House Name<sup>*</sup></label>
-                                  <input type="text" class="form-control" id="editHouseName<%= index + 1 %>"
-                                    name="houseName" value="<%= address.houseName %>">
-                                  <p id="editHouseNameError<%= index + 1 %>" class="text-danger"></p>
-                                </div>
-                                <div class="col-md-6 p-2">
-                                  <label class="form-label">Street Name<sup>*</sup></label>
-                                  <input type="text" class="form-control" id="editStreetName<%= index + 1 %>"
-                                    name="streetName" value="<%= address.streetName %>">
-                                  <p id="editStreetNameError<%= index + 1 %>" class="text-danger"></p>
-                                </div>
-                                <div class="col-md-6 p-2">
-                                  <label class="form-label">District<sup>*</sup></label>
-                                  <input type="text" class="form-control" id="editDistrict<%= index + 1 %>"
-                                    name="district" value="<%= address.district %>">
-                                  <p id="editDistrictError<%= index + 1 %>" class="text-danger"></p>
-                                </div>
-                                <div class="col-md-6 p-2">
-                                  <label class="form-label">Post Office<sup>*</sup></label>
-                                  <input type="text" class="form-control" name="postOffice"
-                                    id="editPostOffice<%= index + 1 %>" value="<%= address.postOffice %>">
-                                  <p id="editPostOfficeError<%= index + 1 %>" class="text-danger"></p>
-                                </div>
-                                <div class="col-md-6 p-2">
-                                  <label class="form-label">State<sup>*</sup></label>
-                                  <input type="text" class="form-control" id="editState<%= index + 1 %>" name="state"
-                                    value="<%= address.state %>">
-                                  <p id="editStateError<%= index + 1 %>" class="text-danger"></p>
-                                </div>
-                                <div class="col-md-6 p-2">
-                                  <label class="form-label">Pin Code<sup>*</sup></label>
-                                  <input type="text" class="form-control" id="editPinCode<%= index + 1 %>"
-                                    name="pinCode" value="<%= address.pinCode %>">
-                                  <p id="editPinCodeError<%= index + 1 %>" class="text-danger"></p>
-                                </div>
-                                <div class="col-12 pt-3 px-3">
-                                  <button type="submit" id="submitEditAddressBtn<%= index + 1 %>"
-                                    class="btn btn-primary text-light my-3 px-4">Submit</button>
-                                </div>
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <% }) %>
-                  </div>
-                </div>
+            <label for="confirmPassword">Confirm Password</label><br />
+            <input
+              id="confirmPassword"
+              type="password"
+              class="form-control"
+            /><br />
+            <p
+              id="confirmPasswordError"
+              style="color: red; margin-top: -18px"
+            ></p>
 
-                <!-- Modal for add address -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                  aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">New Address</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <form id="addressForm" action="/add-address" method="post" class="row g-3" novalidate>
-                          <!-- Static Address Form Fields -->
-                          <div class="col-12 ">
-                            <label class="form-label my-3">Name<sup>*</sup></label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Your Name">
-                            <p id="nameErrors" class="text-danger"> </p>
-                          </div>
-                          <div class="col-12 p-2">
-                            <label class="form-label my-3">Phone<sup>*</sup></label>
-                            <input type="number" class="form-control" id="phone" name="phone"
-                              placeholder="Phone Number">
-                            <p id="phoneErrors" class="text-danger"></p>
-                          </div>
-                          <div class="col-md-6 p-2">
-                            <label class="form-label">House Name<sup>*</sup></label>
-                            <input type="text" class="form-control" id="address" name="houseName"
-                              placeholder="House Name">
-                            <p id="addressError" class="text-danger"></p>
-                          </div>
-                          <div class="col-md-6 p-2">
-                            <label class="form-label">Street Name<sup>*</sup></label>
-                            <input type="text" class="form-control" id="townCity" name="streetName"
-                              placeholder="Street Name">
-                            <p id="townCityError" class="text-danger"></p>
-                          </div>
-                          <div class="col-md-6 p-2">
-                            <label class="form-label">District<sup>*</sup></label>
-                            <input type="text" class="form-control" id="district" name="district"
-                              placeholder="District">
-                            <p id="districtError" class="text-danger"></p>
-                          </div>
-                          <div class="col-md-6 p-2">
-                            <label class="form-label">Post Office<sup>*</sup></label>
-                            <input type="text" class="form-control" name="postOffice" id="postOffice"
-                              placeholder="Post Office">
-                            <p id="postOfficeError" class="text-danger"></p>
-                          </div>
-                          <div class="col-md-6 p-2">
-                            <label class="form-label">State<sup>*</sup></label>
-                            <input type="text" class="form-control" id="state" name="state" placeholder="State">
-                            <p id="stateError" class="text-danger"></p>
-                          </div>
-                          <div class="col-md-6 p-2">
-                            <label class="form-label">Pin Code<sup>*</sup></label>
-                            <input type="text" class="form-control" id="pinCode" name="pinCode" placeholder="Pin Code">
-                            <p id="pinCodeError" class="text-danger"></p>
-                          </div>
-                          <div class="col-12 pt-3 px-3">
-                            <button type="submit" id="submitAddressBtn" class="btn btn-primary text-light my-3 px-4"
-                              data-dismiss="modal">Submit</button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- address modal ends here -->
-
-
-              </div>
-            </div>
-            <!-- Your address content goes here -->
-          </div>
-          <div id="changePassword" class="col-md-9" style="display: none;">
-            <!-- Change Password Content -->
-            <div class="tab-pane border p-3" id="account-info" role="tabpanel" aria-labelledby="account-info-tab">
-              <div class="myaccount-content">
-                  <h3>Change Password</h3>
-
-                  <form id="changePasswordForm" class="form-group" onsubmit="changePassword(event)">
-                    <label for="currentPassword">Current Password</label><br>
-                    <input id="currentPassword" type="password" class="form-control"><br>
-                    <p id="currentPasswordError" style="color: red; margin-top: -18px;"></p>
-                
-                    <label for="newPassword">New Password</label><br>
-                    <input id="newPassword" type="password" class="form-control"><br>
-                    <p id="newPasswordError" style="color: red; margin-top: -18px;"></p>
-                
-                    <label for="confirmPassword">Confirm Password</label><br>
-                    <input id="confirmPassword" type="password" class="form-control"><br>
-                    <p id="confirmPasswordError" style="color: red; margin-top: -18px;"></p>
-                
-                    <button type="submit" class="btn btn-dark px-4">Submit</button>
-                </form>
-
-              </div>
-          </div>
-
-            <!-- Your change password content goes here -->
-          </div>
+            <button type="submit" class="btn btn-dark px-4">Submit</button>
+          </form>
         </div>
       </div>
 
-      <script>
-        // Form Validation
-        document.getElementById('addressForm').addEventListener('submit', function (event) {
-          event.preventDefault();
+      <!-- Your change password content goes here -->
+    </div>
+  </div>
+</div>
 
-          // Reset error messages
-          document.getElementById('nameErrors').textContent = '';
-          document.getElementById('phoneErrors').textContent = '';
-          document.getElementById('addressError').textContent = '';
-          document.getElementById('townCityError').textContent = '';
-          document.getElementById('districtError').textContent = '';
-          document.getElementById('postOfficeError').textContent = '';
-          document.getElementById('stateError').textContent = '';
-          document.getElementById('pinCodeError').textContent = '';
+<script>
+  // Form Validation
+  document
+    .getElementById("addressForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
 
-          // Validate each field
-          const name = document.getElementById('name').value.trim();
-          const phone = document.getElementById('phone').value.trim();
-          console.log(name, phone)
-          const address = document.getElementById('address').value.trim();
-          const townCity = document.getElementById('townCity').value.trim();
-          const district = document.getElementById('district').value.trim();
-          const postOffice = document.getElementById('postOffice').value.trim();
-          const state = document.getElementById('state').value.trim();
-          const pinCode = document.getElementById('pinCode').value.trim();
+      // Reset error messages
+      document.getElementById("nameErrors").textContent = "";
+      document.getElementById("phoneErrors").textContent = "";
+      document.getElementById("addressError").textContent = "";
+      document.getElementById("townCityError").textContent = "";
+      document.getElementById("districtError").textContent = "";
+      document.getElementById("postOfficeError").textContent = "";
+      document.getElementById("stateError").textContent = "";
+      document.getElementById("pinCodeError").textContent = "";
 
-          let isValid = true;
+      // Validate each field
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      console.log(name, phone);
+      const address = document.getElementById("address").value.trim();
+      const townCity = document.getElementById("townCity").value.trim();
+      const district = document.getElementById("district").value.trim();
+      const postOffice = document.getElementById("postOffice").value.trim();
+      const state = document.getElementById("state").value.trim();
+      const pinCode = document.getElementById("pinCode").value.trim();
 
-          if (name.length < 3) {
-            document.getElementById('nameErrors').textContent = 'Name should atleast 3 letters';
-            isValid = false;
-          } else if (!/^[a-zA-Z\s]{3,}$/.test(name)) {
-            document.getElementById('nameErrors').textContent = 'Name includes only letters';
-            isValid = false;
-          }
-          if (phone === '') {
-            document.getElementById('phoneErrors').textContent = 'Phone number is required';
-            isValid = false;
-          } else if (!/^\d{10}$/.test(phone)) {
-            document.getElementById('phoneErrors').textContent = 'Phone number must be 10 digits';
-            isValid = false;
-          }
-          if (address === '') {
-            document.getElementById('addressError').textContent = 'House Number or House Name is required';
-            isValid = false;
-          }
-          if (townCity === '') {
-            document.getElementById('townCityError').textContent = 'Street Name is required';
-            isValid = false;
-          }
-          if (district === '') {
-            document.getElementById('districtError').textContent = 'District is required';
-            isValid = false;
-          }
-          if (postOffice === '') {
-            document.getElementById('postOfficeError').textContent = 'Post Office is required';
-            isValid = false;
-          }
-          if (state === '') {
-            document.getElementById('stateError').textContent = 'State is required';
-            isValid = false;
-          }
-          if (pinCode === '') {
-            document.getElementById('pinCodeError').textContent = 'Pin Code is required';
-            isValid = false;
-          } else if (!/^\d{6}$/.test(pinCode)) {
-            document.getElementById('pinCodeError').textContent = 'Pin Code must be 6 digits';
-            isValid = false;
-          }
+      let isValid = true;
 
-          if (isValid) {
-            // Form is valid, submit it
-            this.submit();
-          }
-        });
-
-        function deleteAddress(addressId) {
-          axios.delete('/delete-address', {
-            params: {
-              id: addressId // assuming your server expects the address ID as 'id'
-            }
-          }).then(response => {
-            console.log(response.data);
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-            showToast('Address deleted succesfully!')
-          }).catch(error => {
-            console.log(error);
-          });
-        }
-
-        function changePassword(event) {
-          event.preventDefault(); // Prevent form submission
-
-          // Get form inputs
-          const currentPassword = document.getElementById("currentPassword").value;
-          const newPassword = document.getElementById("newPassword").value;
-          const confirmPassword = document.getElementById("confirmPassword").value;
-
-          // Get error message elements
-          const currentPasswordError = document.getElementById("currentPasswordError");
-          const newPasswordError = document.getElementById("newPasswordError");
-          const confirmPasswordError = document.getElementById("confirmPasswordError");
-
-          // Clear previous error messages
-          currentPasswordError.textContent = "";
-          newPasswordError.textContent = "";
-          confirmPasswordError.textContent = "";
-
-          // Validate form data
-          if (currentPassword.trim().length === 0){
-            currentPasswordError.textContent = 'Please fill this field';
-            return
-          }
-          if (newPassword.trim().length === 0){
-            newPasswordError.textContent = 'Please fill this field';
-            return
-          }
-          if (confirmPassword.trim().length === 0){
-            confirmPasswordError.textContent = 'Please fill this field';
-            return
-          } 
-
-          // Validate password complexity
-          const passwordRegex = /^(?=.*[a-zA-Z0-9!@#$%^&*])(?=.{6,14})/;
-          if (!passwordRegex.test(newPassword)) {
-              newPasswordError.textContent = "Password must be 6-14 characters long and contain only letters, numbers, or special characters.";
-              return;
-          }
-
-          // Validate new password and confirm password match
-          if (newPassword !== confirmPassword) {
-              confirmPasswordError.textContent = "Password do not match.";
-              return;
-          }
-
-          // Prepare data object to send to the server
-          const data = {
-              currentPassword: currentPassword,
-              newPassword: newPassword,
-              confirmPassword: confirmPassword
-          };
-
-          axios.post('/change-password', data)
-              .then(response => {
-                 // Clear input fields
-                 document.getElementById("currentPassword").value = '';
-                 document.getElementById("newPassword").value = '';
-                 document.getElementById("confirmPassword").value = '';
-                 
-                  showToast("Password changed successfully!");
-              })
-              .catch(error => {
-                  console.error(error.response);
-                  currentPasswordError.textContent = error.response.data.error;
-              });
+      if (name.length < 3) {
+        document.getElementById("nameErrors").textContent =
+          "Name should be at least 3 letters";
+        isValid = false;
+      } else if (!/^[a-zA-Z\s]{3,}$/.test(name)) {
+        document.getElementById("nameErrors").textContent =
+          "Name should include only letters";
+        isValid = false;
+      }
+      if (phone === "") {
+        document.getElementById("phoneErrors").textContent =
+          "Phone number is required";
+        isValid = false;
+      } else if (!/^\d{10}$/.test(phone)) {
+        document.getElementById("phoneErrors").textContent =
+          "Phone number must be 10 digits";
+        isValid = false;
+      }
+      if (address === "") {
+        document.getElementById("addressError").textContent =
+          "House Number or House Name is required";
+        isValid = false;
+      }
+      if (townCity === "") {
+        document.getElementById("townCityError").textContent =
+          "Town/City name is required";
+        isValid = false;
+      }
+      if (district === "") {
+        document.getElementById("districtError").textContent =
+          "District name is required";
+        isValid = false;
+      } else if (!/^[a-zA-Z\s]+$/.test(district)) {
+        document.getElementById("districtError").textContent =
+          "District should include only letters";
+        isValid = false;
+      }
+      if (postOffice === "") {
+        document.getElementById("postOfficeError").textContent =
+          "Post Office name is required";
+        isValid = false;
+      } else if (!/^[a-zA-Z\s]+$/.test(postOffice)) {
+        document.getElementById("postOfficeError").textContent =
+          "Post Office should include only letters";
+        isValid = false;
+      }
+      if (state === "") {
+        document.getElementById("stateError").textContent =
+          "State name is required";
+        isValid = false;
+      } else if (!/^[a-zA-Z\s]+$/.test(state)) {
+        document.getElementById("stateError").textContent =
+          "State should include only letters";
+        isValid = false;
+      }
+      if (pinCode === "") {
+        document.getElementById("pinCodeError").textContent =
+          "Pin Code is required";
+        isValid = false;
+      } else if (!/^\d{6}$/.test(pinCode)) {
+        document.getElementById("pinCodeError").textContent =
+          "Pin Code must be 6 digits";
+        isValid = false;
       }
 
+      if (isValid) {
+        // Form is valid, submit it
+        this.submit();
+      }
+    });
 
-      // cancelOrder
-      function cancelOrder () {
-        const orderId = document.getElementById('get-orderId').value;
-        console.log(orderId)
-        
-        axios.post('/cancel-order', { orderId: orderId })
-          .then(response => {
-            document.getElementById('cancel-btn').style.display = 'none';
-            document.getElementById('cancel-message').style.display = 'block';
+  function deleteAddress(addressId) {
+    axios
+      .delete("/delete-address", {
+        params: {
+          id: addressId, // assuming your server expects the address ID as 'id'
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+        showToast("Address deleted succesfully!");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
-            showToast('Order Cancelled successfully!');
-          })
-          .catch(error => {
-            console.error(error);
-          });
-        }
+  function changePassword(event) {
+    event.preventDefault(); // Prevent form submission
 
-      </script>
+    // Get form inputs
+    const currentPassword = document.getElementById("currentPassword").value;
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
 
+    // Get error message elements
+    const currentPasswordError = document.getElementById(
+      "currentPasswordError"
+    );
+    const newPasswordError = document.getElementById("newPasswordError");
+    const confirmPasswordError = document.getElementById(
+      "confirmPasswordError"
+    );
 
-      <!-- Include Footer -->
-      <%- include('../partials/_footer')%>
-        <!-- /Include Footer -->
+    // Clear previous error messages
+    currentPasswordError.textContent = "";
+    newPasswordError.textContent = "";
+    confirmPasswordError.textContent = "";
 
-        <script src="users/js/myAccount.js"></script>
+    // Validate form data
+    if (currentPassword.trim().length === 0) {
+      currentPasswordError.textContent = "Please fill this field";
+      return;
+    }
+    if (newPassword.trim().length === 0) {
+      newPasswordError.textContent = "Please fill this field";
+      return;
+    }
+    if (confirmPassword.trim().length === 0) {
+      confirmPasswordError.textContent = "Please fill this field";
+      return;
+    }
 
-        <!-- Include layoutFoot -->
-        <%- include('../partials/_layoutFoot')%>
-          <!-- /Include layoutFoot -->
+    // Validate password complexity
+    const passwordRegex = /^(?=.*[a-zA-Z0-9!@#$%^&*])(?=.{6,14})/;
+    if (!passwordRegex.test(newPassword)) {
+      newPasswordError.textContent =
+        "Password must be 6-14 characters long and contain only letters, numbers, or special characters.";
+      return;
+    }
+
+    // Validate new password and confirm password match
+    if (newPassword !== confirmPassword) {
+      confirmPasswordError.textContent = "Password do not match.";
+      return;
+    }
+
+    // Prepare data object to send to the server
+    const data = {
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+      confirmPassword: confirmPassword,
+    };
+
+    axios
+      .post("/change-password", data)
+      .then((response) => {
+        // Clear input fields
+        document.getElementById("currentPassword").value = "";
+        document.getElementById("newPassword").value = "";
+        document.getElementById("confirmPassword").value = "";
+
+        showToast("Password changed successfully!");
+      })
+      .catch((error) => {
+        console.error(error.response);
+        currentPasswordError.textContent = error.response.data.error;
+      });
+  }
+
+  // cancelOrder
+  function cancelOrder() {
+    const orderId = document.getElementById("get-orderId").value;
+    console.log(orderId);
+
+    axios
+      .post("/cancel-order", { orderId: orderId })
+      .then((response) => {
+        document.getElementById("cancel-btn").style.display = "none";
+        document.getElementById("cancel-message").style.display = "block";
+
+        showToast("Order Cancelled successfully!");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+</script>
+
+<!-- Include Footer -->
+<%- include('../partials/_footer')%>
+<!-- /Include Footer -->
+
+<script src="users/js/myAccount.js"></script>
+
+<!-- Include layoutFoot -->
+<%- include('../partials/_layoutFoot')%>
+<!-- /Include layoutFoot -->

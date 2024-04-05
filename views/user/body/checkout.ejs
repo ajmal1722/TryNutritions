@@ -372,13 +372,22 @@
     if (district === '') {
         document.getElementById('districtError').textContent = 'District is required';
         isValid = false;
+    } else if (!/^[a-zA-Z\s]+$/.test(district)) {
+        document.getElementById('districtError').textContent = 'District must contain only letters';
+        isValid = false;
     }
     if (postOffice === '') {
         document.getElementById('postOfficeError').textContent = 'Post Office is required';
         isValid = false;
+    } else if (!/^[a-zA-Z\s]+$/.test(postOffice)) {
+        document.getElementById('postOfficeError').textContent = 'Post Office must contain only letters';
+        isValid = false;
     }
     if (state === '') {
         document.getElementById('stateError').textContent = 'State is required';
+        isValid = false;
+    } else if (!/^[a-zA-Z\s]+$/.test(state)) {
+        document.getElementById('stateError').textContent = 'State must contain only letters';
         isValid = false;
     }
     if (pinCode === '') {
