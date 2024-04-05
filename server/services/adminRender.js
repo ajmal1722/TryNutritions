@@ -1,6 +1,7 @@
 const Product = require("../model/products");
 const Users = require('../model/userModel');
 const Orders = require('../model/order');
+const Banner = require('../model/banner')
 const Category = require('../model/category');
 const Vendors = require('../model/vendorModel');
 const Coupon = require('../model/coupon');
@@ -356,6 +357,29 @@ exports.updatedCategory = async (req, res) => {
     }
 };
 
+// Banner
+exports.addBanner = async (req, res) => {
+    try {
+        const file = req.file;
+
+        // Upload image to Cloudinary
+        const result = await cloudinary.uploader.upload(file.path);
+
+        // Create a new category with the data and Cloudinary information
+        const bannerData = {
+            ...req.body,
+            imageUrl: result.secure_url, // Cloudinary image URL
+            imageId: result.public_id     // Cloudinary image ID
+        };
+
+        const createBanner = await Banner.create(bannerData);
+
+        res.status(200).redirect('back');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};
 
 // vendor
 exports.viewVendor = async (req, res) => {

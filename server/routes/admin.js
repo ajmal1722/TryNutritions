@@ -24,6 +24,7 @@ route.get('/products', adminAuth.checkAuth, services.products);
 route.get('/coupons', adminAuth.checkAuth, services.coupons);
 
 route.get('/banners', adminAuth.checkAuth, services.banners);
+route.post('/add-banner', multer.single('bannerImage'), services.addBanner);
 
 route.get('/payments', adminAuth.checkAuth, services.payments);
 
@@ -42,9 +43,7 @@ route.post('/login', controller.login);
 route.get('/logout', controller.logout);
 
 route.post('/addProducts', multer.single('productImage'), controller.addProduct);
-
 route.get('/deleteProduct', services.deleteProduct);
-
 route.get('/editProduct', services.editProduct);
 
 route.post('/admin/updateProduct/:id', multer.single('productImage'), services.updateProduct)

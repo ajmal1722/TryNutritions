@@ -52,23 +52,23 @@
                     <h5 class="card-title my-3">Change Home Banner</h5>
                     <p class="card-text">Change Home Carousel and text</p>
                     
-                    <form>
+                    <form action="/add-banner" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <div class="mb-3">
                                 <label for="banner-img" class="form-label">Change Banner Image</label>
-                                <input type="file" class="form-control" id="banner-img" placeholder="Enter site name">
+                                <input type="file" class="form-control" id="banner-img" name="bannerImage" accept="image/*" >
                             </div>
                             <div class="mb-3">
                                 <label for="head" class="form-label">Banner Heading</label>sub-head
-                                <input type="text" class="form-control" id="head">
+                                <input type="text" class="form-control" id="head" name="heading">
                             </div>
                             <div class="mb-3">
                                 <label for="sub-head" class="form-label">Banner Sub-heading</label>
-                                <input type="text" class="form-control" id="sub-head">
+                                <input type="text" class="form-control" id="sub-head" name="subHeading">
                             </div>
                             <div class="mb-3">
                                 <label for="banner-href" class="form-label">Banner href</label>
-                                <input type="text" class="form-control" id="banner-href">
+                                <input type="text" class="form-control" id="banner-href" name="buttonLink">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-dark">Save Changes</button>
