@@ -46,7 +46,8 @@ exports.homeRoutes = async (req, res) => {
                 latestProducts: latestProduct,
                 searchQuery: searchQuery,
                 bestSellerProducts: bestSellerProduct,
-                limit: limit
+                limit: limit,
+                Banner: banner
             });
         } else {
             res.status(500).send(error);

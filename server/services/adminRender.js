@@ -124,7 +124,7 @@ exports.addProducts = async (req, res) => {
 } 
 
 exports.coupons = async (req, res) => {
-    coupon = await Coupon.find({}).exec()
+    const coupon = await Coupon.find({}).exec()
     res.render('admin/body/coupons', {
         pageName: 'Coupons',
         Coupon: coupon
@@ -135,7 +135,13 @@ exports.banners = (req, res) => res.render('admin/body/banner', { pageName: 'Ban
 
 exports.payments = (req, res) => res.render('admin/body/payments', { pageName: 'Payments' });
 
-exports.settings = (req, res) => res.render('admin/body/settings', { pageName: 'settings' });
+exports.settings = async (req, res) => {
+    const banner = await Banner.find({});
+    res.render('admin/body/settings', {
+        pageName: 'settings',
+        Banner: banner
+    });
+} 
 
 exports.vendors = async (req, res) => {
     const vendor = await Vendors.find({}).exec();
@@ -360,19 +366,34 @@ exports.updatedCategory = async (req, res) => {
 // Banner
 exports.addBanner = async (req, res) => {
     try {
-        const file = req.file;
+        const bannerId = req.query.id; 
 
-        // Upload image to Cloudinary
-        const result = await cloudinary.uploader.upload(file.path);
+        // Find the existing banner by ID
+        let banner = await Banner.findById(bannerId);
 
-        // Create a new category with the data and Cloudinary information
-        const bannerData = {
-            ...req.body,
-            imageUrl: result.secure_url, // Cloudinary image URL
-            imageId: result.public_id     // Cloudinary image ID
-        };
+        if (!banner) {
+            return res.status(404).json({ message: "Banner not found" });
+        }
 
-        const createBanner = await Banner.create(bannerData);
+        const updatedBanner = { ...req.body };
+
+        // Check if a new file is uploaded
+        if (req.file) {
+            // Upload the new image to Cloudinary
+            const result = await cloudinary.uploader.upload(req.file.path);
+
+            // Update the banner data with the new image URL and ID
+            banner.imageUrl = result.secure_url;
+            banner.imageId = result.public_id;
+        }
+
+        // Update other properties of the banner with the new data from req.body
+        banner.heading = req.body.heading;
+        banner.subHeading = req.body.subHeading;
+        banner.buttonLink = req.body.buttonLink;
+
+        // Save the updated banner
+        banner = await banner.save();
 
         res.status(200).redirect('back');
     } catch (error) {
