@@ -6,7 +6,13 @@ const Schema = new mongoose.Schema({
         contentType: String,
         imageBase64: String
     },
-    category: {
+    heading: {
+        type: String
+    },
+    subHeading: {
+        type: String
+    },
+    buttonLink: {
         type: String
     }
 })
