@@ -293,13 +293,13 @@
                           <div class="col-12 ">
                             <label class="form-label my-3">Name<sup>*</sup></label>
                             <input type="text" class="form-control" id="name" name="name" placeholder="Your Name">
-                            <p id="nameError" class="text-danger"></p>
+                            <p id="nameErrors" class="text-danger"> </p>
                           </div>
                           <div class="col-12 p-2">
                             <label class="form-label my-3">Phone<sup>*</sup></label>
                             <input type="number" class="form-control" id="phone" name="phone"
                               placeholder="Phone Number">
-                            <p id="phoneError" class="text-danger"></p>
+                            <p id="phoneErrors" class="text-danger"></p>
                           </div>
                           <div class="col-md-6 p-2">
                             <label class="form-label">House Name<sup>*</sup></label>
@@ -387,8 +387,8 @@
           event.preventDefault();
 
           // Reset error messages
-          document.getElementById('nameError').textContent = '';
-          document.getElementById('phoneError').textContent = '';
+          document.getElementById('nameErrors').textContent = '';
+          document.getElementById('phoneErrors').textContent = '';
           document.getElementById('addressError').textContent = '';
           document.getElementById('townCityError').textContent = '';
           document.getElementById('districtError').textContent = '';
@@ -409,18 +409,18 @@
 
           let isValid = true;
 
-          if (name === '') {
-            document.getElementById('nameError').textContent = 'Name is required';
+          if (name.length < 3) {
+            document.getElementById('nameErrors').textContent = 'Name should atleast 3 letters';
             isValid = false;
           } else if (!/^[a-zA-Z\s]{3,}$/.test(name)) {
-            document.getElementById('nameError').textContent = 'Name must be at least 3 letters and only include letters';
+            document.getElementById('nameErrors').textContent = 'Name includes only letters';
             isValid = false;
           }
           if (phone === '') {
-            document.getElementById('phoneError').textContent = 'Phone number is required';
+            document.getElementById('phoneErrors').textContent = 'Phone number is required';
             isValid = false;
           } else if (!/^\d{10}$/.test(phone)) {
-            document.getElementById('phoneError').textContent = 'Phone number must be 10 digits';
+            document.getElementById('phoneErrors').textContent = 'Phone number must be 10 digits';
             isValid = false;
           }
           if (address === '') {
