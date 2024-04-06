@@ -46,7 +46,15 @@
                             <a href="#" class="nav-link dropdown-toggle my-auto" data-bs-toggle="dropdown"><i class="fas fa-user fa-2x"></i></a>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0">
                                 <a href="myAccount" class="dropdown-item">My Account</a>
-                                <a href="login" class="dropdown-item">Login</a>
+                                <% if (verifiedUser) { %>
+                                    <a href="/logout" class="dropdown-item">
+                                        Logout
+                                    </a>
+                                <% } else { %>
+                                    <a href="login" class="dropdown-item">
+                                        Login
+                                    </a>
+                                <% } %>
                             </div>
                         </div>
                     </div>

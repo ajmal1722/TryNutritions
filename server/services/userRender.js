@@ -88,6 +88,7 @@ exports.shop = async (req, res) => {
         const productPerPage = 9;
         const searchQuery = req.query.search || ''; // Retrieve search query from request
         const sortBy = req.query.sortBy || ''; // Retrieve sorting parameter from request
+        const verifiedUser = req.user;
 
         // Define the sorting criteria based on the sortBy parameter
         let sortCriteria = {};
@@ -130,7 +131,8 @@ exports.shop = async (req, res) => {
             totalPages: totalPages,
             searchQuery: searchQuery,
             sortBy: sortBy, // Pass the sorting parameter to the view
-            req: req // Pass the request object for further processing if needed
+            req: req, // Pass the request object for further processing if needed
+            verifiedUser
         });
     } catch (error) {
         console.error('Error rendering shop page:', error);
@@ -178,27 +180,40 @@ exports.filterCategory = async (req, res) => {
 
 // shop-details
 exports.shopDetails = async (req, res) => {
-    const searchQuery = req.query.search || '';
-    const productId = req.query.id;
-    const product = await Products.findById(productId);
-    const category = await Category.find({}).exec();
-    const relatedProduct = await Products.find({ category: product.category }).limit(6);
-    const feauturedProduct = await Products.find({})
-                                            .sort({ discount: -1 })
-                                            .limit(4)
-                                            .exec()
+    try {
+        const searchQuery = req.query.search || '';
+        const productId = req.query.id;
+        const product = await Products.findById(productId);
+        const category = await Category.find({}).exec();
+        const relatedProduct = await Products.find({ category: product.category }).limit(6);
+        const feauturedProduct = await Products.find({})
+                                                .sort({ discount: -1 })
+                                                .limit(4)
+                                                .exec();
+        const verifiedUser = req.user;                                        
 
-    res.render('user/body/shop-details', {
-        pageName: 'Shop-details',
-        Product: product,
-        Categories: category,
-        relatedProducts: relatedProduct,
-        searchQuery: searchQuery,
-        feauturedProducts: feauturedProduct
-    });
+        res.render('user/body/shop-details', {
+            pageName: 'Shop-details',
+            Product: product,
+            Categories: category,
+            relatedProducts: relatedProduct,
+            searchQuery: searchQuery,
+            feauturedProducts: feauturedProduct,
+            verifiedUser
+        });
+    } catch (error) {
+        console.error('Error fetching shop details:', error);
+        res.status(500).json({ error: error.message });
+    }
 } 
 
-exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Contact us' });
+exports.contact = (req, res) => {
+    const verifiedUser = req.user;
+    res.render('user/body/contact', { 
+        pageName: 'Contact us',
+        verifiedUser 
+    });  
+} 
 
 // checkout
 exports.checkout = async (req, res) => {
@@ -210,6 +225,7 @@ exports.checkout = async (req, res) => {
         pageName: 'Checkout',
         Cart: cart,
         User: user,
+        verifiedUser: userId
      })
 };
 
@@ -242,7 +258,8 @@ exports.myAccount = async (req, res) => {
         res.status(201).render('user/body/myAccount', {
             pageName: 'My Account',
             User: user,
-            Orders: orders
+            Orders: orders,
+            verifiedUser: userId
         });
     } catch (error) {
         res.status(500).send({ error: error.message });
@@ -261,6 +278,7 @@ exports.cart = async (req, res) => {
         res.render('user/body/cart', {
             pageName: 'Cart',
             cart: cart,
+            verifiedUser: user
         });
     } catch (error) {
         res.status(500).send({ error: error.message });
@@ -793,6 +811,7 @@ exports.paymentSuccess = async (req, res) => {
 
 exports.orderSuccess = async (req, res) => {
     const orderId = req.query.id;
+    const verifiedUser = req.user;
 
     console.log('orderId:token', orderId)
 
@@ -801,6 +820,7 @@ exports.orderSuccess = async (req, res) => {
 
     res.render('user/body/orderCompletion', {
         pageName: '',
-        Order: order
+        Order: order,
+        verifiedUser
     });
 } 

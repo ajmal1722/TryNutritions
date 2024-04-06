@@ -15,6 +15,7 @@ exports.homeRoutes = async (req, res) => {
     const category = await Category.find({}).exec();
     const banner = await Banner.find({}).exec();
     const product = await Products.find({}).exec();
+    const verifiedUser = req.user;
     const latestProduct = await Products.find({})
                                 .sort({createdAt: -1})
                                 .limit(8)
@@ -35,7 +36,8 @@ exports.homeRoutes = async (req, res) => {
             searchQuery: searchQuery,
             bestSellerProducts: bestSellerProduct,
             limit: limit,
-            Banner: banner
+            Banner: banner,
+            verifiedUser
         })
     } catch (error) {
         if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
@@ -47,7 +49,8 @@ exports.homeRoutes = async (req, res) => {
                 searchQuery: searchQuery,
                 bestSellerProducts: bestSellerProduct,
                 limit: limit,
-                Banner: banner
+                Banner: banner,
+                verifiedUser
             });
         } else {
             res.status(500).send(error);
