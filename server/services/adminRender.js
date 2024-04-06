@@ -25,6 +25,7 @@ exports.admindashboard = async (req, res) => {
                 totalFinalAmount: { $sum: "$finalAmount" }
             }
         }]);
+        const products = await Product.find({}).sort({ salesCount: -1}).limit(5)
 
         console.log(totalOrder[0])
         // Extract the total final amount from the result
@@ -35,7 +36,8 @@ exports.admindashboard = async (req, res) => {
             Orders: orders,
             totalOrders: orderlength,
             Users: users,
-            totalsales: totalFinalAmount
+            totalsales: totalFinalAmount,
+            products
          });  
     } catch (error) {
         console.error(error);
