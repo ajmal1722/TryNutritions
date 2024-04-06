@@ -12,6 +12,7 @@ const upload = require('../middlewares/multer');
 
 // admin dashboard
 route.get('/admin/', adminAuth.checkAuth, services.admindashboard);
+route.get('/admin/show-line-chart', adminAuth.checkAuth, services.showLineChart);
 
 // admin login
 route.get('/login', adminAuth.checkAuthenticated, services.adminLogin);

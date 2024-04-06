@@ -10,7 +10,8 @@ const fs = require('fs');
 const uploads = require('../middlewares/multer');
 const cloudinary = require('../middlewares/cloudinary');
 const { error } = require("console");
-const nodemailer = require('nodemailer')
+const nodemailer = require('nodemailer');
+const Order = require("../model/order");
 
 // admin dashboard
 exports.admindashboard = async (req, res) => {
@@ -529,6 +530,38 @@ exports.updateOrderStatus = async (req, res) => {
     }
 }
 
+exports.showLineChart = async (req, res) => {
+    try {
+        // Get orders for the last 7 days
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const orders = await Order.find({ orderDate: { $gte: sevenDaysAgo } });
+
+        const labels = [];
+        const data = [];
+
+        // Initialize data array with 0s for each day
+        for (let i = 0; i < 7; i++) {
+            const date = new Date();
+            date.setDate(date.getDate() - 6 + i);
+            const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
+            labels.push(formattedDate);
+            data.push(0);
+        }
+
+        // Populate data array with total sales for each day
+        orders.forEach(order => {
+            const orderDate = new Date(order.orderDate);
+            const dayIndex = Math.floor((orderDate - sevenDaysAgo) / (1000 * 60 * 60 * 24)); // Calculate index of the day in the data array
+            data[dayIndex] += order.finalAmount; // Add order's finalAmount to the corresponding day's total
+        });
+
+        res.status(200).json({ labels: labels, data: data });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
 
 
 

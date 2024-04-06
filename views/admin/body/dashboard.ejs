@@ -48,6 +48,10 @@
 				</li>
 			</ul>
 
+			<!-- chart js -->
+			<div class="container p-5">
+				<canvas id="myChart"></canvas>
+			</div>
 
 			<div class="table-data">
 				<div class="order">
@@ -127,5 +131,48 @@
 	
 	
 	<script src="/admin/js/script.js"></script>
+	<!-- Axios library -->
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<!-- Chart js -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+	<script>
+		// Fetch data from server and render chart
+		axios.get('/admin/show-line-chart')
+			.then(res => {
+				const chartData = res.data; // Assuming the response contains necessary data for chart
+				renderChart(chartData);
+			})
+			.catch(err => {
+				// Error handling
+				console.error('Error fetching chart data:', err);
+			});
+	
+		// Function to render the chart
+		function renderChart(chartData) {
+			// Your chart rendering code here
+			const ctx = document.getElementById('myChart');
+			new Chart(ctx, {
+				type: 'line',
+				data: {
+					labels: chartData.labels, 
+					datasets: [{
+						label: 'Total Amount',
+						data: chartData.data,
+						borderWidth: 1
+					}]
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: true
+						}
+					}
+				}
+			});
+		}
+	</script>
+	
 </body>
 </html>
