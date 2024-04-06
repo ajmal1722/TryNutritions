@@ -753,6 +753,10 @@
         document.getElementById("townCityError").textContent =
           "Town/City name is required";
         isValid = false;
+      } else if (!/^[a-zA-Z\s]+$/.test(townCity)){
+        document.getElementById("townCityError").textContent =
+          "Only letters are allowed";
+        isValid = false;
       }
       if (district === "") {
         document.getElementById("districtError").textContent =
@@ -767,7 +771,7 @@
         document.getElementById("postOfficeError").textContent =
           "Post Office name is required";
         isValid = false;
-      } else if (!/^[a-zA-Z\s]+$/.test(postOffice)) {
+      } else if (!/^[a-zA-Z.\s]+$/.test(postOffice)) {
         document.getElementById("postOfficeError").textContent =
           "Post Office should include only letters";
         isValid = false;
