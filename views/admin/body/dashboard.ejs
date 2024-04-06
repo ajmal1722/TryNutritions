@@ -75,18 +75,18 @@
 					<!-- chart js -->
 					<div class="row">
 						<div class="col-lg-8 py-5">
-							<h5>Average sale of last 7 Days: </h5>
+							<h5>Average sale of last 7 Days: <span id="average-sale" class="text-secondary mx-2"></span></h5>
 							<canvas id="myChart"></canvas>
 						</div>
 						<div class="col-lg-4 py-5">
-							<h3>Top 5 Most Sold Products</h3>
+							<h3 class="mb-3">Top 5 Most Sold Products</h3>
 							<div class="table-responsive">
 								<table class="table table-striped">
 								  <tbody>
 									<% products.forEach(product => { %>
 									  <tr style="margin-bottom: 3px;">
 										<td>
-										  <img src="<%= product.imageUrl %>" alt="<%= product.name %>" style="max-width: 60px;">
+										  <img src="<%= product.imageUrl %>" alt="<%= product.name %>" style="max-width: 65px;">
 										</td>
 										<td><%= product.name %></td>
 										<td><%= product.salesCount %> kg</td>
@@ -187,11 +187,15 @@
 
 
 	<script>
+
+		
 		// Fetch data from server and render chart
 		axios.get('/admin/show-line-chart')
 			.then(res => {
 				const chartData = res.data; // Assuming the response contains necessary data for chart
 				renderChart(chartData);
+				const avgSale = '₹' + (res.data.totalFinalAmount / 7).toFixed(2);
+				document.getElementById('average-sale').textContent = avgSale;
 			})
 			.catch(err => {
 				// Error handling

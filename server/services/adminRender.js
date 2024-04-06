@@ -541,6 +541,7 @@ exports.showLineChart = async (req, res) => {
 
         const labels = [];
         const data = [];
+        let totalFinalAmount = 0;
 
         // Initialize data array with 0s for each day
         for (let i = 0; i < 7; i++) {
@@ -556,9 +557,10 @@ exports.showLineChart = async (req, res) => {
             const orderDate = new Date(order.orderDate);
             const dayIndex = Math.floor((orderDate - sevenDaysAgo) / (1000 * 60 * 60 * 24)); // Calculate index of the day in the data array
             data[dayIndex] += order.finalAmount; // Add order's finalAmount to the corresponding day's total
+            totalFinalAmount += order.finalAmount; // Add order's finalAmount to the total
         });
 
-        res.status(200).json({ labels: labels, data: data });
+        res.status(200).json({ labels: labels, data: data, totalFinalAmount: totalFinalAmount });
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
