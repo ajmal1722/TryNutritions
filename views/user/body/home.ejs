@@ -167,7 +167,7 @@
                                                                 <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;"><%= product.category %></div>
                                                                 <div class="p-4">
                                                                     <h4><%= product.name %></h4>
-                                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                                                                    <p><%= product.description.length > 130 ? product.description.slice(0, 130) + '...' : product.description %>
                                                                     <div class="d-flex justify-content-between flex-lg-wrap">
                                                                         <p class="text-dark fs-5 fw-bold mb-0"><%= product.sellingPrice %> / kg</p>
                                                                         <form action="/add-to-cart?id=<%= product._id %>" method="post">
@@ -249,30 +249,16 @@
             <div class="container py-5">
                 <h1 class="mb-0">Recommended Products</h1>
                 <div class="owl-carousel vegetable-carousel justify-content-center">
-                    <div class="border border-primary rounded position-relative vesitable-item">
-                        <div class="vesitable-img">
-                            <img src="/users/img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-                        </div>
-                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                        <div class="p-4 rounded-bottom">
-                            <h4>Parsely</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
                     <% latestProducts.forEach(product => { %>
                         <a href="/shop-details?id=<%= product._id %>" class="text-decoration-none">
-                            <div class="border border-primary rounded position-relative vesitable-item">
+                            <div class="border border-primary rounded position-relative vesitable-item" style="height: 490px;">
                                 <div class="vesitable-img" style="height: 240px;">
                                     <img src="<%= product.imageUrl %>" class="img-fluid w-100 rounded-top" alt="">
                                 </div>
-                                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
+                                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;"><%= product.category %></div>
                                 <div class="p-4 rounded-bottom">
                                     <h4><%= product.name %></h4>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                                    <p><%= product.description.length > 130 ? product.description.slice(0, 130) + '...' : product.description %>
                                     <div class="d-flex justify-content-between flex-lg-wrap">
                                         <p class="text-dark fs-5 fw-bold mb-0">₹<%= product.sellingPrice %> / kg</p>
                                         <form onclick="addToCartAlert('<%= product._id %>')">
@@ -285,20 +271,6 @@
                             </div>
                         </a>   
                     <% }) %>
-                    <div class="border border-primary rounded position-relative vesitable-item">
-                        <div class="vesitable-img">
-                            <img src="/users/img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-                        </div>
-                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                        <div class="p-4 rounded-bottom">
-                            <h4>Parsely</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

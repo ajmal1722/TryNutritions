@@ -85,7 +85,7 @@ exports.verifyOtp = async (req, res) => {
 exports.shop = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1; // Default to page 1 if not specified
-        const productPerPage = 2;
+        const productPerPage = 9;
         const searchQuery = req.query.search || ''; // Retrieve search query from request
         const sortBy = req.query.sortBy || ''; // Retrieve sorting parameter from request
 
@@ -143,7 +143,7 @@ exports.viewMore = async (req, res) => {
     const featuredProducts = await Products.find({})
         .sort({ discount: -1 })
         .skip(4)
-        .limit(6)
+        .limit(3)
         .exec();
 
     res.json({ products: featuredProducts })
