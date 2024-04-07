@@ -51,7 +51,7 @@ route.get('/myAccount', authentication.checkAuth, authentication.fetchCartItems,
 route.get('/contact', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.contact)
 
 // Category filtering in shop page
-route.get('/filter-category', services.filterCategory)
+// route.get('/filter-category', services.filterCategory)
 
 
 route.post('/api/login', controller.login);

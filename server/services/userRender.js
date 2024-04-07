@@ -90,6 +90,9 @@ exports.shop = async (req, res) => {
         const sortBy = req.query.sortBy || ''; // Retrieve sorting parameter from request
         const verifiedUser = req.user;
 
+        // Extract categories from the query parameter
+        const categories = req.query.categories ? req.query.categories.split(',') : [];
+
         // Define the sorting criteria based on the sortBy parameter
         let sortCriteria = {};
         if (sortBy === 'priceLowToHigh') {
@@ -101,21 +104,25 @@ exports.shop = async (req, res) => {
             sortCriteria = {};
         }
 
+        // Build the category filter
+        const categoryFilter = categories.length > 0 ? { category: { $in: categories } } : {};
+
         const totalProducts = await Products.countDocuments({
-            name: { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search by name
+            name: { $regex: new RegExp(searchQuery, 'i') }, // Case-insensitive search by name
+            ...categoryFilter // Apply category filter
         });
         const totalPages = Math.ceil(totalProducts / productPerPage);
 
         const products = await Products.find({
-            name: { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search by name
+            name: { $regex: new RegExp(searchQuery, 'i') }, // Case-insensitive search by name
+            ...categoryFilter // Apply category filter
         })
         .sort(sortCriteria) // Apply sorting criteria
         .skip((page - 1) * productPerPage)
         .limit(productPerPage)
         .exec();
-        
-        console.log(products)
-        const categories = await Category.find().exec();
+
+        const allCategories = await Category.find().exec();
         const featuredProducts = await Products.find({})
             .sort({ discount: -1 })
             .limit(3)
@@ -124,9 +131,9 @@ exports.shop = async (req, res) => {
         res.render('user/body/shop', {
             pageName: 'Shop',
             Products: products,
-            Categories: categories,
+            Categories: allCategories,
             feauturedProducts: featuredProducts,
-            selectedCategories: [], // Initialize selected categories as empty
+            selectedCategories: categories, // Pass the selected categories to the view
             currentPage: page, // Pass the current page number
             totalPages: totalPages,
             searchQuery: searchQuery,
@@ -141,6 +148,7 @@ exports.shop = async (req, res) => {
 };
 
 
+
 exports.viewMore = async (req, res) => {
     const featuredProducts = await Products.find({})
         .sort({ discount: -1 })
@@ -151,32 +159,30 @@ exports.viewMore = async (req, res) => {
     res.json({ products: featuredProducts })
 }
 
-exports.filterCategory = async (req, res) => {
-    let query = {};
-    let selectedCategories = [];
+// exports.filterCategory = async (req, res) => {
+//     let query = {};
+//     let selectedCategories = [];
 
-    // Check if the request query contains categories
-    if (req.query.categories) {
-        // Split the categories string into an array
-        selectedCategories = req.query.categories.split(',');
+//     // Check if the request query contains categories
+//     if (req.query.categories) {
+//         // Split the categories string into an array
+//         selectedCategories = req.query.categories.split(',');
 
-        // Construct MongoDB query to find products where the category field matches any of the selected categories
-        query.category = { $in: selectedCategories };
-        console.log('selected Categories:', selectedCategories)
-    }
+//         // Construct MongoDB query to find products where the category field matches any of the selected categories
+//         query.category = { $in: selectedCategories };
+//         console.log('selected Categories:', selectedCategories)
+//     }
 
-    try {
-        // Fetch products based on the constructed query
-        const products = await Products.find(query).exec();
-        console.log('Filtered Products:', products.length, products)
-        res.json({products});
-    } catch (error) {
-        console.error('Error filtering categories:', error);
-        res.status(500).json({ error: error.message });
-    }
-};
-
-
+//     try {
+//         // Fetch products based on the constructed query
+//         const products = await Products.find(query).exec();
+//         console.log('Filtered Products:', products.length, products)
+//         res.json({products});
+//     } catch (error) {
+//         console.error('Error filtering categories:', error);
+//         res.status(500).json({ error: error.message });
+//     }
+// };
 
 // shop-details
 exports.shopDetails = async (req, res) => {
