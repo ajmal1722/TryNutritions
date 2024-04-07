@@ -289,9 +289,14 @@ exports.cart = async (req, res) => {
 exports.addToCart = async (req, res) => {
     try {
         const productId = req.query.id;
+        
+        if (!req.user) {
+            return res.status(401).json({ error: "User is not present" });
+        }
         const userId = req.user._id;
 
         // Check if userId is not present
+        console.log('user:', userId)
         if (!userId) {
             return res.status(401).json({ error: "User is not logged in." });
         }
@@ -337,7 +342,7 @@ exports.addToCart = async (req, res) => {
         await cart.save();
 
         // Redirect to the current page
-        res.status(200).redirect('back');
+        res.status(200).json({ cart });
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
