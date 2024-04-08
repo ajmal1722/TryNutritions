@@ -47,7 +47,7 @@ route.get('/checkout', authentication.checkAuth, authentication.fetchCartItems, 
 route.get('/error', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.errorMessage)
 
 // Order
-route.get('/order-completed', authentication.fetchCartItems, services.orderSuccess)
+route.get('/order-completed', authentication.fetchCartItems, services.orderSuccess);
 
 // my account
 route.get('/myAccount', authentication.checkAuth, authentication.fetchCartItems, services.myAccount);

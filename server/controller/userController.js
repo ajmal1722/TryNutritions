@@ -70,10 +70,12 @@ exports.userLogin = async (req, res) => {
             const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR)
             res.status(201).redirect('/');
         } else {
+            res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
             res.render('user/body/login')
         }
     } catch (error) {
         if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
+            res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
             res.status(201).render('user/body/login');
         } else {
             res.status(500).send(error);
@@ -430,7 +432,7 @@ exports.verifyPasswordOtp = async (req, res) => {
     try {
         console.log(req.body);
 
-        
+
     } catch (error) {
         res.status(500).send({ error: error.message });
     }

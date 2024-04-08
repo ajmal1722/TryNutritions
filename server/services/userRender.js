@@ -19,7 +19,10 @@ const razorpayInstance = new Razorpay({
 
 
 // signup page
-exports.userSigup = (req, res) => res.render('user/body/signup');
+exports.userSigup = (req, res) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.render('user/body/signup');
+} 
 
 exports.forgottenPassword = (req, res) => {
     res.render('user/body/forget');
@@ -36,6 +39,7 @@ exports.otpPage = async (req, res) => {
 
     const otpExpiration = user.emailOtp.expiry;
 
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.render('user/body/otpVerificationPage', { email: email, expiry: otpExpiration });
 };
 
@@ -219,6 +223,8 @@ exports.shopDetails = async (req, res) => {
 
 exports.contact = (req, res) => {
     const verifiedUser = req.user;
+
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.render('user/body/contact', { 
         pageName: 'Contact us',
         verifiedUser 
@@ -277,6 +283,8 @@ exports.checkout = async (req, res) => {
 
     const user = await User.findById(userId)
     const cart = await Cart.findOne({ user: userId })
+
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.render('user/body/checkout', {
         pageName: 'Checkout',
         Cart: cart,
@@ -339,6 +347,7 @@ exports.myAccount = async (req, res) => {
         ]);
         console.log(orders)
 
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
         res.status(201).render('user/body/myAccount', {
             pageName: 'My Account',
             User: user,
@@ -359,6 +368,7 @@ exports.cart = async (req, res) => {
         // console.log('User: ', user);
         // console.log('Cart: ', cart);
 
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
         res.render('user/body/cart', {
             pageName: 'Cart',
             cart: cart,
