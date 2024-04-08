@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TryNutrition| Forget Password</title>
+    <title>TryNutritions | Forget Password</title>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.3/components/logins/login-6/assets/css/login-6.css">
     <style>
         body {
             background-size: cover;
-            background-color: rgb(207, 215, 223);
         }
     </style>
 </head>
+
 <body>
     <section class="pb-md-5">
         <div style="margin-top: 10vh;" class="container">
@@ -21,12 +22,14 @@
                     <div class="card border-0 shadow-lg rounded-4">
                         <div class="card-body p-3 p-md-4 p-xl-5">
                             <div class="align align-items-end d-flex justify-content-end">
-                                <a href="/login">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                                        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
+                                <a href="/login"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
                                     </svg>
                                 </a>
                             </div>
+
                             <div class="row">
                                 <div class="col-12">
                                     <div class="mb-3">
@@ -34,75 +37,133 @@
                                     </div>
                                 </div>
                             </div>
-                            <form id="resetPasswordForm" action="/verify-Otp" method="post">
+                            <form action="resetpassload" method="post">
                                 <div class="row gy-1 overflow-hidden">
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
+                                            <input type="email" class="form-control" name="email" id="email"
+                                                placeholder="name@example.com" required>
                                             <label for="email" class="form-label">Email</label>
+                                            <p id="emailError" class="text-danger"></p>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="form-floating mb-3" id="otpField" style="display: none;">
-                                            <input type="text" class="form-control" name="otp" id="otp" placeholder="OTP" required>
+                                        <div class="form-floating mb-3">
+                                            <input type="password" class="form-control" name="password" id="password"
+                                                placeholder="Password" required>
+                                            <label for="password" class="form-label">Create a New Password</label>
+                                            <p id="passwordError" class="text-danger"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating mb-3">
+                                            <input type="password" class="form-control" id="confirmPassword"
+                                                placeholder="Confirm Password" required>
+                                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                            <p id="confirmPasswordError" class="text-danger"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="otp" id="otp"
+                                                placeholder="OTP" disabled>
                                             <label for="otp" class="form-label">OTP</label>
+
+                                            <button id="generateBtn" class="btn btn-sm btn-dark mt-3"
+                                                onclick="generateOTP()" type="button">Generate OTP</button>
+                                            <button id="verifyBtn" class="btn btn-sm btn-dark mt-3"
+                                                 type="button" style="display: none;">Verify OTP</button>
+
+                                        </div>
+
+                                        <div id="timer" style="display:none;">
+                                            <p>OTP will expire in <span id="countdown">60</span> seconds</p>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="d-grid">
-                                            <button class="btn btn-sm btn-dark mt-3" id="generateBtn" type="button" onclick="generateOTP()">Generate OTP</button>
-                                            <button class="btn btn-sm btn-dark mt-3" id="verifyBtn" type="submit" style="display: none;">Verify OTP</button>
+                                            <button class="btn bsb-btn-lg btn-dark" type="button" id="resetPasswordBtn"
+                                                onclick="PasswordChange()" style="display: none;">Reset Password</button>
                                         </div>
                                     </div>
                                 </div>
                             </form>
-                            <div id="timer" style="display:none;">
-                                <p>OTP will expire in <span id="countdown">60</span> seconds</p>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- Axios -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>    
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    function generateOTP() {
+    <script>
+        function generateOTP() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
 
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('passwordError').textContent = '';
 
-        const email = document.getElementById('email').value;
-        console.log(email)
+            // Check if email is empty
+            if (!email.trim()) {
+                document.getElementById('emailError').textContent = 'Email cannot be empty.';
+                return;
+            }
 
-        axios.post('/generate-otp', { email })
-            .then((result) => {
-                // Hide the email field and show the OTP field and related buttons
-                document.getElementById('email').setAttribute('disabled', 'disabled');
-                document.getElementById('otpField').style.display = 'block';
-                document.getElementById('generateBtn').style.display = 'none';
-                document.getElementById('verifyBtn').style.display = 'block';
-                document.getElementById('resetPasswordBtn').style.display = 'none';
+            // Check if password is empty
+            if (!password.trim()) {
+                document.getElementById('passwordError').textContent = 'Password cannot be empty.';
+                return;
+            }
 
-                // Add an event listener to the generateBtn button
-                document.getElementById('generateBtn').addEventListener('click', (event) => {
-                    event.preventDefault()
-                    const userOtp = document.getElementById('otp').value;
-                    console.log('otp:', userOtp);
-                    console.log('verify button is clicked');
+             // Regular expression for password validation (6-14 characters, letters, numbers, and special characters allowed)
+            const passwordRegex = /^(?=.*[a-zA-Z0-9!@#$%^&*])(?=.{6,14})/;
+            
+            if (!password.match(passwordRegex)) {
+                document.getElementById('passwordError').textContent = 'Password must be between 6-14 characters and contain only letters, numbers, and special characters';
+                return;
+            }
+
+            // Check if passwords match
+            if (password !== confirmPassword) {
+                document.getElementById('passwordError').textContent = 'Passwords do not match.';
+                return;
+            }
+
+            axios.post('/generate-otp', { email })
+                .then((result) => {
+                    document.getElementById('email').setAttribute('disabled', 'disabled');
+                    // document.getElementById('otpField').style.display = 'block';
+                    document.getElementById('generateBtn').style.display = 'none';
+                    document.getElementById('verifyBtn').style.display = 'block';
+                    document.getElementById('resetPasswordBtn').style.display = 'none';
+                    document.getElementById('otp').removeAttribute('disabled');
+                })
+                .catch((err) => {
+                    console.log(err);
                 });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        }
 
-        // Start the countdown timer
-        // startTimer();
-    }
+        function verifyOTP() {
+            const otp = document.getElementById('otp').value;
+            const email = document.getElementById('email').value;
 
-    
-</script>
+            axios.post('/verify-Otp', { email, otp })
+                .then((response) => {
+                    // Handle response
+                })
+                .catch((error) => {
+                    // Handle error
+                });
+        }
+
+        function PasswordChange() {
+            // Code for password change
+        }
+    </script>
 </body>
+
 </html>
