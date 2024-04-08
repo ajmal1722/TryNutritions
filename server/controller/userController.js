@@ -8,6 +8,10 @@ const nodemailer = require('nodemailer');
 const Order = require('../model/order');
 const Banner = require('../model/banner');
 
+
+// storing otp globally
+let resetOtp = { emailOtp: null};
+
 // home route (home page)
 exports.homeRoutes = async (req, res) => {
     const limit = 8;
@@ -357,6 +361,76 @@ exports.cancelOrder = async (req, res) => {
 
         const order = await Order.findByIdAndUpdate(orderId, { status: 'Cancelled' })
         res.status(200).json({ order });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+// Forgot Password
+exports.generateOtp = (req, res) => {
+    try {
+        const { email } = req.body;
+        console.log('email:', req.body)
+
+        // Generate a random OTP
+        const otp = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
+
+        // save the generated otp in a variable
+        resetOtp.emailOtp = otp
+
+        const emailContent = `
+            <h6>Verify Your Email Address</h6>
+            
+            <p class="text-center">Verify your email to finish Your resetting password.
+            use the following verification code:
+            </p>
+
+            <h4 class="text-center">${otp}</h4>
+
+            <p>The verification code is valid for  2 minutes</p>
+        `;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // Use `true` for port 465, `false` for all other ports
+            auth: {
+              user: process.env.APP_EMAIL,
+              pass: process.env.APP_PASSWORD,
+            },
+        });
+                    
+        // send mail with defined transport object
+        const mailOptions = {
+            from: process.env.APP_EMAIL, // sender address
+            to: email, // list of receivers
+            subject: "OTP for account verification", // Subject line
+            text: `Your OTP for account verification is: ${otp}`, // plain text body
+            html: emailContent, // html body
+        };
+        
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                return console.log('err:', err)
+            }
+            
+            console.log("Message sent: %s", info.messageId);
+            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        })
+
+        res.status(200).json({ resetOtp })
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+    
+}
+
+exports.verifyPasswordOtp = async (req, res) => {
+    try {
+        console.log(req.body);
+
+        
     } catch (error) {
         res.status(500).send({ error: error.message });
     }

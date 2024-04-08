@@ -21,6 +21,10 @@ const razorpayInstance = new Razorpay({
 // signup page
 exports.userSigup = (req, res) => res.render('user/body/signup');
 
+exports.forgottenPassword = (req, res) => {
+    res.render('user/body/forget');
+}
+
 exports.otpPage = async (req, res) => {
     const email = req.query.email;
     const user = await User.findOne({ email: email });

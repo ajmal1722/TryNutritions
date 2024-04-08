@@ -14,6 +14,11 @@ route.get('/', authentication.getCartInNotAuthorizedPage, authentication.fetchCa
 // login
 route.get('/login', controller.userLogin);
 
+// Forgot Password
+route.get('/forgot-password', services.forgottenPassword);
+route.post('/generate-otp', controller.generateOtp);
+route.post('/verify-Otp', controller.verifyPasswordOtp);
+
 // logout
 route.get('/logout', controller.logout);
 
