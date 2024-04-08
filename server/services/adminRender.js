@@ -541,12 +541,14 @@ exports.showLineChart = async (req, res) => {
 
         const labels = [];
         const data = [];
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for accurate comparison
         let totalFinalAmount = 0;
 
         // Initialize data array with 0s for each day
         for (let i = 0; i < 7; i++) {
-            const date = new Date();
-            date.setDate(date.getDate() - 6 + i);
+            const date = new Date(currentDate); // Clone current date
+            date.setDate(date.getDate() - 6 + i); // Set the date to each of the last 7 days
             const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
             labels.push(formattedDate);
             data.push(0);
@@ -555,6 +557,7 @@ exports.showLineChart = async (req, res) => {
         // Populate data array with total sales for each day
         orders.forEach(order => {
             const orderDate = new Date(order.orderDate);
+            orderDate.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for accurate comparison
             const dayIndex = Math.floor((orderDate - sevenDaysAgo) / (1000 * 60 * 60 * 24)); // Calculate index of the day in the data array
             data[dayIndex] += order.finalAmount; // Add order's finalAmount to the corresponding day's total
             totalFinalAmount += order.finalAmount; // Add order's finalAmount to the total
