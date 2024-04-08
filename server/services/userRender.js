@@ -242,25 +242,53 @@ exports.errorMessage = (req, res) => res.render('user/body/error');
 exports.myAccount = async (req, res) => {
     try {
         const userId = req.user._id;
-    
+
         const user = await User.findById(userId);
-        const orders = await Order.find({ userId });
-
-        // Iterate through each order and fetch image URLs for items
-        for (let order of orders) {
-            // Extract product ids from the order items
-            const productIds = order.items.map(item => item.product);
-
-            // Fetch products with the extracted product ids
-            const products = await Products.find({ _id: { $in: productIds } });
-
-            // Map each item to include imageUrl
-            order.items = order.items.map((item, index) => ({
-                ...item.toObject(),
-                imageUrl: products[index].imageUrl
-            }));
-        }
         
+        // Aggregate pipeline to perform lookup
+        const orders = await Order.aggregate([
+            {
+                $match: { userId: userId }
+            },
+            {
+                $lookup: {
+                    from: "products", // Name of the collection to join
+                    localField: "items.product", // Field from the Orders collection
+                    foreignField: "_id", // Field from the Products collection
+                    as: "productInfo" // Alias for the joined documents
+                }
+            },
+            {
+                $addFields: {
+                    items: {
+                        $map: {
+                            input: "$items",
+                            as: "item",
+                            in: {
+                                $mergeObjects: [
+                                    "$$item",
+                                    {
+                                        imageUrl: {
+                                            $arrayElemAt: [
+                                                "$productInfo.imageUrl",
+                                                { $indexOfArray: ["$productInfo._id", "$$item.product"] }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    productInfo: 0 // Exclude productInfo from the output
+                }
+            }
+        ]);
+        console.log(orders)
+
         res.status(201).render('user/body/myAccount', {
             pageName: 'My Account',
             User: user,
@@ -271,6 +299,7 @@ exports.myAccount = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 }
+
 
 // cart
 exports.cart = async (req, res) => {
