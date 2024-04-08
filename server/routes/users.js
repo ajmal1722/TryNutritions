@@ -48,7 +48,8 @@ route.get('/order-completed', authentication.fetchCartItems, services.orderSucce
 route.get('/myAccount', authentication.checkAuth, authentication.fetchCartItems, services.myAccount);
 
 // contact us
-route.get('/contact', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.contact)
+route.get('/contact', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.contact);
+route.post('/message-from-user', authentication.checkAuth, services.messageFromUser)
 
 // Category filtering in shop page
 // route.get('/filter-category', services.filterCategory)

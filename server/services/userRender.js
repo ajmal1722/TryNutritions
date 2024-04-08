@@ -221,6 +221,52 @@ exports.contact = (req, res) => {
     });  
 } 
 
+exports.messageFromUser = async (req, res) => {
+    const userID = req.user._id;
+    const data = req.body;
+
+    const emailContent = `
+        <p>From: </strong> ${data.name}</li></p>
+
+        <p>Email: </strong> ${data.email}</li></p>
+    
+        <p>Message: </strong> ${data.message}</li></p>
+        
+    `;
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // Use `true` for port 465, `false` for all other ports
+        auth: {
+            user: process.env.APP_EMAIL,
+            pass: process.env.APP_PASSWORD,
+        },
+    });
+                
+    // send mail with defined transport object
+    const mailOptions = {
+        from: process.env.APP_EMAIL, // sender address
+        to: 'ajuajmal1722001@gmail.com', // list of receivers
+        subject: "Message from User", // Subject line
+        text: "Message to TryNutritions", // plain text body
+        html: emailContent, // html body
+    };
+    
+    transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            return console.log('err:', err)
+        }
+        
+        console.log("Message sent: %s", info.messageId);
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    })
+        
+    console.log(userID, data);
+    res.status(200).redirect('back');
+}
+
 // checkout
 exports.checkout = async (req, res) => {
     const userId = req.user._id;
@@ -299,7 +345,6 @@ exports.myAccount = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 }
-
 
 // cart
 exports.cart = async (req, res) => {
