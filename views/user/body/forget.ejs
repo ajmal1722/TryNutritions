@@ -65,14 +65,14 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="otp" id="otp"
+                                            <input type="number" class="form-control" name="otp" id="otp"
                                                 placeholder="OTP" disabled>
                                             <label for="otp" class="form-label">OTP</label>
 
                                             <button id="generateBtn" class="btn btn-sm btn-dark mt-3"
                                                 onclick="generateOTP()" type="button">Generate OTP</button>
                                             <button id="verifyBtn" class="btn btn-sm btn-dark mt-3"
-                                                 type="button" style="display: none;">Verify OTP</button>
+                                                 type="button" style="display: none;" onclick="verifyOTP()">Verify OTP</button>
 
                                         </div>
 
@@ -141,7 +141,10 @@
                     document.getElementById('verifyBtn').style.display = 'block';
                     document.getElementById('resetPasswordBtn').style.display = 'none';
                     document.getElementById('otp').removeAttribute('disabled');
-                })
+
+                    document.getElementById('password').setAttribute('disabled', 'disabled');
+                    document.getElementById('confirmPassword').setAttribute('disabled', 'disabled');
+                    })
                 .catch((err) => {
                     console.log(err);
                 });
@@ -150,19 +153,28 @@
         function verifyOTP() {
             const otp = document.getElementById('otp').value;
             const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-            axios.post('/verify-Otp', { email, otp })
+            axios.post('/verify-Otp', { email, otp, password })
                 .then((response) => {
-                    // Handle response
+                    console.log(response);
+                    document.getElementById('confirmPasswordError').textContent = '';
+                    window.location.href = '/login';
+                    // showToast('Password Updated Successfully!');
+                    // setTimeout(() => {
+                    //     window.location.href = '/'
+                    // }, 1500);
                 })
                 .catch((error) => {
-                    // Handle error
+                    if (error) {
+                        console.log(error.response.data.error)
+                        document.getElementById('confirmPasswordError').textContent = error.response.data.error;
+                    } else {
+                        showToast('hello world')
+                    }
                 });
         }
 
-        function PasswordChange() {
-            // Code for password change
-        }
     </script>
 </body>
 

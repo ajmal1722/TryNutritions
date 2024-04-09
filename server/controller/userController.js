@@ -421,6 +421,7 @@ exports.generateOtp = (req, res) => {
             console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
         })
 
+        console.log('Reset otp:', resetOtp)
         res.status(200).json({ resetOtp })
     } catch (error) {
         res.status(500).send({ error: error.message });
@@ -430,10 +431,34 @@ exports.generateOtp = (req, res) => {
 
 exports.verifyPasswordOtp = async (req, res) => {
     try {
-        console.log(req.body);
+        const { email, otp, password } = req.body;
 
+        // Find the user by email
+        const user = await Userdb.findOne({ email });
 
+        // Check if the user exists
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        // Check if the OTP matches
+        if (otp * 1 !== resetOtp.emailOtp) {
+            return res.status(401).json({ error: 'OTP does not match.' });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // If OTP matches, update the user's password
+        user.password = hashedPassword; 
+        await user.save();
+
+        console.log('password updated succesfully..!');
+
+        // Return success response
+        res.status(200).json({ message: 'Password reset successfully.' });
     } catch (error) {
-        res.status(500).send({ error: error.message });
+        // Handle any errors
+        res.status(500).json({ error: error.message });
     }
-}
+};
