@@ -1,12 +1,19 @@
 const mongoose = require('mongoose');
 
 const Schema = new mongoose.Schema({
-    image: {
-        filename: String,
-        contentType: String,
-        imageBase64: String
+    imageUrl: {
+        type: String
     },
-    category: {
+    imageId: {
+        type: String
+    },
+    heading: {
+        type: String
+    },
+    subHeading: {
+        type: String
+    },
+    buttonLink: {
         type: String
     }
 })

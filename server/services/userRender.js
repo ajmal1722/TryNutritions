@@ -19,7 +19,15 @@ const razorpayInstance = new Razorpay({
 
 
 // signup page
-exports.userSigup = (req, res) => res.render('user/body/signup');
+exports.userSigup = (req, res) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.render('user/body/signup');
+} 
+
+exports.forgottenPassword = (req, res) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.render('user/body/forget');
+}
 
 exports.otpPage = async (req, res) => {
     const email = req.query.email;
@@ -32,6 +40,7 @@ exports.otpPage = async (req, res) => {
 
     const otpExpiration = user.emailOtp.expiry;
 
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.render('user/body/otpVerificationPage', { email: email, expiry: otpExpiration });
 };
 
@@ -85,9 +94,13 @@ exports.verifyOtp = async (req, res) => {
 exports.shop = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1; // Default to page 1 if not specified
-        const productPerPage = 2;
+        const productPerPage = 9;
         const searchQuery = req.query.search || ''; // Retrieve search query from request
         const sortBy = req.query.sortBy || ''; // Retrieve sorting parameter from request
+        const verifiedUser = req.user;
+
+        // Extract categories from the query parameter
+        const categories = req.query.categories ? req.query.categories.split(',') : [];
 
         // Define the sorting criteria based on the sortBy parameter
         let sortCriteria = {};
@@ -100,21 +113,27 @@ exports.shop = async (req, res) => {
             sortCriteria = {};
         }
 
+        // Build the category filter
+        const categoryFilter = categories.length > 0 ? { category: { $in: categories } } : {};
+
         const totalProducts = await Products.countDocuments({
-            name: { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search by name
+            name: { $regex: new RegExp(searchQuery, 'i') }, // Case-insensitive search by name
+            ...categoryFilter, // Apply category filter
+            isDeleted: false // Filter out deleted products
         });
         const totalPages = Math.ceil(totalProducts / productPerPage);
 
         const products = await Products.find({
-            name: { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search by name
+            name: { $regex: new RegExp(searchQuery, 'i') }, // Case-insensitive search by name
+            ...categoryFilter, // Apply category filter
+            isDeleted: false // Filter out deleted products
         })
         .sort(sortCriteria) // Apply sorting criteria
         .skip((page - 1) * productPerPage)
         .limit(productPerPage)
         .exec();
-        
-        console.log(products)
-        const categories = await Category.find().exec();
+
+        const allCategories = await Category.find().exec();
         const featuredProducts = await Products.find({})
             .sort({ discount: -1 })
             .limit(3)
@@ -123,14 +142,15 @@ exports.shop = async (req, res) => {
         res.render('user/body/shop', {
             pageName: 'Shop',
             Products: products,
-            Categories: categories,
+            Categories: allCategories,
             feauturedProducts: featuredProducts,
-            selectedCategories: [], // Initialize selected categories as empty
+            selectedCategories: categories, // Pass the selected categories to the view
             currentPage: page, // Pass the current page number
             totalPages: totalPages,
             searchQuery: searchQuery,
             sortBy: sortBy, // Pass the sorting parameter to the view
-            req: req // Pass the request object for further processing if needed
+            req: req, // Pass the request object for further processing if needed
+            verifiedUser
         });
     } catch (error) {
         console.error('Error rendering shop page:', error);
@@ -139,66 +159,132 @@ exports.shop = async (req, res) => {
 };
 
 
+
 exports.viewMore = async (req, res) => {
-    const featuredProducts = await Products.find({})
-        .sort({ discount: -1 })
-        .skip(3)
-        .limit(6)
-        .exec();
-
-    res.json({ products: featuredProducts })
-}
-
-exports.filterCategory = async (req, res) => {
-    let query = {};
-    let selectedCategories = [];
-
-    // Check if the request query contains categories
-    if (req.query.categories) {
-        // Split the categories string into an array
-        selectedCategories = req.query.categories.split(',');
-
-        // Construct MongoDB query to find products where the category field matches any of the selected categories
-        query.category = { $in: selectedCategories };
-        console.log('selected Categories:', selectedCategories)
-    }
-
     try {
-        // Fetch products based on the constructed query
-        const products = await Products.find(query).exec();
-        console.log('Filtered Products:', products.length, products)
-        res.json({products});
+        const featuredProducts = await Products.find({ isDeleted: false }) // Only retrieve products where isDeleted is false
+            .sort({ discount: -1 })
+            .skip(4)
+            .limit(3)
+            .exec();
+
+        res.json({ products: featuredProducts });
     } catch (error) {
-        console.error('Error filtering categories:', error);
+        console.error('Error fetching featured products:', error);
         res.status(500).json({ error: error.message });
     }
-};
+}
 
 
+// exports.filterCategory = async (req, res) => {
+//     let query = {};
+//     let selectedCategories = [];
+
+//     // Check if the request query contains categories
+//     if (req.query.categories) {
+//         // Split the categories string into an array
+//         selectedCategories = req.query.categories.split(',');
+
+//         // Construct MongoDB query to find products where the category field matches any of the selected categories
+//         query.category = { $in: selectedCategories };
+//         console.log('selected Categories:', selectedCategories)
+//     }
+
+//     try {
+//         // Fetch products based on the constructed query
+//         const products = await Products.find(query).exec();
+//         console.log('Filtered Products:', products.length, products)
+//         res.json({products});
+//     } catch (error) {
+//         console.error('Error filtering categories:', error);
+//         res.status(500).json({ error: error.message });
+//     }
+// };
 
 // shop-details
 exports.shopDetails = async (req, res) => {
-    const searchQuery = req.query.search || '';
-    const productId = req.query.id;
-    const product = await Products.findById(productId);
-    const category = await Category.find({}).exec();
-    const relatedProduct = await Products.find({ category: product.category }).limit(6);
-    const feauturedProduct = await Products.find({})
-                                            .sort({ discount: -1 })
-                                            .limit(4)
-                                            .exec()
+    try {
+        const searchQuery = req.query.search || '';
+        const productId = req.query.id;
+        const product = await Products.findOne({ _id: productId, isDeleted: false }); // Exclude deleted products
+        const category = await Category.find({}).exec();
+        const relatedProduct = await Products.find({ category: product.category, isDeleted: false }).limit(6); // Exclude deleted products
+        const feauturedProduct = await Products.find({ isDeleted: false }) // Exclude deleted products
+                                                .sort({ discount: -1 })
+                                                .limit(4)
+                                                .exec();
+        const verifiedUser = req.user;                                        
 
-    res.render('user/body/shop-details', {
-        pageName: 'Shop-details',
-        Product: product,
-        Categories: category,
-        relatedProducts: relatedProduct,
-        searchQuery: searchQuery,
-        feauturedProducts: feauturedProduct
-    });
+        res.render('user/body/shop-details', {
+            pageName: 'Shop-details',
+            Product: product,
+            Categories: category,
+            relatedProducts: relatedProduct,
+            searchQuery: searchQuery,
+            feauturedProducts: feauturedProduct,
+            verifiedUser
+        });
+    } catch (error) {
+        console.error('Error fetching shop details:', error);
+        res.status(500).json({ error: error.message });
+    }
 } 
 
-exports.contact = (req, res) => res.render('user/body/contact', { pageName: 'Contact us' });
+exports.contact = (req, res) => {
+    const verifiedUser = req.user;
+
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.render('user/body/contact', { 
+        pageName: 'Contact us',
+        verifiedUser 
+    });  
+} 
+
+exports.messageFromUser = async (req, res) => {
+    const userID = req.user._id;
+    const data = req.body;
+
+    const emailContent = `
+        <p>From: </strong> ${data.name}</li></p>
+
+        <p>Email: </strong> ${data.email}</li></p>
+    
+        <p>Message: </strong> ${data.message}</li></p>
+        
+    `;
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // Use `true` for port 465, `false` for all other ports
+        auth: {
+            user: process.env.APP_EMAIL,
+            pass: process.env.APP_PASSWORD,
+        },
+    });
+                
+    // send mail with defined transport object
+    const mailOptions = {
+        from: process.env.APP_EMAIL, // sender address
+        to: 'ajuajmal1722001@gmail.com', // list of receivers
+        subject: "Message from User", // Subject line
+        text: "Message to TryNutritions", // plain text body
+        html: emailContent, // html body
+    };
+    
+    transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            return console.log('err:', err)
+        }
+        
+        console.log("Message sent: %s", info.messageId);
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    })
+        
+    console.log(userID, data);
+    res.status(200).redirect('back');
+}
 
 // checkout
 exports.checkout = async (req, res) => {
@@ -206,10 +292,13 @@ exports.checkout = async (req, res) => {
 
     const user = await User.findById(userId)
     const cart = await Cart.findOne({ user: userId })
+
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.render('user/body/checkout', {
         pageName: 'Checkout',
         Cart: cart,
         User: user,
+        verifiedUser: userId
      })
 };
 
@@ -217,9 +306,66 @@ exports.checkout = async (req, res) => {
 exports.errorMessage = (req, res) => res.render('user/body/error');
     
 // my account
-exports.myAccount = (req, res) => {
-    const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR);
-    res.status(201).render('user/body/myAccount', { pageName: 'My Account', userName: verify.name });
+exports.myAccount = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        const user = await User.findById(userId);
+        
+        // Aggregate pipeline to perform lookup
+        const orders = await Order.aggregate([
+            {
+                $match: { userId: userId }
+            },
+            {
+                $lookup: {
+                    from: "products", // Name of the collection to join
+                    localField: "items.product", // Field from the Orders collection
+                    foreignField: "_id", // Field from the Products collection
+                    as: "productInfo" // Alias for the joined documents
+                }
+            },
+            {
+                $addFields: {
+                    items: {
+                        $map: {
+                            input: "$items",
+                            as: "item",
+                            in: {
+                                $mergeObjects: [
+                                    "$$item",
+                                    {
+                                        imageUrl: {
+                                            $arrayElemAt: [
+                                                "$productInfo.imageUrl",
+                                                { $indexOfArray: ["$productInfo._id", "$$item.product"] }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    productInfo: 0 // Exclude productInfo from the output
+                }
+            }
+        ]);
+        console.log(orders)
+
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.status(201).render('user/body/myAccount', {
+            pageName: 'My Account',
+            User: user,
+            Orders: orders,
+            verifiedUser: userId
+        });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
 }
 
 // cart
@@ -231,9 +377,11 @@ exports.cart = async (req, res) => {
         // console.log('User: ', user);
         // console.log('Cart: ', cart);
 
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
         res.render('user/body/cart', {
             pageName: 'Cart',
             cart: cart,
+            verifiedUser: user
         });
     } catch (error) {
         res.status(500).send({ error: error.message });
@@ -244,9 +392,14 @@ exports.cart = async (req, res) => {
 exports.addToCart = async (req, res) => {
     try {
         const productId = req.query.id;
+        
+        if (!req.user) {
+            return res.status(401).json({ error: "User is not present" });
+        }
         const userId = req.user._id;
 
         // Check if userId is not present
+        console.log('user:', userId)
         if (!userId) {
             return res.status(401).json({ error: "User is not logged in." });
         }
@@ -292,7 +445,7 @@ exports.addToCart = async (req, res) => {
         await cart.save();
 
         // Redirect to the current page
-        res.status(200).redirect('back');
+        res.status(200).json({ cart });
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
@@ -766,6 +919,7 @@ exports.paymentSuccess = async (req, res) => {
 
 exports.orderSuccess = async (req, res) => {
     const orderId = req.query.id;
+    const verifiedUser = req.user;
 
     console.log('orderId:token', orderId)
 
@@ -774,6 +928,7 @@ exports.orderSuccess = async (req, res) => {
 
     res.render('user/body/orderCompletion', {
         pageName: '',
-        Order: order
+        Order: order,
+        verifiedUser
     });
 } 

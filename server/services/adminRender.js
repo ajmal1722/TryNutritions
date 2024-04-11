@@ -1,6 +1,7 @@
 const Product = require("../model/products");
 const Users = require('../model/userModel');
 const Orders = require('../model/order');
+const Banner = require('../model/banner')
 const Category = require('../model/category');
 const Vendors = require('../model/vendorModel');
 const Coupon = require('../model/coupon');
@@ -9,6 +10,8 @@ const fs = require('fs');
 const uploads = require('../middlewares/multer');
 const cloudinary = require('../middlewares/cloudinary');
 const { error } = require("console");
+const nodemailer = require('nodemailer');
+const Order = require("../model/order");
 
 // admin dashboard
 exports.admindashboard = async (req, res) => {
@@ -22,6 +25,7 @@ exports.admindashboard = async (req, res) => {
                 totalFinalAmount: { $sum: "$finalAmount" }
             }
         }]);
+        const products = await Product.find({}).sort({ salesCount: -1}).limit(5)
 
         console.log(totalOrder[0])
         // Extract the total final amount from the result
@@ -32,7 +36,8 @@ exports.admindashboard = async (req, res) => {
             Orders: orders,
             totalOrders: orderlength,
             Users: users,
-            totalsales: totalFinalAmount
+            totalsales: totalFinalAmount,
+            products
          });  
     } catch (error) {
         console.error(error);
@@ -122,18 +127,67 @@ exports.addProducts = async (req, res) => {
 } 
 
 exports.coupons = async (req, res) => {
-    coupon = await Coupon.find({}).exec()
+    const coupon = await Coupon.find({}).exec()
     res.render('admin/body/coupons', {
         pageName: 'Coupons',
         Coupon: coupon
     });
 } 
 
-exports.banners = (req, res) => res.render('admin/body/banner', { pageName: 'Banners' });
+exports.report = async (req, res) => {
+    try {
+        // Get current date
+        const today = new Date();
+        
+        // Calculate start of current week
+        const thisWeekStart = new Date(today);
+        thisWeekStart.setDate(today.getDate() - today.getDay());
+        thisWeekStart.setHours(0, 0, 0, 0);
+
+        // Calculate start of current month
+        const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+        thisMonthStart.setHours(0, 0, 0, 0);
+
+        // Find orders
+        const orders = await Order.find({}).exec();
+
+        // Filter orders for this week and this month
+        const thisWeekOrders = orders.filter(order => order.orderDate >= thisWeekStart && order.orderDate <= today);
+        const thisMonthOrders = orders.filter(order => order.orderDate >= thisMonthStart && order.orderDate <= today);
+
+        // Calculate totals
+        const totalOrders = orders.length;
+        const thisWeekTotal = thisWeekOrders.length;
+        const thisMonthTotal = thisMonthOrders.length;
+        const totalAmount = orders.reduce((acc, order) => acc + order.finalAmount, 0);
+        const thisWeekAmount = thisWeekOrders.reduce((acc, order) => acc + order.finalAmount, 0);
+        const thisMonthAmount = thisMonthOrders.reduce((acc, order) => acc + order.finalAmount, 0);
+
+        res.render('admin/body/report', {
+            pageName: 'Reports',
+            Orders: orders,
+            thisWeekTotal,
+            thisWeekAmount,
+            thisMonthTotal,
+            thisMonthAmount,
+            totalOrders,
+            totalAmount
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+};
 
 exports.payments = (req, res) => res.render('admin/body/payments', { pageName: 'Payments' });
 
-exports.settings = (req, res) => res.render('admin/body/settings', { pageName: 'settings' });
+exports.settings = async (req, res) => {
+    const banner = await Banner.find({});
+    res.render('admin/body/settings', {
+        pageName: 'settings',
+        Banner: banner
+    });
+} 
 
 exports.vendors = async (req, res) => {
     const vendor = await Vendors.find({}).exec();
@@ -157,14 +211,9 @@ exports.deleteProduct = async (req, res) => {
         const productId = req.query.id;
         console.log(productId);
 
-        // delete the productImage from cloudinary
-        const product = await Product.findById(productId);
-        if (product.imageId) {
-            await cloudinary.uploader.destroy(product.imageId);
-        }
+        // Update the isDeleted field to true
+        await Product.findByIdAndUpdate(productId, { isDeleted: true });
 
-        const deletedProduct = await Product.findByIdAndDelete(productId);
-        
         res.status(200).redirect('admin/products')
     } catch (error) {
         res.status(500).send(error.message);
@@ -196,7 +245,8 @@ exports.updateProduct = async (req, res) => {
 
         const updatedProduct = {
             ...req.body,
-            discount: productDiscount
+            discount: productDiscount,
+            isDeleted: false
         };
 
         // Check if a new image file is uploaded
@@ -355,6 +405,44 @@ exports.updatedCategory = async (req, res) => {
     }
 };
 
+// Banner
+exports.addBanner = async (req, res) => {
+    try {
+        const bannerId = req.query.id; 
+
+        // Find the existing banner by ID
+        let banner = await Banner.findById(bannerId);
+
+        if (!banner) {
+            return res.status(404).json({ message: "Banner not found" });
+        }
+
+        const updatedBanner = { ...req.body };
+
+        // Check if a new file is uploaded
+        if (req.file) {
+            // Upload the new image to Cloudinary
+            const result = await cloudinary.uploader.upload(req.file.path);
+
+            // Update the banner data with the new image URL and ID
+            banner.imageUrl = result.secure_url;
+            banner.imageId = result.public_id;
+        }
+
+        // Update other properties of the banner with the new data from req.body
+        banner.heading = req.body.heading;
+        banner.subHeading = req.body.subHeading;
+        banner.buttonLink = req.body.buttonLink;
+
+        // Save the updated banner
+        banner = await banner.save();
+
+        res.status(200).redirect('back');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};
 
 // vendor
 exports.viewVendor = async (req, res) => {
@@ -435,8 +523,45 @@ exports.updateOrderStatus = async (req, res) => {
         const order = await Orders.findById(orderId);
         // Update the order status
         order.status = status;
-
         await order.save();
+
+        // Retrieve the user associated with the order
+        const user = await Users.findById(order.userId);
+
+        const emailContent = `
+            <p>Dear ${order.user},</p>
+
+            <p>Your order with orderId: <strong>${order.orderId}</strong> has been <strong>${order.status}</strong></p>
+        `;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // Use `true` for port 465, `false` for all other ports
+            auth: {
+              user: process.env.APP_EMAIL,
+              pass: process.env.APP_PASSWORD,
+            },
+        });
+                    
+            // send mail with defined transport object
+        const mailOptions = {
+            from: process.env.APP_EMAIL, // sender address
+            to: user.email, // list of receivers
+            subject: "Order Updated", // Subject line
+            text: "Your order status is updated!", // plain text body
+            html: emailContent, // html body
+        };
+        
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                return console.log('err:', err)
+            }
+            
+            console.log("Message sent: %s", info.messageId);
+            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        })
 
         res.status(200).json({ message: 'Order status updated successfully', order });
     } catch (error) {
@@ -445,3 +570,61 @@ exports.updateOrderStatus = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+exports.showLineChart = async (req, res) => {
+    try {
+        // Get orders for the last 7 days
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const orders = await Order.find({ orderDate: { $gte: sevenDaysAgo } });
+
+        const labels = [];
+        const data = [];
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for accurate comparison
+        let totalFinalAmount = 0;
+
+        // Initialize data array with 0s for each day
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(currentDate); // Clone current date
+            date.setDate(date.getDate() - 6 + i); // Set the date to each of the last 7 days
+            const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
+            labels.push(formattedDate);
+            data.push(0);
+        }
+
+        // Populate data array with total sales for each day
+        orders.forEach(order => {
+            const orderDate = new Date(order.orderDate);
+            orderDate.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for accurate comparison
+            const dayIndex = Math.floor((orderDate - sevenDaysAgo) / (1000 * 60 * 60 * 24)); // Calculate index of the day in the data array
+            data[dayIndex] += order.finalAmount; // Add order's finalAmount to the corresponding day's total
+            totalFinalAmount += order.finalAmount; // Add order's finalAmount to the total
+        });
+
+        res.status(200).json({ labels: labels, data: data, totalFinalAmount: totalFinalAmount });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+
+
+
+
+// exports.deleteOrder = async (req, res) => {
+//     try {
+//         const orderId = req.query.id;
+//         console.log('orderId:', orderId)
+
+//         // Fetch the order and populate the product field to access the imageUrl
+//         const deleteOrder = await Orders.findOneAndDelete({ _id: orderId})
+
+//         res.redirect('back')
+//     } catch (error) {
+//         console.error('Error fetching order details:', error);
+//         res.status(500).json({ error: error.message });
+//     }
+// }

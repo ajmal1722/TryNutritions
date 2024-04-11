@@ -12,6 +12,7 @@ const upload = require('../middlewares/multer');
 
 // admin dashboard
 route.get('/admin/', adminAuth.checkAuth, services.admindashboard);
+route.get('/admin/show-line-chart', adminAuth.checkAuth, services.showLineChart);
 
 // admin login
 route.get('/login', adminAuth.checkAuthenticated, services.adminLogin);
@@ -23,7 +24,8 @@ route.get('/products', adminAuth.checkAuth, services.products);
 
 route.get('/coupons', adminAuth.checkAuth, services.coupons);
 
-route.get('/banners', adminAuth.checkAuth, services.banners);
+route.get('/banners', adminAuth.checkAuth, services.report);
+route.post('/add-banner', multer.single('bannerImage'), services.addBanner);
 
 route.get('/payments', adminAuth.checkAuth, services.payments);
 
@@ -42,9 +44,7 @@ route.post('/login', controller.login);
 route.get('/logout', controller.logout);
 
 route.post('/addProducts', multer.single('productImage'), controller.addProduct);
-
 route.get('/deleteProduct', services.deleteProduct);
-
 route.get('/editProduct', services.editProduct);
 
 route.post('/admin/updateProduct/:id', multer.single('productImage'), services.updateProduct)
@@ -70,5 +70,6 @@ route.post('/updateCoupon', services.updateCoupon);
 route.get('/orders', adminAuth.checkAuth, services.orders);
 route.get('/order-details', adminAuth.checkAuth, services.orderDetails);
 route.post('/update-order-status', adminAuth.checkAuth, services.updateOrderStatus);
+// route.get('/delete-order', adminAuth.checkAuth, services.deleteOrder);
 
 module.exports = route;

@@ -167,14 +167,15 @@
                                                                 <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;"><%= product.category %></div>
                                                                 <div class="p-4">
                                                                     <h4><%= product.name %></h4>
-                                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                                                                    <p><%= product.description.length > 130 ? product.description.slice(0, 130) + '...' : product.description %>
                                                                     <div class="d-flex justify-content-between flex-lg-wrap">
                                                                         <p class="text-dark fs-5 fw-bold mb-0"><%= product.sellingPrice %> / kg</p>
-                                                                        <form action="/add-to-cart?id=<%= product._id %>" method="post">
+                                                                        <form onclick="addToCartAlert('<%= product._id %>'); return false">
                                                                             <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
                                                                                 <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                                                             </button>
-                                                                        </form>
+                                                                        </form>  
+                                                                            
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -196,7 +197,7 @@
 
 
         <!-- Featurs Start -->
-        <div class="container-fluid service py-5">
+        <!-- <div class="container-fluid service py-5">
             <div class="container py-5">
                 <div class="row g-4 justify-content-center">
                     <div class="col-md-6 col-lg-4">
@@ -240,7 +241,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- Featurs End -->
 
 
@@ -249,33 +250,21 @@
             <div class="container py-5">
                 <h1 class="mb-0">Recommended Products</h1>
                 <div class="owl-carousel vegetable-carousel justify-content-center">
-                    <div class="border border-primary rounded position-relative vesitable-item">
-                        <div class="vesitable-img">
-                            <img src="/users/img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-                        </div>
-                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                        <div class="p-4 rounded-bottom">
-                            <h4>Parsely</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
                     <% latestProducts.forEach(product => { %>
                         <a href="/shop-details?id=<%= product._id %>" class="text-decoration-none">
-                            <div class="border border-primary rounded position-relative vesitable-item">
+                            <div class="border border-primary rounded position-relative vesitable-item" style="height: 490px;">
                                 <div class="vesitable-img" style="height: 240px;">
                                     <img src="<%= product.imageUrl %>" class="img-fluid w-100 rounded-top" alt="">
                                 </div>
-                                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
+                                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;"><%= product.category %></div>
                                 <div class="p-4 rounded-bottom">
                                     <h4><%= product.name %></h4>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                                    <p><%= product.description.length > 130 ? product.description.slice(0, 130) + '...' : product.description %>
                                     <div class="d-flex justify-content-between flex-lg-wrap">
                                         <p class="text-dark fs-5 fw-bold mb-0">₹<%= product.sellingPrice %> / kg</p>
-                                        <form onclick="addToCartAlert('<%= product._id %>')">
+                                        
+                                            
+                                        <form  onclick="addToCartAlert('<%= product._id %>'); return false">
                                             <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
                                                 <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                             </button>
@@ -285,20 +274,6 @@
                             </div>
                         </a>   
                     <% }) %>
-                    <div class="border border-primary rounded position-relative vesitable-item">
-                        <div class="vesitable-img">
-                            <img src="/users/img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-                        </div>
-                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                        <div class="p-4 rounded-bottom">
-                            <h4>Parsely</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -311,22 +286,14 @@
                 <div class="row g-4 align-items-center">
                     <div class="col-lg-6">
                         <div class="py-4">
-                            <h1 class="display-3 text-white">Fresh Exotic Fruits</h1>
-                            <p class="fw-normal display-3 text-dark mb-4">in Our Store</p>
-                            <p class="mb-4 text-dark">The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic words etc.</p>
-                            <a href="#" class="banner-btn btn border-2 border-white rounded-pill text-dark py-3 px-5">BUY</a>
+                            <h1 class="display-3 text-white"><%= Banner[0].heading %></h1>
+                            <p class="fw-normal display-3 text-dark mb-4"><%= Banner[0].subHeading %></p>
+                            <a href="<%= Banner[0].buttonLink %>" class="banner-btn btn border-2 border-white rounded-pill text-dark py-3 px-5">BUY</a>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="position-relative">
-                            <img src="/users/img/baner-1.png" class="img-fluid w-100 rounded" alt="">
-                            <div class="d-flex align-items-center justify-content-center bg-white rounded-circle position-absolute" style="width: 140px; height: 140px; top: 0; left: 0;">
-                                <h1 style="font-size: 100px;">1</h1>
-                                <div class="d-flex flex-column">
-                                    <span class="h2 mb-0">50$</span>
-                                    <span class="h4 text-muted mb-0">kg</span>
-                                </div>
-                            </div>
+                            <img src="<%= Banner[0].imageUrl %>" class="img-fluid w-100 rounded" alt="">
                         </div>
                     </div>
                 </div>
@@ -380,11 +347,9 @@
                                             <i class="fas fa-star"></i>
                                         </div>
                                         <h4 class="mb-3">₹<%= product.sellingPrice %></h4>
-                                        <form onclick="addToCartAlert('<%= product._id %>')">
-                                            <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
-                                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                            </button>
-                                        </form>
+                                        <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary" onclick="addToCartAlert('<%= product._id %>')">
+                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -529,24 +494,7 @@
             <%- include('../partials/_footer')%>
         <!-- /Include Footer -->
 
-        <!-- Copyright Start -->
-        <div class="container-fluid copyright bg-dark py-4">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Your Site Name</a>, All right reserved.</span>
-                    </div>
-                    <div class="col-md-6 my-auto text-center text-md-end text-white">
-                        <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
-                        <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
-                        <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
-                        Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a> Distributed By <a class="border-bottom" href="https://themewagon.com">ThemeWagon</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Copyright End -->
-
+        
 
          <!-- Include layoutFoot -->
          <%- include('../partials/_layoutFoot')%>

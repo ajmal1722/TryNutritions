@@ -1,96 +1,149 @@
-
 <!-- Include sidebar -->
 <%- include('../partials/_sidebar.ejs')%>
 <!-- /Include sidebar -->
 
+	<style>
+		.progress-wrapper {
+			margin-top: 20px;
+		}
+
+		.progress-bars {
+			margin-top: 20px;
+		}
+
+		.progress-bar {
+			margin-bottom: 10px;
+		}
+
+		.progress-bar-inner {
+			color: white;
+			padding: 8px;
+			border-radius: 3px;
+			transition: width 0.5s ease;
+		}
+	</style>
 
 	<!-- CONTENT -->
 	<section id="content">
-		
-		
+
+
 		<!-- include NAVBAR -->
 		<%- include('../partials/_navbar.ejs')%>
 		<!-- include NAVBAR -->
 
 
-		<!-- MAIN -->
-		<main>
-			<!-- include HEAD TITLE -->
-			<%- include('../partials/_headTitle.ejs')%>
-			<!-- /include HEAD TITLE -->
-				<!-- <a href="#" class="btn-download">
+			<!-- MAIN -->
+			<main>
+				<!-- include HEAD TITLE -->
+				<%- include('../partials/_headTitle.ejs')%>
+				<!-- /include HEAD TITLE -->
+					<!-- <a href="#" class="btn-download">
 					<i class='bx bxs-cloud-download' ></i>
 					<span class="text">Download PDF</span>
-				</a> -->
-			</div>
-
-			<ul class="box-info">
-				<li>
-					<i class='bx bxs-calendar-check' ></i>
-					<span class="text">
-						<h3><%= totalOrders.length %></h3>
-						<p>Total Orders</p>
-					</span>
-				</li>
-				<li>
-					<i class='bx bxs-group' ></i>
-					<span class="text">
-						<h3><%= Users.length %></h3>
-						<p>Total Users</p>
-					</span>
-				</li>
-				<li>
-					<i class='bx bxs-dollar-circle' ></i>
-					<span class="text">
-						<h3>₹ <%= totalsales %></h3>
-						<p>Total Sales</p>
-					</span>
-				</li>
-			</ul>
-
-
-			<div class="table-data">
-				<div class="order">
-					<div class="head">
-						<h3>Recent Orders</h3>
+					</a> -->
 					</div>
-					<table>
-						<thead>
-							<tr>
-								<th class="text-center">Order ID</th>
-								<th class="text-center">User</th>
-								<th class="text-center">Date Order</th>
-								<th class="text-center">Total</th>
-								<th class="text-center">Status</th>
-							</tr>
-						</thead>
-						<tbody class="text-center">
-							<% Orders.forEach(item => { %>
-								<tr>
-									<td>
-										<%= item.orderId %>
-									</td>
-									<td><%= item.user %></td>
-									<td>
-										<%= item.orderDate.toISOString().substring(0, 10) %>
-									</td> <!-- Use a function to format the date -->
-									<td>₹ <%= item.finalAmount %></td>
-									<td>
-										<span class="status <%= (item.status === 'Pending') ? 'bg-warning' :
+
+					<ul class="box-info">
+						<li>
+							<i class='bx bxs-calendar-check'></i>
+							<span class="text">
+								<h3>
+									<%= totalOrders.length %>
+								</h3>
+								<p>Total Orders</p>
+							</span>
+						</li>
+						<li>
+							<i class='bx bxs-group'></i>
+							<span class="text">
+								<h3>
+									<%= Users.length %>
+								</h3>
+								<p>Total Users</p>
+							</span>
+						</li>
+						<li>
+							<i class='bx bxs-dollar-circle'></i>
+							<span class="text">
+								<h3>₹ <%= totalsales %>
+								</h3>
+								<p>Total Sales</p>
+							</span>
+						</li>
+					</ul>
+
+					<!-- chart js -->
+					<div class="row">
+						<div class="col-lg-8 py-5">
+							<h5>Average sale of last 7 Days: <span id="average-sale" class="text-secondary mx-2"></span></h5>
+							<canvas id="myChart"></canvas>
+						</div>
+						<div class="col-lg-4 py-5">
+							<h3 class="mb-3">Top 5 Most Sold Products</h3>
+							<div class="table-responsive">
+								<table class="table table-striped">
+								  <tbody>
+									<% products.forEach(product => { %>
+									  <tr style="margin-bottom: 3px;">
+										<td>
+										  <img src="<%= product.imageUrl %>" alt="<%= product.name %>" style="max-width: 65px;">
+										</td>
+										<td><%= product.name %></td>
+										<td><%= product.salesCount %> kg</td>
+									  </tr>
+									<% }) %>
+								  </tbody>
+								</table>
+							  </div>
+						</div>
+					</div>
+
+
+					<div class="table-data">
+						<div class="order">
+							<div class="head">
+								<h3>Recent Orders</h3>
+							</div>
+							<table>
+								<thead>
+									<tr>
+										<th class="text-center">Order ID</th>
+										<th class="text-center">User</th>
+										<th class="text-center">Date Order</th>
+										<th class="text-center">Total</th>
+										<th class="text-center">Status</th>
+									</tr>
+								</thead>
+								<tbody class="text-center">
+									<% Orders.forEach(item=> { %>
+										<tr>
+											<td>
+												<%= item.orderId %>
+											</td>
+											<td>
+												<%= item.user %>
+											</td>
+											<td>
+												<%= item.orderDate.toISOString().substring(0, 10) %>
+											</td> <!-- Use a function to format the date -->
+											<td>₹ <%= item.finalAmount %>
+											</td>
+											<td>
+												<span class="status <%= (item.status === 'Pending') ? 'bg-warning' :
 												(item.status === 'Cancelled') ? 'bg-danger' :
 												(item.status === 'Placed') ? 'bg-secondary' :
 												(item.status === 'Shipped') ? 'bg-primary bg-gradient' :
 												(item.status === 'Out For Delivery') ? 'bg-primary' :
 												(item.status === 'Delivered') ? 'bg-success' : '' %>">
-											<%= item.status %>
-										</span>
-									</td>
-								</tr>
-							<% }) %>
-						</tbody>
-					</table>
-				</div>
-				<!-- <div class="todo">
+													<%= item.status %>
+												</span>
+											</td>
+										</tr>
+										<% }) %>
+								</tbody>
+							</table>
+						</div>
+						<!-- <div class="todo">
 					<div class="head">
 						<h3>Todos</h3>
 						<i class='bx bx-plus' ></i>
@@ -119,13 +172,61 @@
 						</li>
 					</ul>
 				</div> -->
-			</div>
-		</main>
-		<!-- MAIN -->
+					</div>
+			</main>
+			<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
-	
-	
+
+
 	<script src="/admin/js/script.js"></script>
-</body>
-</html>
+	<!-- Axios library -->
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<!-- Chart js -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+	<script>
+
+		
+		// Fetch data from server and render chart
+		axios.get('/admin/show-line-chart')
+			.then(res => {
+				const chartData = res.data; // Assuming the response contains necessary data for chart
+				renderChart(chartData);
+				const avgSale = '₹' + (res.data.totalFinalAmount / 7).toFixed(2);
+				document.getElementById('average-sale').textContent = avgSale;
+			})
+			.catch(err => {
+				// Error handling
+				console.error('Error fetching chart data:', err);
+			});
+
+		// Function to render the chart
+		function renderChart(chartData) {
+			// Your chart rendering code here
+			const ctx = document.getElementById('myChart');
+			new Chart(ctx, {
+				type: 'line',
+				data: {
+					labels: chartData.labels,
+					datasets: [{
+						label: 'Total Amount',
+						data: chartData.data,
+						borderWidth: 1
+					}]
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: true
+						}
+					}
+				}
+			});
+		}
+	</script>
+
+	</body>
+
+	</html>

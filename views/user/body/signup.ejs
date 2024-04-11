@@ -74,9 +74,13 @@
 
             // Validate name
             if (name.trim().length < 3) {
-                document.getElementById("nameError").innerHTML = "Minimum 3 characters required";
-                valid = false;
+                return document.getElementById("nameError").innerHTML = "Minimum 3 characters required";
             }
+
+            if (!/^[A-Za-z\s]+$/.test(name)) {
+                document.getElementById("nameError").innerHTML = "Only letters are allowed";
+                valid = false;
+    }
 
             // Validate phone
             if (!/^\d{10}$/.test(phone)) {

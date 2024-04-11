@@ -14,6 +14,11 @@ route.get('/', authentication.getCartInNotAuthorizedPage, authentication.fetchCa
 // login
 route.get('/login', controller.userLogin);
 
+// Forgot Password
+route.get('/forgot-password', services.forgottenPassword);
+route.post('/generate-otp', controller.generateOtp);
+route.post('/verify-Otp', controller.verifyPasswordOtp);
+
 // logout
 route.get('/logout', controller.logout);
 
@@ -42,16 +47,17 @@ route.get('/checkout', authentication.checkAuth, authentication.fetchCartItems, 
 route.get('/error', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.errorMessage)
 
 // Order
-route.get('/order-completed', authentication.fetchCartItems, services.orderSuccess)
+route.get('/order-completed', authentication.fetchCartItems, services.orderSuccess);
 
 // my account
 route.get('/myAccount', authentication.checkAuth, authentication.fetchCartItems, services.myAccount);
 
 // contact us
-route.get('/contact', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.contact)
+route.get('/contact', authentication.getCartInNotAuthorizedPage, authentication.fetchCartItems, services.contact);
+route.post('/message-from-user', authentication.checkAuth, services.messageFromUser)
 
 // Category filtering in shop page
-route.get('/filter-category', services.filterCategory)
+// route.get('/filter-category', services.filterCategory)
 
 
 route.post('/api/login', controller.login);
@@ -67,6 +73,12 @@ route.post('/removeCoupon', authentication.checkAuth, services.removeCoupon);
 // route.post('/proceed-to-checkout', authentication.checkAuth, services.proceedToCheckout);
 route.post('/add-address', authentication.checkAuth, services.addNewAddress);
 route.post('/place-order', authentication.checkAuth, services.placeOrder);
-route.post('/save-payment-details', authentication.checkAuth, services.paymentSuccess)
+route.post('/save-payment-details', authentication.checkAuth, services.paymentSuccess);
+
+route.post('/update-profile', authentication.checkAuth, controller.updateProfile);
+route.post('/update-address', authentication.checkAuth, controller.updateAddress);
+route.delete('/delete-address', authentication.checkAuth, controller.deleteAddress);
+route.post('/change-password', authentication.checkAuth, controller.changePassword);
+route.post('/cancel-order', authentication.checkAuth, controller.cancelOrder);
 
 module.exports = route;

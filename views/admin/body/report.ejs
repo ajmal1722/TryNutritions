@@ -1,0 +1,121 @@
+<!-- Include sidebar -->
+<%- include('../partials/_sidebar.ejs')%>
+<!-- /Include sidebar -->
+
+	
+
+	<!-- CONTENT -->
+	<section id="content">
+
+
+		<!-- include NAVBAR -->
+		<%- include('../partials/_navbar.ejs')%>
+		<!-- include NAVBAR -->
+
+
+			<!-- MAIN -->
+			<main>
+				<!-- include HEAD TITLE -->
+				<%- include('../partials/_headTitle.ejs')%>
+				<!-- /include HEAD TITLE -->
+					<a href="#" class="btn-download">
+					<i class='bx bxs-cloud-download' ></i>
+					<span class="text">Download PDF</span>
+					</a>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<div class="bg-light p-3 m-1 rounded-4 text-center">
+								<h4 class="mb-3" style="color: rgb(156, 77, 20);">This Week Sales</h4>
+								<p>Total Orders : <span class="text-secondary mx-2"><%= thisWeekTotal %></span></p>
+								<p>Total Amount : <span class="text-secondary mx-2"><%= thisWeekAmount %></span></p>
+							</div>
+						</div>						
+						<div class="col-md-4">
+							<div class="bg-light p-3 m-1 rounded-4 text-center">
+								<h4 class="mb-3" style="color: rgb(156, 77, 20);">This Month Sales</h4>
+								<p>Total Orders : <span class="text-secondary mx-2"><%= thisMonthTotal %></span></p>
+								<p>Total Amount : <span class="text-secondary mx-2"><%= thisMonthAmount %></span></p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="bg-light p-3 m-1 rounded-4 text-center">
+								<h4 class="mb-3" style="color: rgb(156, 77, 20);">Total Sales</h4>
+								<p>Total Orders : <span class="text-secondary mx-2"><%= totalOrders %></span></p>
+								<p>Total Amount : <span class="text-secondary mx-2"><%= totalAmount %></span></p>
+							</div>
+						</div>
+					</div>					
+
+
+					<div class="table-data">
+						<div class="order">
+							<div class="head">
+								<h3>Sales Report</h3>
+							</div>
+							<table id="myTable" class="display">
+								<thead>
+									<tr>
+										<th class="text-center">Order ID</th>
+										<th class="text-center">User</th>
+										<th class="text-center">Date Order</th>
+										<th class="text-center">Total</th>
+										<th class="text-center">Status</th>
+									</tr>
+								</thead>
+								<tbody class="text-center">
+									<% Orders.forEach(item=> { %>
+										<tr>
+											<td>
+												<%= item.orderId %>
+											</td>
+											<td>
+												<%= item.user %>
+											</td>
+											<td class="text-center">
+												<%= item.orderDate.toISOString().substring(0, 10) %>
+											</td>
+											<td>₹ <%= item.finalAmount %>
+											</td>
+											<td>
+												<span class="status <%= (item.status === 'Pending') ? 'bg-warning' :
+												(item.status === 'Cancelled') ? 'bg-danger' :
+												(item.status === 'Placed') ? 'bg-secondary' :
+												(item.status === 'Shipped') ? 'bg-primary bg-gradient' :
+												(item.status === 'Out For Delivery') ? 'bg-primary' :
+												(item.status === 'Delivered') ? 'bg-success' : '' %>">
+													<%= item.status %>
+												</span>
+											</td>
+										</tr>
+										<% }) %>
+								</tbody>
+							</table>
+						</div>
+					</div>
+			</main>
+			<!-- MAIN -->
+	</section>
+	<!-- CONTENT -->
+
+
+	<script src="/admin/js/script.js"></script>
+	<!-- Axios library -->
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<!-- Chart js -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<!-- Jquery Data Table -->
+	<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+
+	<script>
+		$(document).ready( function () {
+			$('#myTable').DataTable();
+		} );
+	</script>
+
+
+</body>
+</html>

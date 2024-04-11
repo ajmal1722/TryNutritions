@@ -5,21 +5,30 @@ const cookieParser = require('cookie-parser');
 const Category = require('../model/category');
 const Products = require('../model/products');
 const nodemailer = require('nodemailer');
+const Order = require('../model/order');
+const Banner = require('../model/banner');
+
+
+// storing otp globally
+let resetOtp = { emailOtp: null};
 
 // home route (home page)
 exports.homeRoutes = async (req, res) => {
     const limit = 8;
     const searchQuery = req.query.search || '';
     const category = await Category.find({}).exec();
-    const product = await Products.find({}).exec();
-    const latestProduct = await Products.find({})
+    const banner = await Banner.find({}).exec();
+    const product = await Products.find({ isDeleted: false }).exec();
+    const verifiedUser = req.user;
+    const latestProduct = await Products.find({ isDeleted: false })
                                 .sort({createdAt: -1})
                                 .limit(8)
                                 .exec();
-    const bestSellerProduct = await Products.find({})
+    const bestSellerProduct = await Products.find({ isDeleted: false })
                                 .sort({salesCount: -1})
                                 .limit(9)
-                                .exec();
+                                .exec();      
+                                console.log(banner)     
     try {
         const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR);
         
@@ -30,7 +39,9 @@ exports.homeRoutes = async (req, res) => {
             latestProducts: latestProduct,
             searchQuery: searchQuery,
             bestSellerProducts: bestSellerProduct,
-            limit: limit
+            limit: limit,
+            Banner: banner,
+            verifiedUser
         })
     } catch (error) {
         if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
@@ -41,7 +52,9 @@ exports.homeRoutes = async (req, res) => {
                 latestProducts: latestProduct,
                 searchQuery: searchQuery,
                 bestSellerProducts: bestSellerProduct,
-                limit: limit
+                limit: limit,
+                Banner: banner,
+                verifiedUser
             });
         } else {
             res.status(500).send(error);
@@ -57,10 +70,12 @@ exports.userLogin = async (req, res) => {
             const verify = jwt.verify(req.cookies.jwt, process.env.AUTH_STR)
             res.status(201).redirect('/');
         } else {
+            res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
             res.render('user/body/login')
         }
     } catch (error) {
         if (error.name === 'TokenExpiredError' || 'JsonWebTokenError') {
+            res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
             res.status(201).render('user/body/login');
         } else {
             res.status(500).send(error);
@@ -202,16 +217,12 @@ exports.login = async (req, res) => {
 
         // check if the user exists
         if (!userData) {
-            return res.status(401).json({ success: false, message: 'user does not exist' });
+            return res.status(401).json({ error: 'user does not exist' });
         }
 
         // check if the user is Active or Blocked
         if (userData.isBlocked === 'Blocked') {
-            return res.status(403).render('user/body/error', {
-                pageName: '403 Error',
-                statusCode: 403,
-                errorMessage: "You're Account has been blocked by Admin.. "
-            });
+            return res.status(403).json( { error: "You're Account has been blocked by Admin" });
         }
 
         // match the password
@@ -232,10 +243,10 @@ exports.login = async (req, res) => {
                 httpOnly: true
             };
             res.cookie('jwt', token, options)
-            res.status(201).redirect('/')
+            res.status(201).json({ userData })
 
         } else {
-            res.status(401).json({ success: false, message: 'Invalid email or password' });
+            res.status(401).json({ error: 'Invalid password' });
         }
 
         // send token in user cookie
@@ -259,3 +270,195 @@ exports.makePayment = async (req, res) => {
         key_secret: process.env.RAZORPAY_API_KEY,
     })
 }
+
+
+exports.updateProfile = async (req, res) => {
+    try {
+        const userData = req.body;
+        const userId = userData.userId; // Extract userId from the request body
+
+        // Find the user by userId and update their profile information
+        const updateUser = await Userdb.findOneAndUpdate(
+            { _id: userId }, // Filter to find the user by userId
+            { $set: userData }, // Update the user data
+            { new: true } // Return the updated user document
+        );
+
+        res.status(200).redirect('back');
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+exports.updateAddress = async (req, res) => {
+    try {
+        const data = req.body;
+        const userId = req.user._id;
+
+        const addressId = data.addressId; // Extract addressId from the request body
+        // delete data.addressId; // Remove addressId from the data object
+
+        // Find the user by their ID and update the specific address
+        const updateUser = await Userdb.findOneAndUpdate(
+            { _id: userId, "addresses._id": addressId }, // Filter to find the user and address by their IDs
+            { $set: { "addresses.$": data } }, // Update the specific address in the addresses array
+            { new: true } // Return the updated user document
+        );
+
+        res.status(200).redirect('back');
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+exports.deleteAddress = async (req, res) => {
+    try {
+        const addressId = req.query.id;
+        const userId = req.user._id;
+
+        // Find the user by their ID and update the addresses array to remove the specified address
+        const updatedUser = await Userdb.findOneAndUpdate(
+            { _id: userId },
+            { $pull: { addresses: { _id: addressId } } },
+            { new: true }
+        );
+
+        res.status(200).json({ updatedUser });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+exports.changePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const userId = req.user._id;
+
+        // Get the user from the database
+        const user = await Userdb.findById(userId);
+        
+        // Compare the current password with the hashed password in the database
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(400).json({ error: "Incorrect Password" });
+        }
+
+        // Hash the new password
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the user's password with the hashed new password
+        user.password = hashedNewPassword;
+        await user.save();
+
+        res.status(200).json({ message: "Password updated successfully." });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+exports.cancelOrder = async (req, res) => {
+    try {
+        const { orderId } = req.body;
+
+        const order = await Order.findByIdAndUpdate(orderId, { status: 'Cancelled' })
+        res.status(200).json({ order });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+// Forgot Password
+exports.generateOtp = (req, res) => {
+    try {
+        const { email } = req.body;
+        console.log('email:', req.body)
+
+        // Generate a random OTP
+        const otp = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
+
+        // save the generated otp in a variable
+        resetOtp.emailOtp = otp
+
+        const emailContent = `
+            <h6>Verify Your Email Address</h6>
+            
+            <p class="text-center">Verify your email to finish Your resetting password.
+            use the following verification code:
+            </p>
+
+            <h4 class="text-center">${otp}</h4>
+
+            <p>The verification code is valid for  2 minutes</p>
+        `;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // Use `true` for port 465, `false` for all other ports
+            auth: {
+              user: process.env.APP_EMAIL,
+              pass: process.env.APP_PASSWORD,
+            },
+        });
+                    
+        // send mail with defined transport object
+        const mailOptions = {
+            from: process.env.APP_EMAIL, // sender address
+            to: email, // list of receivers
+            subject: "OTP for account verification", // Subject line
+            text: `Your OTP for account verification is: ${otp}`, // plain text body
+            html: emailContent, // html body
+        };
+        
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                return console.log('err:', err)
+            }
+            
+            console.log("Message sent: %s", info.messageId);
+            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        })
+
+        console.log('Reset otp:', resetOtp)
+        res.status(200).json({ resetOtp })
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+    
+}
+
+exports.verifyPasswordOtp = async (req, res) => {
+    try {
+        const { email, otp, password } = req.body;
+
+        // Find the user by email
+        const user = await Userdb.findOne({ email });
+
+        // Check if the user exists
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        // Check if the OTP matches
+        if (otp * 1 !== resetOtp.emailOtp) {
+            return res.status(401).json({ error: 'OTP does not match.' });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // If OTP matches, update the user's password
+        user.password = hashedPassword; 
+        await user.save();
+
+        console.log('password updated succesfully..!');
+
+        // Return success response
+        res.status(200).json({ message: 'Password reset successfully.' });
+    } catch (error) {
+        // Handle any errors
+        res.status(500).json({ error: error.message });
+    }
+};

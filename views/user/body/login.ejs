@@ -16,18 +16,22 @@
                 <div class="card shadow">
                     <div class="card-body p-4">
                         <h2 class="text-center heading mb-5">Sign in</h2>
-                        <form id="signInForm" action="/api/login" method="post" onsubmit="return validateForm()">
+                        <form id="signInForm" action="/api/login" method="post" onsubmit="validateForm(event)">
                             <div class="mb-4">
                                 <input type="text" class="form-control" name="email" id="email" placeholder="Your email or phone number">
                                 <span id="emailError" class="text-danger"></span>
                             </div>
+                            <p id="password-error" class="text-danger"></p>
                             <div class="mb-4">
-                                <input type="password" class="form-control" name="password" id="password" placeholder="Create password">
+                                <input type="password" class="form-control" name="password" id="password" placeholder="Enter Your Password">
                                 <span id="passwordError" class="text-danger"></span>
                             </div>
                             <div class="mb-4">
                                 <button type="submit" class="btn w-100">Sign in</button>
                             </div>
+                            <div class="text-center">
+                                <p><a href="/forgot-password" style="text-decoration: none; color: black;">Forgotten your password?</a></p>
+                            </div>                            
                             <div class="text-center">
                                 <p>New to TryNutritions? <a href="/signup">Register now</a></p>
                             </div>
@@ -38,31 +42,49 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         function validateForm() {
-            let email = document.getElementById("email").value;
-            let password = document.getElementById("password").value;
+            event.preventDefault()
 
-            let emailValid = /^[\w.-]+@[\w-]+\.+[\w-]{2,}$/.test(email);
-            let passwordValid = /^[A-Za-z\d]{6,}$/.test(password);
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
 
-            // Reset error messages
-            document.getElementById("emailError").innerHTML = "";
-            document.getElementById("passwordError").innerHTML = "";
+        let emailValid = /^[\w.-]+@[\w-]+\.+[\w-]{2,}$/.test(email);
+        let passwordValid = /^[A-Za-z\d]{6,}$/.test(password);
 
-            if (!emailValid) {
-                document.getElementById("emailError").innerHTML =
-                    "Enter a valid email or phone number";
-            }
+        // Reset error messages
+        document.getElementById("emailError").innerHTML = "";
+        document.getElementById("passwordError").innerHTML = "";
 
-            if (!passwordValid) {
-                document.getElementById("passwordError").innerHTML =
-                    "Password must be 6 characters";
-            }
-
-            // If any validation fails, return false
-            return emailValid && passwordValid;
+        if (!emailValid) {
+            document.getElementById("emailError").innerHTML =
+                "Enter a valid email or phone number";
         }
+
+        if (!passwordValid) {
+            document.getElementById("passwordError").innerHTML =
+                "Password must be 6 characters";
+        }
+
+        if (emailValid && passwordValid) {
+            // If validation passes, send data using Axios
+            axios.post('/api/login', {
+                email: email,
+                password: password
+            })
+            .then(response => {
+                console.log(response.data);
+                window.location.href = '/';
+            })
+            .catch(error => {
+                document.getElementById('password-error').textContent = error.response.data.error;
+                console.error(error.response.data);
+            });
+        }
+
+        return false;
+    }
     </script>
 </body>
 

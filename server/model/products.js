@@ -53,6 +53,10 @@ const Schema = new mongoose.Schema({
     },
     imageId: {
         type: String
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 
