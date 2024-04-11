@@ -136,28 +136,11 @@ exports.coupons = async (req, res) => {
 
 exports.banners = async (req, res) => {
     try {
-        const orders = await Orders.find({}).sort({ orderDate: -1 }).limit(9).exec();
-        const orderlength = await Orders.find({}).exec();
-        const users = await Users.find({}).exec();
-        const totalOrder = await Orders.aggregate([{
-            $group: {
-                _id: null,
-                totalFinalAmount: { $sum: "$finalAmount" }
-            }
-        }]);
-        const products = await Product.find({}).sort({ salesCount: -1}).limit(5)
-
-        console.log(totalOrder[0])
-        // Extract the total final amount from the result
-        const totalFinalAmount = totalOrder.length > 0 ? totalOrder[0].totalFinalAmount : 0;
+        const orders = await Order.find({}).exec();
 
         res.render('admin/body/banner', { 
             pageName: 'Reports',
             Orders: orders,
-            totalOrders: orderlength,
-            Users: users,
-            totalsales: totalFinalAmount,
-            products
          });  
     } catch (error) {
         console.error(error);

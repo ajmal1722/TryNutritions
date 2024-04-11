@@ -18,48 +18,43 @@
 				<!-- include HEAD TITLE -->
 				<%- include('../partials/_headTitle.ejs')%>
 				<!-- /include HEAD TITLE -->
-					<!-- <a href="#" class="btn-download">
+					<a href="#" class="btn-download">
 					<i class='bx bxs-cloud-download' ></i>
 					<span class="text">Download PDF</span>
-					</a> -->
+					</a>
 					</div>
 
-					<ul class="box-info">
-						<li>
-							<i class='bx bxs-calendar-check'></i>
-							<span class="text">
-								<h3>
-									<%= totalOrders.length %>
-								</h3>
-								<p>Total Orders</p>
-							</span>
-						</li>
-						<li>
-							<i class='bx bxs-group'></i>
-							<span class="text">
-								<h3>
-									<%= Users.length %>
-								</h3>
-								<p>Total Users</p>
-							</span>
-						</li>
-						<li>
-							<i class='bx bxs-dollar-circle'></i>
-							<span class="text">
-								<h3>₹ <%= totalsales %>
-								</h3>
-								<p>Total Sales</p>
-							</span>
-						</li>
-					</ul>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="bg-light p-3 m-1 rounded-4 text-center">
+								<h4 class="mb-3" style="color: rgb(156, 77, 20);">Last Week Sales</h4>
+								<p>Total Orders : <span class="text-secondary mx-2">342</span></p>
+								<p>Total Amount : <span class="text-secondary mx-2">342</span></p>
+							</div>
+						</div>						
+						<div class="col-md-4">
+							<div class="bg-light p-3 m-1 rounded-4 text-center">
+								<h4 class="mb-3" style="color: rgb(156, 77, 20);">Last Month Sales</h4>
+								<p>Total Orders : <span class="text-secondary mx-2">342</span></p>
+								<p>Total Amount : <span class="text-secondary mx-2">342</span></p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="bg-light p-3 m-1 rounded-4 text-center">
+								<h4 class="mb-3" style="color: rgb(156, 77, 20);">Total Sales</h4>
+								<p>Total Orders : <span class="text-secondary mx-2">342</span></p>
+								<p>Total Amount : <span class="text-secondary mx-2">342</span></p>
+							</div>
+						</div>
+					</div>					
 
 
 					<div class="table-data">
 						<div class="order">
 							<div class="head">
-								<h3>Recent Orders</h3>
+								<h3>Sales Report</h3>
 							</div>
-							<table>
+							<table id="myTable" class="display">
 								<thead>
 									<tr>
 										<th class="text-center">Order ID</th>
@@ -78,9 +73,9 @@
 											<td>
 												<%= item.user %>
 											</td>
-											<td>
+											<td class="text-center">
 												<%= item.orderDate.toISOString().substring(0, 10) %>
-											</td> <!-- Use a function to format the date -->
+											</td>
 											<td>₹ <%= item.finalAmount %>
 											</td>
 											<td>
@@ -110,3 +105,17 @@
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<!-- Chart js -->
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<!-- Jquery Data Table -->
+	<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+
+	<script>
+		$(document).ready( function () {
+			$('#myTable').DataTable();
+		} );
+	</script>
+
+
+</body>
+</html>
