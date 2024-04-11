@@ -2,34 +2,111 @@
 <%- include('../partials/_sidebar.ejs')%>
 <!-- /Include sidebar -->
 
-<!-- CONTENT -->
-<section id="content">
-    <!-- include NAVBAR -->
-    <%- include('../partials/_navbar.ejs')%>
-    <!-- include NAVBAR -->
+	
 
-    <!-- MAIN -->
-    <main>
-        <div class="container">
-            <!-- include HEAD TITLE -->
-            <%- include('../partials/_headTitle.ejs')%>
-            <!-- /include HEAD TITLE -->
-
-            <!-- Add Banner Button -->
-            <!-- <a data-bs-toggle="modal" data-bs-target="#addBannerModal" class="btn-download">
-                <span class="text mx-md-2">Add Banner</span>
-            </a> -->
-        </div>
-
-        
-
-    
-</main>
-<!-- /MAIN -->
+	<!-- CONTENT -->
+	<section id="content">
 
 
-<script src="/admin/js/script.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- include NAVBAR -->
+		<%- include('../partials/_navbar.ejs')%>
+		<!-- include NAVBAR -->
 
-</body>
-</html>
+
+			<!-- MAIN -->
+			<main>
+				<!-- include HEAD TITLE -->
+				<%- include('../partials/_headTitle.ejs')%>
+				<!-- /include HEAD TITLE -->
+					<!-- <a href="#" class="btn-download">
+					<i class='bx bxs-cloud-download' ></i>
+					<span class="text">Download PDF</span>
+					</a> -->
+					</div>
+
+					<ul class="box-info">
+						<li>
+							<i class='bx bxs-calendar-check'></i>
+							<span class="text">
+								<h3>
+									<%= totalOrders.length %>
+								</h3>
+								<p>Total Orders</p>
+							</span>
+						</li>
+						<li>
+							<i class='bx bxs-group'></i>
+							<span class="text">
+								<h3>
+									<%= Users.length %>
+								</h3>
+								<p>Total Users</p>
+							</span>
+						</li>
+						<li>
+							<i class='bx bxs-dollar-circle'></i>
+							<span class="text">
+								<h3>₹ <%= totalsales %>
+								</h3>
+								<p>Total Sales</p>
+							</span>
+						</li>
+					</ul>
+
+
+					<div class="table-data">
+						<div class="order">
+							<div class="head">
+								<h3>Recent Orders</h3>
+							</div>
+							<table>
+								<thead>
+									<tr>
+										<th class="text-center">Order ID</th>
+										<th class="text-center">User</th>
+										<th class="text-center">Date Order</th>
+										<th class="text-center">Total</th>
+										<th class="text-center">Status</th>
+									</tr>
+								</thead>
+								<tbody class="text-center">
+									<% Orders.forEach(item=> { %>
+										<tr>
+											<td>
+												<%= item.orderId %>
+											</td>
+											<td>
+												<%= item.user %>
+											</td>
+											<td>
+												<%= item.orderDate.toISOString().substring(0, 10) %>
+											</td> <!-- Use a function to format the date -->
+											<td>₹ <%= item.finalAmount %>
+											</td>
+											<td>
+												<span class="status <%= (item.status === 'Pending') ? 'bg-warning' :
+												(item.status === 'Cancelled') ? 'bg-danger' :
+												(item.status === 'Placed') ? 'bg-secondary' :
+												(item.status === 'Shipped') ? 'bg-primary bg-gradient' :
+												(item.status === 'Out For Delivery') ? 'bg-primary' :
+												(item.status === 'Delivered') ? 'bg-success' : '' %>">
+													<%= item.status %>
+												</span>
+											</td>
+										</tr>
+										<% }) %>
+								</tbody>
+							</table>
+						</div>
+					</div>
+			</main>
+			<!-- MAIN -->
+	</section>
+	<!-- CONTENT -->
+
+
+	<script src="/admin/js/script.js"></script>
+	<!-- Axios library -->
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<!-- Chart js -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
