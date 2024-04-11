@@ -118,13 +118,15 @@ exports.shop = async (req, res) => {
 
         const totalProducts = await Products.countDocuments({
             name: { $regex: new RegExp(searchQuery, 'i') }, // Case-insensitive search by name
-            ...categoryFilter // Apply category filter
+            ...categoryFilter, // Apply category filter
+            isDeleted: false // Filter out deleted products
         });
         const totalPages = Math.ceil(totalProducts / productPerPage);
 
         const products = await Products.find({
             name: { $regex: new RegExp(searchQuery, 'i') }, // Case-insensitive search by name
-            ...categoryFilter // Apply category filter
+            ...categoryFilter, // Apply category filter
+            isDeleted: false // Filter out deleted products
         })
         .sort(sortCriteria) // Apply sorting criteria
         .skip((page - 1) * productPerPage)
@@ -159,14 +161,20 @@ exports.shop = async (req, res) => {
 
 
 exports.viewMore = async (req, res) => {
-    const featuredProducts = await Products.find({})
-        .sort({ discount: -1 })
-        .skip(4)
-        .limit(3)
-        .exec();
+    try {
+        const featuredProducts = await Products.find({ isDeleted: false }) // Only retrieve products where isDeleted is false
+            .sort({ discount: -1 })
+            .skip(4)
+            .limit(3)
+            .exec();
 
-    res.json({ products: featuredProducts })
+        res.json({ products: featuredProducts });
+    } catch (error) {
+        console.error('Error fetching featured products:', error);
+        res.status(500).json({ error: error.message });
+    }
 }
+
 
 // exports.filterCategory = async (req, res) => {
 //     let query = {};
@@ -198,10 +206,10 @@ exports.shopDetails = async (req, res) => {
     try {
         const searchQuery = req.query.search || '';
         const productId = req.query.id;
-        const product = await Products.findById(productId);
+        const product = await Products.findOne({ _id: productId, isDeleted: false }); // Exclude deleted products
         const category = await Category.find({}).exec();
-        const relatedProduct = await Products.find({ category: product.category }).limit(6);
-        const feauturedProduct = await Products.find({})
+        const relatedProduct = await Products.find({ category: product.category, isDeleted: false }).limit(6); // Exclude deleted products
+        const feauturedProduct = await Products.find({ isDeleted: false }) // Exclude deleted products
                                                 .sort({ discount: -1 })
                                                 .limit(4)
                                                 .exec();

@@ -18,13 +18,13 @@ exports.homeRoutes = async (req, res) => {
     const searchQuery = req.query.search || '';
     const category = await Category.find({}).exec();
     const banner = await Banner.find({}).exec();
-    const product = await Products.find({}).exec();
+    const product = await Products.find({ isDeleted: false }).exec();
     const verifiedUser = req.user;
-    const latestProduct = await Products.find({})
+    const latestProduct = await Products.find({ isDeleted: false })
                                 .sort({createdAt: -1})
                                 .limit(8)
                                 .exec();
-    const bestSellerProduct = await Products.find({})
+    const bestSellerProduct = await Products.find({ isDeleted: false })
                                 .sort({salesCount: -1})
                                 .limit(9)
                                 .exec();      

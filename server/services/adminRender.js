@@ -211,14 +211,9 @@ exports.deleteProduct = async (req, res) => {
         const productId = req.query.id;
         console.log(productId);
 
-        // delete the productImage from cloudinary
-        const product = await Product.findById(productId);
-        if (product.imageId) {
-            await cloudinary.uploader.destroy(product.imageId);
-        }
+        // Update the isDeleted field to true
+        await Product.findByIdAndUpdate(productId, { isDeleted: true });
 
-        const deletedProduct = await Product.findByIdAndDelete(productId);
-        
         res.status(200).redirect('admin/products')
     } catch (error) {
         res.status(500).send(error.message);
@@ -250,7 +245,8 @@ exports.updateProduct = async (req, res) => {
 
         const updatedProduct = {
             ...req.body,
-            discount: productDiscount
+            discount: productDiscount,
+            isDeleted: false
         };
 
         // Check if a new image file is uploaded
