@@ -24,7 +24,7 @@ route.get('/products', adminAuth.checkAuth, services.products);
 
 route.get('/coupons', adminAuth.checkAuth, services.coupons);
 
-route.get('/banners', adminAuth.checkAuth, services.banners);
+route.get('/banners', adminAuth.checkAuth, services.report);
 route.post('/add-banner', multer.single('bannerImage'), services.addBanner);
 
 route.get('/payments', adminAuth.checkAuth, services.payments);

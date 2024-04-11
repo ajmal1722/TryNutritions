@@ -134,18 +134,49 @@ exports.coupons = async (req, res) => {
     });
 } 
 
-exports.banners = async (req, res) => {
+exports.report = async (req, res) => {
     try {
+        // Get current date
+        const today = new Date();
+        
+        // Calculate start of current week
+        const thisWeekStart = new Date(today);
+        thisWeekStart.setDate(today.getDate() - today.getDay());
+        thisWeekStart.setHours(0, 0, 0, 0);
+
+        // Calculate start of current month
+        const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+        thisMonthStart.setHours(0, 0, 0, 0);
+
+        // Find orders
         const orders = await Order.find({}).exec();
 
-        res.render('admin/body/banner', { 
+        // Filter orders for this week and this month
+        const thisWeekOrders = orders.filter(order => order.orderDate >= thisWeekStart && order.orderDate <= today);
+        const thisMonthOrders = orders.filter(order => order.orderDate >= thisMonthStart && order.orderDate <= today);
+
+        // Calculate totals
+        const totalOrders = orders.length;
+        const thisWeekTotal = thisWeekOrders.length;
+        const thisMonthTotal = thisMonthOrders.length;
+        const totalAmount = orders.reduce((acc, order) => acc + order.finalAmount, 0);
+        const thisWeekAmount = thisWeekOrders.reduce((acc, order) => acc + order.finalAmount, 0);
+        const thisMonthAmount = thisMonthOrders.reduce((acc, order) => acc + order.finalAmount, 0);
+
+        res.render('admin/body/report', {
             pageName: 'Reports',
             Orders: orders,
-         });  
+            thisWeekTotal,
+            thisWeekAmount,
+            thisMonthTotal,
+            thisMonthAmount,
+            totalOrders,
+            totalAmount
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
-    } 
+    }
 };
 
 exports.payments = (req, res) => res.render('admin/body/payments', { pageName: 'Payments' });

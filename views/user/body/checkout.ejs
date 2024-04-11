@@ -384,7 +384,7 @@
     if (postOffice === '') {
         document.getElementById('postOfficeError').textContent = 'Post Office is required';
         isValid = false;
-    } else if (!/^[a-zA-Z\s]+$/.test(postOffice)) {
+    } else if (!/^[a-zA-Z.\s]+$/.test(postOffice)) {
         document.getElementById('postOfficeError').textContent = 'Post Office must contain only letters';
         isValid = false;
     }
