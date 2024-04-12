@@ -36,24 +36,22 @@
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
-								<form id="exportForm" action="/download-excel">
-									<div class="mb-3">
-										<label for="startDate" class="form-label">Start Date:</label>
-										<input type="date" class="form-control" id="startDate" name="startDate" required>
-									</div>
-									<div class="mb-3">
-										<label for="endDate" class="form-label">End Date:</label>
-										<input type="date" class="form-control" id="endDate" name="endDate" required>
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-										<button type="submit" class="btn btn-primary" id="exportBtn">Export</button>
-									</div>
-								</form>
-							</div>							
+								<div class="mb-3">
+									<label for="startDate" class="form-label">Start Date:</label>
+									<input type="date" class="form-control" id="startDate" name="startDate" required>
+								</div>
+								<div class="mb-3">
+									<label for="endDate" class="form-label">End Date:</label>
+									<input type="date" class="form-control" id="endDate" name="endDate" required>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-primary" id="exportBtn">Export</button>
+								</div>
+							</div>                            
 						</div>
 					</div>
-				</div>
+				</div>		
 				
 
 					<div class="row">
@@ -156,6 +154,45 @@
 		});
 
 		flatpickr("#endDate", {});
+
+		// exporting sales report
+		document.getElementById("exportBtn").addEventListener("click", function() {
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
+
+    axios
+        .get("/download-excel", {
+            params: {
+                startDate: startDate,
+                endDate: endDate
+            },
+            responseType: 'blob' // Set the response type to 'blob'
+        })
+        .then(response => {
+            // Create a blob object from the response data
+            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+			// Generate a unique file name using timestamp
+            const timestamp = new Date().getTime(); // Get current timestamp
+            const fileName = `sales_report_${timestamp}.xlsx`;
+
+            // Create a download link
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName; // Specify the file name
+            document.body.appendChild(a);
+            a.click();
+
+            window.URL.revokeObjectURL(url);
+
+			window.location.reload()
+        })
+        .catch(error => {
+            console.error(error);
+        });
+});
+
 
 		// Jquery data table
 		$(document).ready( function () {
