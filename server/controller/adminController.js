@@ -151,6 +151,13 @@ exports.downloadExcel = async (req, res) => {
             orderDate: { $gte: startDate, $lte: endDate }
         }).exec();
 
+        console.log('orders:', orders);
+
+        // If no orders found, send an empty response
+        if (orders.length === 0) {
+            return res.status(401).json({ error: 'No orders found in the specified date range.' });
+        }
+
         // Create a new workbook
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Orders');

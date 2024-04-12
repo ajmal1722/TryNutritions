@@ -40,6 +40,7 @@
 									<label for="startDate" class="form-label">Start Date:</label>
 									<input type="date" class="form-control" id="startDate" name="startDate" required>
 								</div>
+								<p id="download-error-msg" class="text-danger"></p>
 								<div class="mb-3">
 									<label for="endDate" class="form-label">End Date:</label>
 									<input type="date" class="form-control" id="endDate" name="endDate" required>
@@ -186,10 +187,17 @@
 
             window.URL.revokeObjectURL(url);
 
-			window.location.reload()
+			window.location.reload();
         })
         .catch(error => {
-            console.error(error);
+            console.error(error.response);
+			if (error.response.status === 401) {
+				document.getElementById('download-error-msg').textContent = 
+					'No orders found in the specified date range.'
+			} else {
+				document.getElementById('download-error-msg').textContent = 
+					'Something Went wrong.'
+			}
         });
 });
 
