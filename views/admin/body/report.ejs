@@ -2,6 +2,7 @@
 <%- include('../partials/_sidebar.ejs')%>
 <!-- /Include sidebar -->
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 	
 
 	<!-- CONTENT -->
@@ -142,8 +143,20 @@
 	<!-- Jquery Data Table -->
 	<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
 
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 	<script>
-		
+		flatpickr("#startDate", {
+			onChange: function(selectedDates, dateStr, instance) {
+				// Set the minimum date for the end date picker to be the selected start date
+				flatpickr("#endDate", {
+					minDate: dateStr
+				});
+			}
+		});
+
+		flatpickr("#endDate", {});
+
 		// Jquery data table
 		$(document).ready( function () {
 			$('#myTable').DataTable();
