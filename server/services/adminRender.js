@@ -275,6 +275,7 @@ exports.updateProduct = async (req, res) => {
 exports.viewUser = async (req, res) => {
     const userId = req.query.id;
     const userData = await Users.findOne({_id: userId});
+    console.log(userData)
     res.render('admin/body/viewUser', {
         pageName: 'User Information',
         user: userData
