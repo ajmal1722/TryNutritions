@@ -1,10 +1,12 @@
 const admin = require('../model/adminModel');
 const products = require('../model/products');
 const Category = require('../model/category');
+const Order = require('../model/order');
 const jsScript = require('../middlewares/script');
 const uploads = require('../middlewares/multer');
 const cloudinary = require('../middlewares/cloudinary');
 const fs = require('fs');
+const ExcelJS = require('exceljs');
 
 require('dotenv').config();
 
@@ -135,5 +137,50 @@ exports.addProduct = async (req, res) => {
             status: 'failed',
             message: error.message
         })
+    }
+}
+
+// To download sales report to excel file
+exports.downloadExcel = async (req, res) => {
+    try {
+        // Fetch orders data from MongoDB
+        const orders = await Order.find().exec();
+
+        // Create a new workbook
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Orders');
+
+        // Add headers to the worksheet
+        worksheet.columns = [
+            { header: 'Order ID', key: 'orderId', width: 20 },
+            { header: 'User Name', key: 'user', width: 20 },
+            { header: 'Date Order', key: 'orderDate', width: 20 },
+            { header: 'Total', key: 'finalAmount', width: 20 },
+            { header: 'Status', key: 'status', width: 20 },
+        ];
+
+        // Add data rows to the worksheet
+        orders.forEach(item => {
+            worksheet.addRow({
+                orderId: item.orderId,
+                user: item.user,
+                orderDate: item.orderDate.toISOString().substring(0, 10),
+                finalAmount: `₹ ${item.finalAmount}`,
+                status: item.status
+            });
+        });
+
+        // Set response headers for Excel file download
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=orders.xlsx');
+
+        // Write the workbook to the response stream
+        await workbook.xlsx.write(res);
+
+        // End the response
+        res.end();
+    } catch (error) {
+        console.error('Error downloading Excel file:', error);
+        res.status(500).send(error.message);
     }
 }
