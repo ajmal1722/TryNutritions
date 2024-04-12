@@ -361,7 +361,8 @@ exports.cancelOrder = async (req, res) => {
     try {
         const { orderId } = req.body;
 
-        const order = await Order.findByIdAndUpdate(orderId, { status: 'Cancelled' })
+        const order = await Order.findByIdAndUpdate(orderId, { status: 'Cancelled' });
+        console.log(order.status)
         res.status(200).json({ order });
     } catch (error) {
         res.status(500).send({ error: error.message });

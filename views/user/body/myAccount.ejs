@@ -224,7 +224,7 @@
             </div>
             <div class="my-3">
               <!-- Example cancel order button -->
-              <input type="hidden" id="get-orderId" value="<%= order._id %>" />
+              <input type="hidden" id="get-orderId-<%= order._id %>" value="<%= order._id %>" />
               <% if (order.status==='Cancelled' ) { %>
               <h5 class="text-danger">This Order has been Cancelled!</h5>
               <% } else if (order.status==='Rejected' ) { %>
@@ -233,17 +233,17 @@
               <h5 class="text-success">This Product has been Delivered!</h5>
               <% } else { %>
               <button
-                id="cancel-btn"
-                class="rounded btn btn-danger"
-                onclick="cancelOrder()"
+                  id="cancel-btn-<%= order._id %>"
+                  class="rounded btn btn-danger"
+                  onclick="cancelOrder('<%= order._id %>')" 
               >
-                Cancel Order
+                  Cancel Order
               </button>
-              <h5 id="cancel-message" class="text-danger" style="display: none">
-                This Order has been Cancelled!
+              <h5 id="cancel-message-<%= order._id %>" class="text-danger" style="display: none">
+                  This Order has been Cancelled!
               </h5>
               <% } %>
-            </div>
+          </div>          
           </div>
           <% }) %> <% }) %>
         </div>
@@ -894,22 +894,22 @@
   }
 
   // cancelOrder
-  function cancelOrder() {
-    const orderId = document.getElementById("get-orderId").value;
+  function cancelOrder(orderId) {
     console.log(orderId);
 
     axios
       .post("/cancel-order", { orderId: orderId })
       .then((response) => {
-        document.getElementById("cancel-btn").style.display = "none";
-        document.getElementById("cancel-message").style.display = "block";
+        document.getElementById(`cancel-btn-${orderId}`).style.display = "none"; // Dynamic ID
+        document.getElementById(`cancel-message-${orderId}`).style.display = "block"; // Dynamic ID
 
         showToast("Order Cancelled successfully!");
+        console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
-  }
+}
 </script>
 
 <!-- Include Footer -->
