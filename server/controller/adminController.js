@@ -143,8 +143,13 @@ exports.addProduct = async (req, res) => {
 // To download sales report to excel file
 exports.downloadExcel = async (req, res) => {
     try {
+        const { startDate, endDate } = req.query;
+        console.log('Date:', startDate, endDate);
+
         // Fetch orders data from MongoDB
-        const orders = await Order.find().exec();
+        const orders = await Order.find({
+            orderDate: { $gte: startDate, $lte: endDate }
+        }).exec();
 
         // Create a new workbook
         const workbook = new ExcelJS.Workbook();
@@ -172,7 +177,7 @@ exports.downloadExcel = async (req, res) => {
 
         // Set response headers for Excel file download
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', 'attachment; filename=orders.xlsx');
+        res.setHeader('Content-Disposition', 'attachment; filename=sales_report.xlsx');
 
         // Write the workbook to the response stream
         await workbook.xlsx.write(res);

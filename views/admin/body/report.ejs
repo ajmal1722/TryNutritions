@@ -35,22 +35,25 @@
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
-								<div class="mb-3">
-									<label for="startDate" class="form-label">Start Date:</label>
-									<input type="date" class="form-control" id="startDate">
-								</div>
-								<div class="mb-3">
-									<label for="endDate" class="form-label">End Date:</label>
-									<input type="date" class="form-control" id="endDate">
-								</div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary" id="exportBtn">Export</button>
-							</div>
+								<form id="exportForm" action="/download-excel">
+									<div class="mb-3">
+										<label for="startDate" class="form-label">Start Date:</label>
+										<input type="date" class="form-control" id="startDate" name="startDate" required>
+									</div>
+									<div class="mb-3">
+										<label for="endDate" class="form-label">End Date:</label>
+										<input type="date" class="form-control" id="endDate" name="endDate" required>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+										<button type="submit" class="btn btn-primary" id="exportBtn">Export</button>
+									</div>
+								</form>
+							</div>							
 						</div>
 					</div>
 				</div>
+				
 
 					<div class="row">
 						<div class="col-md-4">
