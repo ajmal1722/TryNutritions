@@ -18,11 +18,39 @@
 				<!-- include HEAD TITLE -->
 				<%- include('../partials/_headTitle.ejs')%>
 				<!-- /include HEAD TITLE -->
-					<a href="#" class="btn-download">
-					<i class='bx bxs-cloud-download' ></i>
-					<span class="text">Download PDF</span>
+				
+					
+					<a href="#" class="btn-download" data-bs-toggle="modal" data-bs-target="#exportModal">
+						<i class='bx bxs-cloud-download'></i>
+						<span class="text">Export Sales Report</span>
 					</a>
+				</div>
+
+				<!-- Modal -->
+				<div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exportModalLabel">Export Sales Report</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div class="mb-3">
+									<label for="startDate" class="form-label">Start Date:</label>
+									<input type="date" class="form-control" id="startDate">
+								</div>
+								<div class="mb-3">
+									<label for="endDate" class="form-label">End Date:</label>
+									<input type="date" class="form-control" id="endDate">
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-primary" id="exportBtn">Export</button>
+							</div>
+						</div>
 					</div>
+				</div>
 
 					<div class="row">
 						<div class="col-md-4">
@@ -101,6 +129,7 @@
 
 
 	<script src="/admin/js/script.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 	<!-- Axios library -->
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<!-- Chart js -->
@@ -111,9 +140,12 @@
 	<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
 
 	<script>
+		
+		// Jquery data table
 		$(document).ready( function () {
 			$('#myTable').DataTable();
 		} );
+		
 	</script>
 
 
