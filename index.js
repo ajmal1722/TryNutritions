@@ -46,7 +46,6 @@ app.use('/img',express.static(path.resolve(__dirname,'assets/img')));
 app.use('/', require('./server/routes/users'));
 app.use('/', require('./server/routes/admin'));
 app.use('/admin', adminRoute);
-app.use('/vendor', require('./server/routes/vendor'));
 
 app.listen(PORT, () => {
     console.log(`server is running on http://localhost:${PORT}`)

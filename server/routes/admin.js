@@ -29,8 +29,6 @@ route.post('/add-banner', multer.single('bannerImage'), services.addBanner);
 
 route.get('/payments', adminAuth.checkAuth, services.payments);
 
-route.get('/vendors', adminAuth.checkAuth, services.vendors);
-
 route.get('/settings', adminAuth.checkAuth, services.settings);
 
 route.get ('/addProducts', services.addProducts);
