@@ -8,12 +8,6 @@ const Schema = new mongoose.Schema({
     category: {
         type: String
     },
-    subCategory: {
-        type: String
-    },
-    brand: {
-        type: String
-    },
     manufacture: {
         type: String
     },
@@ -27,7 +21,7 @@ const Schema = new mongoose.Schema({
     },
     weight: {
         type: Number,
-        required: true
+        default: 1
     },
     stock: {
         type: Number

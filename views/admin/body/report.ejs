@@ -2,6 +2,7 @@
 <%- include('../partials/_sidebar.ejs')%>
 <!-- /Include sidebar -->
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 	
 
 	<!-- CONTENT -->
@@ -18,11 +19,41 @@
 				<!-- include HEAD TITLE -->
 				<%- include('../partials/_headTitle.ejs')%>
 				<!-- /include HEAD TITLE -->
-					<a href="#" class="btn-download">
-					<i class='bx bxs-cloud-download' ></i>
-					<span class="text">Download PDF</span>
+				
+					
+					<a href="#" class="btn-download" data-bs-toggle="modal" data-bs-target="#exportModal">
+						<i class='bx bxs-cloud-download'></i>
+						<span class="text">Export Sales Report</span>
 					</a>
+				</div>
+
+				<!-- Modal -->
+				<div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exportModalLabel">Export Sales Report</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div class="mb-3">
+									<label for="startDate" class="form-label">Start Date:</label>
+									<input type="date" class="form-control" id="startDate" name="startDate" required>
+								</div>
+								<p id="download-error-msg" class="text-danger"></p>
+								<div class="mb-3">
+									<label for="endDate" class="form-label">End Date:</label>
+									<input type="date" class="form-control" id="endDate" name="endDate" required>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-primary" id="exportBtn">Export</button>
+								</div>
+							</div>                            
+						</div>
 					</div>
+				</div>		
+				
 
 					<div class="row">
 						<div class="col-md-4">
@@ -101,6 +132,7 @@
 
 
 	<script src="/admin/js/script.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 	<!-- Axios library -->
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<!-- Chart js -->
@@ -110,10 +142,71 @@
 	<!-- Jquery Data Table -->
 	<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
 
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 	<script>
+		flatpickr("#startDate", {
+			onChange: function(selectedDates, dateStr, instance) {
+				// Set the minimum date for the end date picker to be the selected start date
+				flatpickr("#endDate", {
+					minDate: dateStr
+				});
+			}
+		});
+
+		flatpickr("#endDate", {});
+
+		// exporting sales report
+		document.getElementById("exportBtn").addEventListener("click", function() {
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
+
+    axios
+        .get("/download-excel", {
+            params: {
+                startDate: startDate,
+                endDate: endDate
+            },
+            responseType: 'blob' // Set the response type to 'blob'
+        })
+        .then(response => {
+            // Create a blob object from the response data
+            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+			// Generate a unique file name using timestamp
+            const timestamp = new Date().getTime(); // Get current timestamp
+            const fileName = `sales_report_${timestamp}.xlsx`;
+
+            // Create a download link
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName; // Specify the file name
+            document.body.appendChild(a);
+            a.click();
+
+            window.URL.revokeObjectURL(url);
+
+			window.location.reload();
+        })
+        .catch(error => {
+            console.error(error.response);
+			if (error.response.status === 401) {
+				document.getElementById('download-error-msg').textContent = 
+					'No orders found in the specified date range.'
+			} else {
+				document.getElementById('download-error-msg').textContent = 
+					'Something Went wrong.'
+			}
+        });
+});
+
+
+		// Jquery data table
 		$(document).ready( function () {
 			$('#myTable').DataTable();
 		} );
+		
 	</script>
 
 

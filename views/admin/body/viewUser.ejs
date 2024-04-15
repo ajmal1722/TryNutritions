@@ -26,36 +26,47 @@
                     </div>
                 
                     <div class="card mt-3">
-                      <div class="card-body">
-                          <div class="row">
-                              <div class="col-md-6">
-                                  <!-- User Information -->
-                                  <h5 class="card-title mb-4">User Information</h5>
-                                  <ul class="list-group">
-                                      <li class="list-group-item">
-                                          <span class="text-primary">User ID:</span> <span class="ms-2"><%= user._id %></span>
-                                      </li>
-                                      <li class="list-group-item">
-                                          <span class="text-primary">Name:</span> <span class="ms-2"><%= user.name %></span>
-                                      </li>
-                                      <li class="list-group-item">
-                                          <span class="text-primary">Email:</span> <span class="ms-2"><%= user.email %></span>
-                                      </li>
-                                      <li class="list-group-item">
-                                          <span class="text-primary">Phone:</span> <span class="ms-2"><%= user.phone %></span>
-                                      </li>
-                                  </ul>
-                              </div>
-                          </div>
-                          <div class="">
-                              <!-- Address Information -->
-                              <h5 class="card-title my-4">Address</h5>
-                              <p class="bg-light border border-secondary rounded p-2" style="min-height: 150px;">
-                                  <span class="text-primary">Address:</span> <span class="ms-2"><%= user.address %></span>
-                              </p>
-                          </div>
-                      </div>
-                  </div>   
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- User Information -->
+                                    <h5 class="card-title mb-4">User Information</h5>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <span class="text-primary">User ID:</span> <span class="ms-2"><%= user._id %></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span class="text-primary">Name:</span> <span class="ms-2"><%= user.name %></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span class="text-primary">Email:</span> <span class="ms-2"><%= user.email %></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span class="text-primary">Phone:</span> <span class="ms-2"><%= user.phone %></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="">
+                                <!-- Address Information -->
+                                <h5 class="card-title my-4">Address</h5>
+                                <% user.addresses.forEach(address => { %>
+                                    <p class="bg-light border border-secondary rounded p-3" style="min-height: 100px;">
+                                        <span class="text-primary ms-2 mb-4"><%= address.name %></span> 
+                                        <span class="text-primary mx-3"><%= address.phone %></span><br>  
+                                        <span class="ms-2">
+                                            <%= address.houseName %>, 
+                                            <%= address.streetName %>, 
+                                            <%= address.postOffice %>, 
+                                            <%= address.district %>, 
+                                            <%= address.state %>, 
+                                            <%= address.pinCode %>
+                                        </span>
+                                    </p>
+                                <% }) %>
+                            </div>
+                        </div>
+                    </div>
                 </div> 
             </div>
         </main>
