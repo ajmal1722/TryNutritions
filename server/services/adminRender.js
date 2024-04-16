@@ -189,14 +189,6 @@ exports.settings = async (req, res) => {
     });
 } 
 
-exports.vendors = async (req, res) => {
-    const vendor = await Vendors.find({}).exec();
-    res.render('admin/body/vendors', {
-        pageName: 'Vendor Details',
-        vendorList: vendor
-    });
-} 
-
 exports.users = async (req, res) => {
     const users = await Users.find({}).exec();
 
