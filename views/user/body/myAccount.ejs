@@ -188,7 +188,7 @@
               border-radius: 5px;
             "
           >
-            <div class="d-flex py-2 mb-2 align-items-center rounded">
+            <div class="d-sm-flex py-2 mb-2 align-items-center rounded">
               <div class="product col-4 py-2">
                 <img
                   src="<%= item.imageUrl %>"
@@ -196,13 +196,10 @@
                   width="150px"
                 />
               </div>
-              <div class="d-grid text-start">
+              <div class="d-grid text-start ml-2">
                 <h6><%= item.name %></h6>
                 <p class="m-0"><small>Quantity: <%= item.quantity %></small></p>
                 <p class="m-0"><small>Price: ₹ <%= item.price %></small></p>
-                <p class="m-0">
-                  <small>Sub Total: ₹ <%= order.subTotal %></small>
-                </p>
                 <p class="m-0">
                   <small
                     >Order Date: <%= order.orderDate.toDateString() %></small
