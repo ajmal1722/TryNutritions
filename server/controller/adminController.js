@@ -91,8 +91,8 @@ exports.login = async (req, res) => {
 }
 
 exports.logout = async (req, res) => {
-    res.clearCookie('jwt');
-    res.redirect('/');
+    res.clearCookie('adminToken');
+    res.redirect('/admin/login');
 }
 
 // add products
