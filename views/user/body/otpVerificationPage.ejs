@@ -140,7 +140,7 @@
             const otpValue = Array.from(otpInputs).map(input => input.value).join('');
             console.log('Verifying OTP:', otpValue, getEmail);
 
-            axios.post('/verify-otp', {
+            axios.post('/verify-otp-for-signup', {
                 otp: otpValue,
                 email: getEmail
             })
@@ -150,7 +150,7 @@
                 })
                 .catch(error => {
                     document.getElementById('otp-error-message').textContent = error.response.data.error;
-                    console.log('Error verifying OTP:', error.response.data.error);
+                    console.log('Error verifying OTP:', error.response.data);
                 });
         });
 

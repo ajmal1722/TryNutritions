@@ -44,6 +44,7 @@ exports.otpPage = async (req, res) => {
     res.render('user/body/otpVerificationPage', { email: email, expiry: otpExpiration });
 };
 
+// otp verification for user signup
 exports.verifyOtp = async (req, res) => {
     try {
         const { otp, email } = req.body;
@@ -308,7 +309,7 @@ exports.errorMessage = (req, res) => {
 
     res.render('user/body/error', {
         verifiedUser: user,
-        pageName: 'Error'
+        pageName: 'error'
     })
 };
     
