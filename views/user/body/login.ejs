@@ -18,7 +18,7 @@
                         <h2 class="text-center heading mb-5">Sign in</h2>
                         <form id="signInForm" action="/api/login" method="post" onsubmit="validateForm(event)">
                             <div class="mb-4">
-                                <input type="text" class="form-control" name="email" id="email" placeholder="Your email or phone number">
+                                <input type="text" class="form-control" name="email" id="email" placeholder="Your email">
                                 <span id="emailError" class="text-danger"></span>
                             </div>
                             <p id="password-error" class="text-danger"></p>
@@ -59,7 +59,7 @@
 
         if (!emailValid) {
             document.getElementById("emailError").innerHTML =
-                "Enter a valid email or phone number";
+                "Enter a valid email";
         }
 
         if (!passwordValid) {
