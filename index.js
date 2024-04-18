@@ -47,6 +47,10 @@ app.use('/', require('./server/routes/users'));
 app.use('/', require('./server/routes/admin'));
 app.use('/admin', adminRoute);
 
+app.use((req, res) => {
+    res.redirect('/error')
+})
+
 app.listen(PORT, () => {
     console.log(`server is running on http://localhost:${PORT}`)
 })
