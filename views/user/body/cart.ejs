@@ -262,7 +262,12 @@
             .then(res => {
                 window.location.href = '/checkout'
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                const errors = err.response.data.errors;
+                errors.forEach(error => {
+                    showErrorToast(error);
+                });
+            });
 
         // const couponCode = document.getElementById('couponCode').value;
         // if (couponCode === ''){
