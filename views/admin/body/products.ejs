@@ -61,7 +61,11 @@
                           <td><%= item.stock %></td>
                           <td>
                             <a class="btn button btn-primary bg-success my-2" href="/editProduct?id=<%= item._id %>" role="button">Edit</a><br>
-                            <a class="btn button btn-primary bg-danger" href="/deleteProduct?id=<%= item._id %>" role="button">Delete</a>
+                            <% if (item.isDeleted === false) { %>
+                              <a class="btn button btn-primary bg-danger" href="/deleteProduct?id=<%= item._id %>" role="button">Delete</a>
+                            <% } else { %>
+                              <h6 class="text-danger">Deleted</h6>
+                            <% } %>
                           </td>
                         </tr>
                       <% }) %> 

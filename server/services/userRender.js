@@ -289,19 +289,57 @@ exports.messageFromUser = async (req, res) => {
 
 // checkout
 exports.checkout = async (req, res) => {
-    const userId = req.user._id;
+    try {
+        const userId = req.user._id;
 
-    const user = await User.findById(userId)
-    const cart = await Cart.findOne({ user: userId })
+        const user = await User.findById(userId);
+        const cart = await Cart.findOne({ user: userId }).populate('items.itemId');
 
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-    res.render('user/body/checkout', {
-        pageName: 'Checkout',
-        Cart: cart,
-        User: user,
-        verifiedUser: userId
-     })
+        if (!cart) {
+            return res.status(404).json({ error: 'Cart not found' });
+        }
+
+        const errors = [];
+        let totalBill = 0;
+
+        // Check each item in the cart
+        for (const cartItem of cart.items) {
+            const product = cartItem.itemId;
+
+            if (!product) {
+                errors.push(`Item with ID ${cartItem.itemId} not found`);
+                continue; // Skip this item and move to the next one
+            }
+
+            // Check if quantity in cart exceeds available stock
+            if (cartItem.quantity > product.stock) {
+                errors.push(`Quantity exceeds. Only ${product.stock} kg of "${product.name}" is available in inventory`);
+            }
+
+            // Calculate total bill
+            totalBill += cartItem.quantity * product.price;
+        }
+
+        // If there are errors, send them as JSON response
+        if (errors.length > 0) {
+            return res.status(400).json({ errors });
+        }
+
+        // Render the checkout page with cart and user details
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.render('user/body/checkout', {
+            pageName: 'Checkout',
+            Cart: cart,
+            User: user,
+            verifiedUser: userId,
+            totalBill: totalBill
+        });
+    } catch (error) {
+        console.error('Error in checkout:', error);
+        res.status(500).json({ error: error.message });
+    }
 };
+
 
 // Error Messages
 exports.errorMessage = (req, res) => {
