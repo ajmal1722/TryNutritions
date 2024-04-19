@@ -31,6 +31,7 @@ exports.admindashboard = async (req, res) => {
         // Extract the total final amount from the result
         const totalFinalAmount = totalOrder.length > 0 ? totalOrder[0].totalFinalAmount : 0;
 
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
         res.render('admin/body/dashboard', { 
             pageName: 'Home',
             Orders: orders,
@@ -46,7 +47,10 @@ exports.admindashboard = async (req, res) => {
 } 
 
 // admin login
-exports.adminLogin = (req, res) => res.render('admin/body/login');
+exports.adminLogin = (req, res) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.render('admin/body/login');
+} 
 
 // orders
 exports.orders = async (req, res) => {
@@ -62,6 +66,7 @@ exports.orders = async (req, res) => {
 
         const orders = await Orders.find({}).sort(sortCriteria).exec();
 
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
         res.render('admin/body/orders', { 
             pageName: 'Orders',
             Orders: orders
@@ -84,6 +89,7 @@ exports.orderDetails = async (req, res) => {
 
         const user = await Users.findById(userId);
 
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
         res.render('admin/body/orderDetails', { 
             pageName: 'Order Details',
             Order: order,
@@ -98,6 +104,8 @@ exports.orderDetails = async (req, res) => {
 // category
 exports.category = async (req, res) => {
     const categories = await Category.find({}).exec();
+
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.render('admin/body/category', {
         pageName: 'Category',
         Category: categories
@@ -108,6 +116,7 @@ exports.products = async (req, res) => {
     try {
         const items = await Product.find({}).exec();
 
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
         res.render('admin/body/products', {
             productsList: items,
             pageName: 'Products'
@@ -120,6 +129,8 @@ exports.products = async (req, res) => {
 
 exports.addProducts = async (req, res) => {
     const categories = await Category.find({}).exec();
+
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
      res.render('admin/body/add_products', {
         pageName: 'Add Products',
         Category: categories
@@ -127,7 +138,9 @@ exports.addProducts = async (req, res) => {
 } 
 
 exports.coupons = async (req, res) => {
-    const coupon = await Coupon.find({}).exec()
+    const coupon = await Coupon.find({}).exec();
+
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.render('admin/body/coupons', {
         pageName: 'Coupons',
         Coupon: coupon
@@ -163,6 +176,7 @@ exports.report = async (req, res) => {
         const thisWeekAmount = thisWeekOrders.reduce((acc, order) => acc + order.finalAmount, 0);
         const thisMonthAmount = thisMonthOrders.reduce((acc, order) => acc + order.finalAmount, 0);
 
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
         res.render('admin/body/report', {
             pageName: 'Reports',
             Orders: orders,
@@ -179,10 +193,15 @@ exports.report = async (req, res) => {
     }
 };
 
-exports.payments = (req, res) => res.render('admin/body/payments', { pageName: 'Payments' });
+exports.payments = (req, res) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.render('admin/body/payments', { pageName: 'Payments' });  
+} 
 
 exports.settings = async (req, res) => {
     const banner = await Banner.find({});
+
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.render('admin/body/settings', {
         pageName: 'settings',
         Banner: banner
@@ -192,6 +211,7 @@ exports.settings = async (req, res) => {
 exports.users = async (req, res) => {
     const users = await Users.find({}).exec();
 
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.render('admin/body/users', {
         pageName: 'Users',
         userList: users
