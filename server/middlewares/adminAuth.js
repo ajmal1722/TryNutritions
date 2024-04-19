@@ -46,7 +46,7 @@ exports.checkAuth = async (req, res, next) => {
 // Middleware to check if the user is authenticated
 exports.checkAuthenticated = (req, res, next) => {
     // Check if the user is authenticated (has a valid token)
-    if (req.cookies.jwt) {
+    if (req.cookies.adminToken) {
         // Redirect to the dashboard
         return res.redirect('/admin');
     }
