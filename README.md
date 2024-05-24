@@ -20,12 +20,12 @@ EJS templates are used to dynamically generate HTML pages on the server. This al
 Technical Stack and Dependencies
 The project leverages several key dependencies:
 
-Express: A minimal and flexible Node.js web application framework.
-Mongoose: An ODM for MongoDB to interact with the database using JavaScript objects.
-EJS: A templating engine that integrates seamlessly with Express to render HTML templates.
-Body-Parser: Middleware to parse incoming request bodies.
-Cookie-Parser: Middleware to parse cookies.
-Multer: Middleware for handling file uploads.
-Cloudinary: For handling image uploads and storage.
-Nodemailer: For sending emails, such as order confirmations.
-Razorpay: For integrating payment gateways.
+- Express: A minimal and flexible Node.js web application framework.
+- Mongoose: An ODM for MongoDB to interact with the database using JavaScript objects.
+- EJS: A templating engine that integrates seamlessly with Express to render HTML templates.
+- Body-Parser: Middleware to parse incoming request bodies.
+- Cookie-Parser: Middleware to parse cookies.
+- Multer: Middleware for handling file uploads.
+- Cloudinary: For handling image uploads and storage.
+- Nodemailer: For sending emails, such as order confirmations.
+- Razorpay: For integrating payment gateways.
